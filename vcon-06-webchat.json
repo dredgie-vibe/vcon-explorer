@@ -1,0 +1,110 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "d769c04d-3660-593b-a4db-b92e9ead1732",
+  "created_at": "2026-05-05T17:46:12+00:00",
+  "subject": "Web chat \u2014 metrics page 500 errors",
+  "parties": [
+    {
+      "name": "Customer (workspace ws_8e2c4f)",
+      "timezone": "America/New_York",
+      "uuid": "ed6f7544-972f-5310-b90e-7f84556c18ce"
+    },
+    {
+      "name": "Helix Agent \u2014 Lior Avraham",
+      "mailto": "lior@helix.example",
+      "timezone": "America/New_York"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "text",
+      "start": "2026-05-05T17:41:12+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "text/plain",
+      "body": "Hey, my dashboard is showing 500 errors on the metrics page.",
+      "encoding": "none"
+    },
+    {
+      "type": "text",
+      "start": "2026-05-05T17:41:32+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "text/plain",
+      "body": "Sorry about that \u2014 can you share your workspace ID?",
+      "encoding": "none"
+    },
+    {
+      "type": "text",
+      "start": "2026-05-05T17:41:52+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "text/plain",
+      "body": "ws_8e2c4f",
+      "encoding": "none"
+    },
+    {
+      "type": "text",
+      "start": "2026-05-05T17:42:12+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "text/plain",
+      "body": "Thanks. I see a stuck job on the rollup worker. Restarting it now.",
+      "encoding": "none"
+    },
+    {
+      "type": "text",
+      "start": "2026-05-05T17:42:32+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "text/plain",
+      "body": "Should clear in about a minute. Let me know if it persists.",
+      "encoding": "none"
+    },
+    {
+      "type": "text",
+      "start": "2026-05-05T17:42:52+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "text/plain",
+      "body": "Confirmed, working again. Thanks!",
+      "encoding": "none"
+    }
+  ],
+  "analysis": [
+    {
+      "type": "summary",
+      "dialog": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "mediatype": "text/plain",
+      "vendor": "Helix",
+      "product": "ChatSummarizer",
+      "body": "Customer reported 500 on metrics page; agent identified stuck rollup worker, restarted it, customer confirmed resolution.",
+      "encoding": "none"
+    }
+  ]
+}
