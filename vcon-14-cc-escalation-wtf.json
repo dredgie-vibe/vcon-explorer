@@ -1,0 +1,89 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "4bc300a4-cc7a-5326-99f8-f02b0afc299e",
+  "created_at": "2026-05-08T17:25:00+00:00",
+  "subject": "Tier-3 escalation \u2014 duplicate charge refund",
+  "parties": [
+    {
+      "name": "Agent \u2014 Khalid Mansoor",
+      "tel": "+1-303-555-0301",
+      "timezone": "America/New_York",
+      "role": "agent"
+    },
+    {
+      "name": "Supervisor \u2014 Reina Esposito",
+      "tel": "+1-303-555-0302",
+      "timezone": "America/New_York",
+      "role": "supervisor"
+    },
+    {
+      "name": "Customer \u2014 Hilde Bjornson",
+      "tel": "+1-415-555-0421",
+      "timezone": "America/New_York",
+      "role": "customer"
+    },
+    {
+      "name": "SME \u2014 Olamide Ajayi",
+      "tel": "+1-303-555-0388",
+      "timezone": "America/New_York",
+      "role": "sme"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-05-08T17:00:00+00:00",
+      "duration": 1280.0,
+      "parties": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "originator": 2,
+      "mediatype": "audio/x-wav",
+      "filename": "14-cc-wtf-multispeaker-conference.wav",
+      "url": "https://media.vcon.example.net/14-cc-wtf-multispeaker-conference.wav",
+      "content_hash": "sha512-96c1c5281800a4f00924c313a263773a716f71c1126f094ff1872604bf3db69f33442e5122a30e93b5c35cc15d1cadb9db542924f2a08674c8ea8ae345e2e795",
+      "alg": "SHA-512",
+      "disposition": "answered",
+      "campaign": "esc-tier3",
+      "interaction_type": "voice",
+      "interaction_id": "INT-ESC-77251",
+      "skill": "escalation-billing"
+    }
+  ],
+  "analysis": [
+    {
+      "type": "transcript",
+      "dialog": [
+        0
+      ],
+      "mediatype": "application/json",
+      "vendor": "AssemblyAI",
+      "product": "Universal-2",
+      "schema": "WTF/1.0",
+      "filename": "14-cc-wtf-multispeaker-conference-wtf.json",
+      "body": "{\"wtf_version\": \"1.0\", \"provider\": {\"name\": \"AssemblyAI\", \"model\": \"universal-2\", \"language\": \"en-US\"}, \"channels\": 4, \"speakers\": [{\"speaker\": \"S0\", \"party\": 0, \"role\": \"agent\", \"talk_time_s\": 410.0}, {\"speaker\": \"S1\", \"party\": 1, \"role\": \"supervisor\", \"talk_time_s\": 120.0}, {\"speaker\": \"S2\", \"party\": 2, \"role\": \"customer\", \"talk_time_s\": 540.0}, {\"speaker\": \"S3\", \"party\": 3, \"role\": \"sme\", \"talk_time_s\": 210.0}], \"segments\": [{\"start\": 3.2, \"end\": 11.7, \"speaker\": \"S2\", \"text\": \"This is the third time I've been transferred and I just want a refund.\"}, {\"start\": 12.0, \"end\": 17.4, \"speaker\": \"S0\", \"text\": \"I'm sorry \\u2014 I'm bringing my supervisor onto the line right now.\"}, {\"start\": 17.6, \"end\": 24.1, \"speaker\": \"S1\", \"text\": \"Hi Hilde, this is Reina, the supervisor. I'm reviewing the case now.\"}], \"quality\": {\"overall_confidence\": 0.88, \"redaction_applied\": true}}",
+      "encoding": "json"
+    },
+    {
+      "type": "summary",
+      "dialog": [
+        0
+      ],
+      "mediatype": "text/plain",
+      "vendor": "Anthropic",
+      "product": "Claude Sonnet 4.6",
+      "body": "Escalation: customer frustrated by repeated transfers; supervisor took over and authorized full refund of $1,184.00; SME confirmed the underlying duplicate-charge bug.",
+      "encoding": "none"
+    }
+  ],
+  "extensions": [
+    "CC",
+    "WTF"
+  ],
+  "must_support": [
+    "WTF"
+  ]
+}
