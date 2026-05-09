@@ -1,0 +1,60 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "e333d68d-5264-5cf7-9ad8-1a16611dfdf2",
+  "created_at": "2026-04-26T17:00:00+00:00",
+  "subject": "Interview \u2014 Staff Platform Engineer (River Kobayashi)",
+  "parties": [
+    {
+      "name": "Yusuf Ademola (Interviewer, Eng Manager)",
+      "mailto": "yusuf@northwind.example",
+      "timezone": "America/New_York"
+    },
+    {
+      "name": "Candidate \u2014 River Kobayashi",
+      "mailto": "river.kobayashi@example.com",
+      "timezone": "America/New_York"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-04-26T16:00:00+00:00",
+      "duration": 2700.0,
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "video/mp4",
+      "filename": "10-interview-staff-platform-eng.mp4",
+      "url": "https://media.vcon.example.net/10-interview-staff-platform-eng.mp4",
+      "content_hash": "sha512-d7535402777ba70889ac185a7776dba282a7d8f7613bfb5c1fb554723a60a890007f1cb44db3fececcebd2b1fa6d1c5269b8a466f80e8d07ec4d4b635a78aed3",
+      "alg": "SHA-512",
+      "disposition": "answered"
+    }
+  ],
+  "analysis": [
+    {
+      "type": "transcript",
+      "dialog": [
+        0
+      ],
+      "mediatype": "text/plain",
+      "vendor": "OpenAI",
+      "product": "Whisper Large v3",
+      "body": "[00:00:00] Interviewer: Welcome, thanks for making the time. Tell me a bit about your last project.\n[00:00:08] Candidate: Sure \u2014 I led the rebuild of the realtime media stack at my previous company...\n[00:14:22] Interviewer: How did you handle the SIP/WebRTC interop edge cases?\n[00:14:30] Candidate: We sat between a Kamailio edge proxy and an Asterisk B2BUA...",
+      "encoding": "none"
+    },
+    {
+      "type": "scorecard",
+      "dialog": [
+        0
+      ],
+      "mediatype": "application/json",
+      "vendor": "Greenhouse",
+      "product": "Structured Interview",
+      "body": "{\"rubric\": \"staff_platform_engineer_v3\", \"scores\": {\"systems_design\": 4, \"rt_media\": 5, \"leadership\": 4, \"communication\": 4}, \"recommendation\": \"hire\"}",
+      "encoding": "json"
+    }
+  ]
+}
