@@ -1,0 +1,68 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "5bc6ad31-340f-55c1-8e30-38ba60b0469c",
+  "created_at": "2026-04-22T19:12:00+00:00",
+  "subject": "SMS \u2014 3pm walkthrough confirmation",
+  "parties": [
+    {
+      "name": "Aisha Holloway",
+      "tel": "+1-646-555-0190",
+      "timezone": "America/New_York"
+    },
+    {
+      "name": "Lisa Bertrand",
+      "tel": "+1-646-555-0123",
+      "timezone": "America/New_York"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "text",
+      "start": "2026-04-22T18:12:00+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "text/plain",
+      "body": "Hey, are we still on for the 3pm walkthrough?",
+      "encoding": "none"
+    },
+    {
+      "type": "text",
+      "start": "2026-04-22T18:15:00+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "text/plain",
+      "body": "Yes \u2014 sending the Zoom link in a sec.",
+      "encoding": "none"
+    },
+    {
+      "type": "text",
+      "start": "2026-04-22T18:18:00+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "text/plain",
+      "body": "Thanks. Should I bring the redlined SOW?",
+      "encoding": "none"
+    },
+    {
+      "type": "text",
+      "start": "2026-04-22T18:21:00+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "text/plain",
+      "body": "Please. Lisa wants to see the changes before we sign.",
+      "encoding": "none"
+    }
+  ]
+}
