@@ -1,0 +1,78 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "4879312b-2c1e-5094-b78e-b1b58fec8a81",
+  "created_at": "2026-04-30T16:10:00+00:00",
+  "subject": "Billing platform migration \u2014 architecture review",
+  "parties": [
+    {
+      "name": "Renata Oduya (Host, Architecture)",
+      "mailto": "renata@northwind.example",
+      "timezone": "America/New_York"
+    },
+    {
+      "name": "Engineering \u2014 Hiro Tanaka",
+      "mailto": "hiro@northwind.example",
+      "timezone": "America/New_York"
+    },
+    {
+      "name": "Finance Ops \u2014 Marlene Sokol",
+      "mailto": "marlene@northwind.example",
+      "timezone": "America/New_York"
+    },
+    {
+      "name": "Security \u2014 Quentin Yarrow",
+      "mailto": "quentin@northwind.example",
+      "timezone": "America/New_York"
+    },
+    {
+      "name": "Legal \u2014 Anya Petrovi\u0107",
+      "mailto": "anya@northwind.example",
+      "timezone": "America/New_York"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-04-30T15:00:00+00:00",
+      "duration": 3540.0,
+      "parties": [
+        0,
+        1,
+        2,
+        3,
+        4
+      ],
+      "originator": 0,
+      "mediatype": "audio/x-wav",
+      "filename": "08-conference-billing-arch-review.wav",
+      "url": "https://media.vcon.example.net/08-conference-billing-arch-review.wav",
+      "content_hash": "sha512-d89641d7422d743a7ef060ee3385d47773b293303674405267e093504e5a7d7159fbe06da3a0856ca8dd9e2b6aa47e6543b13defbc847e5976f0e83b5197f6e7",
+      "alg": "SHA-512",
+      "disposition": "answered"
+    }
+  ],
+  "analysis": [
+    {
+      "type": "transcript",
+      "dialog": [
+        0
+      ],
+      "mediatype": "text/plain",
+      "vendor": "Otter.ai",
+      "product": "Otter v3",
+      "body": "[00:00:00] Host: Welcome everyone \u2014 this is the architecture review for the\nbilling platform migration. We've got engineering, finance ops, and security on the line.\n[00:00:18] Engineering: We're proposing a strangler-fig approach over six months...\n[00:08:42] Security: I want to flag the PCI scope expansion that comes with the new tokenizer.",
+      "encoding": "none"
+    },
+    {
+      "type": "summary",
+      "dialog": [
+        0
+      ],
+      "mediatype": "text/plain",
+      "vendor": "Anthropic",
+      "product": "Claude Sonnet 4.6",
+      "body": "Architecture review for billing platform migration. Engineering proposed strangler-fig over six months; Security flagged PCI scope expansion from new tokenizer; Legal noted contractual carve-outs in two key processor agreements.",
+      "encoding": "none"
+    }
+  ]
+}
