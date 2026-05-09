@@ -1,0 +1,88 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "ab05e8b7-6973-5296-8898-81e51c7cf6f9",
+  "created_at": "2026-05-04T17:00:00+00:00",
+  "subject": "QM-monitored support call (router intermittent)",
+  "parties": [
+    {
+      "name": "Agent \u2014 Paloma Ibarra",
+      "tel": "+1-737-555-0801",
+      "timezone": "America/New_York",
+      "role": "agent"
+    },
+    {
+      "name": "Customer \u2014 Felipe Gallego",
+      "tel": "+1-415-555-0455",
+      "timezone": "America/New_York",
+      "role": "customer"
+    },
+    {
+      "name": "Supervisor \u2014 Naila Khoury",
+      "tel": "+1-737-555-0888",
+      "timezone": "America/New_York",
+      "role": "supervisor"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-05-04T16:45:00+00:00",
+      "duration": 720.0,
+      "parties": [
+        0,
+        1,
+        2
+      ],
+      "originator": 1,
+      "mediatype": "audio/x-wav",
+      "filename": "17-cc-supervisor-monitor.wav",
+      "url": "https://media.vcon.example.net/17-cc-supervisor-monitor.wav",
+      "content_hash": "sha512-ead5ba2c52f671847fa9789858853a1de87703a7b6dcf825c68e570cebde595a832f3d87e4822d303af88d5fa3441dab0fb73b4545ba2a71207b14840a936d81",
+      "alg": "SHA-512",
+      "disposition": "answered",
+      "campaign": "qm-coaching-may26",
+      "interaction_type": "voice",
+      "interaction_id": "INT-QM-44189",
+      "skill": "general-tier1",
+      "party_history": [
+        {
+          "party": 2,
+          "event": "silent_join",
+          "time": "2026-05-04T16:45:30+00:00"
+        },
+        {
+          "party": 2,
+          "event": "drop",
+          "time": "2026-05-04T16:57:00+00:00"
+        }
+      ]
+    }
+  ],
+  "analysis": [
+    {
+      "type": "qm_score",
+      "dialog": [
+        0
+      ],
+      "mediatype": "application/json",
+      "vendor": "Helix",
+      "product": "QM v3",
+      "body": "{\"rubric\": \"general-tier1-v4\", \"scores\": {\"greeting\": 5, \"empathy\": 4, \"resolution\": 4, \"closing\": 5}, \"overall\": 4.5, \"scored_by\": \"Naila Khoury\"}",
+      "encoding": "json"
+    },
+    {
+      "type": "transcript",
+      "dialog": [
+        0
+      ],
+      "mediatype": "text/plain",
+      "vendor": "OpenAI",
+      "product": "Whisper Large v3",
+      "body": "[00:00:01] Paloma: Thanks for calling Helix, this is Paloma. [00:00:04] Felipe: Hi, my router keeps dropping every few hours...",
+      "encoding": "none"
+    }
+  ],
+  "extensions": [
+    "CC"
+  ]
+}
