@@ -1,0 +1,75 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "6e5e1670-1020-5378-9348-a0209487a682",
+  "created_at": "2026-05-06T21:13:00+00:00",
+  "subject": "Card-on-file update (PCI/PII redacted)",
+  "parties": [
+    {
+      "name": "Agent \u2014 Henrietta Vossberg",
+      "tel": "+1-737-555-1010",
+      "timezone": "America/New_York",
+      "role": "agent"
+    },
+    {
+      "name": "Customer \u2014 Rashid El-Khoury",
+      "tel": "+1-415-555-1212",
+      "timezone": "America/New_York",
+      "role": "customer"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-05-06T21:05:00+00:00",
+      "duration": 520.0,
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "audio/x-wav",
+      "filename": "20-cc-redacted-pci-pii.wav",
+      "url": "https://media.vcon.example.net/20-cc-redacted-pci-pii.wav",
+      "content_hash": "sha512-ff67f9a4590e0b824985fc8c196210d983068dd485a0fdc0458e44070629c93a7c7d88f9bcc84b7a5a8c04c6147605841826d9a58bf2652d417570db7fc157c7",
+      "alg": "SHA-512",
+      "disposition": "answered",
+      "campaign": "card-on-file-update",
+      "interaction_type": "voice",
+      "interaction_id": "INT-PCI-22087",
+      "skill": "payments-tier1"
+    }
+  ],
+  "analysis": [
+    {
+      "type": "transcript",
+      "dialog": [
+        0
+      ],
+      "mediatype": "application/json",
+      "vendor": "Deepgram",
+      "product": "Nova-3",
+      "schema": "WTF/1.0",
+      "filename": "20-cc-redacted-pci-pii-wtf.json",
+      "body": "{\"wtf_version\": \"1.0\", \"provider\": {\"name\": \"Deepgram\", \"model\": \"nova-3\", \"language\": \"en-US\"}, \"channels\": 2, \"speakers\": [{\"speaker\": \"S0\", \"party\": 0, \"role\": \"agent\", \"talk_time_s\": 210.0}, {\"speaker\": \"S1\", \"party\": 1, \"role\": \"customer\", \"talk_time_s\": 280.0}], \"segments\": [{\"start\": 1.2, \"end\": 6.4, \"speaker\": \"S0\", \"text\": \"Thanks for calling \\u2014 I see you'd like to update the card on file.\"}, {\"start\": 7.0, \"end\": 12.1, \"speaker\": \"S1\", \"text\": \"Yes, my new card is \\u2014\"}, {\"start\": 12.1, \"end\": 42.0, \"speaker\": \"S1\", \"text\": \"[REDACTED:PCI]\", \"redaction\": \"pci\"}, {\"start\": 42.5, \"end\": 48.7, \"speaker\": \"S0\", \"text\": \"Got it \\u2014 and I'll just confirm the billing zip.\"}, {\"start\": 48.9, \"end\": 52.4, \"speaker\": \"S1\", \"text\": \"[REDACTED:PII-zip]\", \"redaction\": \"pii\"}], \"quality\": {\"overall_confidence\": 0.93, \"redaction_applied\": true}}",
+      "encoding": "json"
+    },
+    {
+      "type": "redaction_log",
+      "dialog": [
+        0
+      ],
+      "mediatype": "application/json",
+      "vendor": "Helix",
+      "product": "Redactor v2",
+      "body": "[{\"start\": 12.1, \"end\": 42.0, \"category\": \"PCI\", \"reason\": \"card-number-spoken\"}, {\"start\": 48.9, \"end\": 52.4, \"category\": \"PII\", \"reason\": \"zip-code-spoken\"}]",
+      "encoding": "json"
+    }
+  ],
+  "extensions": [
+    "CC",
+    "WTF"
+  ],
+  "must_support": [
+    "WTF"
+  ]
+}
