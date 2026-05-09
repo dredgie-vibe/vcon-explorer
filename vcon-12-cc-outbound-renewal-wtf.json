@@ -1,0 +1,89 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "338cf4ca-f2cc-5a74-8201-7a6d690e2540",
+  "created_at": "2026-05-06T19:25:00+00:00",
+  "subject": "Outbound renewal \u2014 Yuki Watanabe (Q2 2026)",
+  "parties": [
+    {
+      "name": "Agent \u2014 Tom\u00e1s Caballero",
+      "tel": "+1-303-555-0144",
+      "mailto": "tomas.c@kestrelpay.example",
+      "timezone": "America/New_York",
+      "role": "agent"
+    },
+    {
+      "name": "Customer \u2014 Yuki Watanabe",
+      "tel": "+1-415-555-0167",
+      "mailto": "yuki.w@example.com",
+      "timezone": "America/New_York",
+      "role": "customer",
+      "contact_list": "renewals-q2-2026"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-05-06T19:15:00+00:00",
+      "duration": 412.3,
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "audio/x-wav",
+      "filename": "12-cc-outbound-renewal-campaign.wav",
+      "url": "https://media.vcon.example.net/12-cc-outbound-renewal-campaign.wav",
+      "content_hash": "sha512-2cf3beac3c02894f940cfd47334e13a81fe21178da5a439dd06a553a30f94b5916f053626843a207e706bd3f80e12a29c8db7322c3ad35b3f7a975497e4caa7b",
+      "alg": "SHA-512",
+      "disposition": "answered",
+      "campaign": "renewals-q2-2026",
+      "interaction_type": "outbound_voice",
+      "interaction_id": "INT-9001782",
+      "skill": "renewals-enterprise"
+    }
+  ],
+  "analysis": [
+    {
+      "type": "transcript",
+      "dialog": [
+        0
+      ],
+      "mediatype": "application/json",
+      "vendor": "Deepgram",
+      "product": "Nova-3",
+      "schema": "WTF/1.0",
+      "filename": "12-cc-outbound-renewal-campaign-wtf.json",
+      "body": "{\"wtf_version\": \"1.0\", \"provider\": {\"name\": \"Deepgram\", \"model\": \"nova-3\", \"language\": \"en-US\"}, \"channels\": 2, \"speakers\": [{\"speaker\": \"S0\", \"party\": 0, \"role\": \"agent\", \"talk_time_s\": 201.4}, {\"speaker\": \"S1\", \"party\": 1, \"role\": \"customer\", \"talk_time_s\": 174.1}], \"segments\": [{\"start\": 2.1, \"end\": 7.4, \"speaker\": \"S0\", \"text\": \"Hi Yuki, this is Tom\\u00e1s from Kestrel Pay calling about your annual renewal.\"}, {\"start\": 7.5, \"end\": 11.2, \"speaker\": \"S1\", \"text\": \"Hey Tom\\u00e1s \\u2014 yeah, I saw the email.\"}, {\"start\": 11.3, \"end\": 18.85, \"speaker\": \"S0\", \"text\": \"We have a multi-year option this year that would lock pricing for 24 months.\"}], \"quality\": {\"overall_confidence\": 0.91, \"redaction_applied\": true}}",
+      "encoding": "json"
+    },
+    {
+      "type": "sentiment",
+      "dialog": [
+        0
+      ],
+      "mediatype": "application/json",
+      "vendor": "Recall.ai",
+      "product": "Sentiment v2",
+      "body": "{\"agent\": 0.62, \"customer\": 0.41, \"trend\": \"warming\"}",
+      "encoding": "json"
+    },
+    {
+      "type": "disposition",
+      "dialog": [
+        0
+      ],
+      "mediatype": "application/json",
+      "vendor": "Helix",
+      "product": "DispoClassifier",
+      "body": "{\"outcome\": \"renewed_24mo\", \"commit_value_usd\": 54000}",
+      "encoding": "json"
+    }
+  ],
+  "extensions": [
+    "CC",
+    "WTF"
+  ],
+  "must_support": [
+    "WTF"
+  ]
+}
