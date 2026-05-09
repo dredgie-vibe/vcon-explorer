@@ -1,0 +1,136 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "6a990b9a-43ff-5c9a-97c3-c360c7bfc1f4",
+  "created_at": "2026-04-29T18:20:00+00:00",
+  "subject": "Multi-segment hardware support call",
+  "parties": [
+    {
+      "name": "IVR / Bot",
+      "timezone": "America/New_York",
+      "uuid": "3580df05-6809-58d3-a302-227683fab2e9",
+      "role": "agent"
+    },
+    {
+      "name": "Agent A \u2014 Beatriz Romero",
+      "tel": "+1-737-555-0701",
+      "timezone": "America/New_York",
+      "role": "agent"
+    },
+    {
+      "name": "Agent B \u2014 Wendell Okafor",
+      "tel": "+1-737-555-0702",
+      "timezone": "America/New_York",
+      "role": "agent"
+    },
+    {
+      "name": "Customer \u2014 Magnus Eriksen",
+      "tel": "+1-415-555-0822",
+      "timezone": "America/New_York",
+      "role": "customer"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-04-29T18:05:00+00:00",
+      "duration": 70.0,
+      "parties": [
+        0,
+        3
+      ],
+      "originator": 3,
+      "mediatype": "audio/x-wav",
+      "filename": "16-cc-multisegment-transfer-seg1-ivr.wav",
+      "url": "https://media.vcon.example.net/16-cc-multisegment-transfer-seg1-ivr.wav",
+      "content_hash": "sha512-d637b3b470d27318f1211946a1dc11382510b38d45f6a0b4bbc4edb7cd907fb1295746a2531ed7b595a4b8bb4284d8b8e13bb2567580f2c8d96886cb012dbc8b",
+      "alg": "SHA-512",
+      "disposition": "answered",
+      "campaign": "general-inbound",
+      "interaction_type": "voice",
+      "interaction_id": "INT-MS-90012",
+      "skill": "ivr"
+    },
+    {
+      "type": "recording",
+      "start": "2026-04-29T18:06:12+00:00",
+      "duration": 165.0,
+      "parties": [
+        1,
+        3
+      ],
+      "originator": 3,
+      "mediatype": "audio/x-wav",
+      "filename": "16-cc-multisegment-transfer-seg2-agentA.wav",
+      "url": "https://media.vcon.example.net/16-cc-multisegment-transfer-seg2-agentA.wav",
+      "content_hash": "sha512-a2aa83a937cbc77c8a04790fcdf0790f6761295ca4e753e058a1affee0143a9651643eb39ea2f6003910f0569822e47a7dc9071d15a8d6182be8c5721556e22b",
+      "alg": "SHA-512",
+      "disposition": "answered",
+      "campaign": "general-inbound",
+      "interaction_type": "voice",
+      "interaction_id": "INT-MS-90012",
+      "skill": "general-tier1",
+      "party_history": [
+        {
+          "party": 1,
+          "event": "join",
+          "time": "2026-04-29T18:06:12+00:00"
+        },
+        {
+          "party": 3,
+          "event": "transferred",
+          "time": "2026-04-29T18:06:12+00:00"
+        }
+      ]
+    },
+    {
+      "type": "recording",
+      "start": "2026-04-29T18:09:00+00:00",
+      "duration": 320.0,
+      "parties": [
+        2,
+        3
+      ],
+      "originator": 3,
+      "mediatype": "audio/x-wav",
+      "filename": "16-cc-multisegment-transfer-seg3-agentB.wav",
+      "url": "https://media.vcon.example.net/16-cc-multisegment-transfer-seg3-agentB.wav",
+      "content_hash": "sha512-810917dc9f6b3eef74c0be296cb9fe38dc37174dbe18048685c81bd3c96f83cdc441ec32495eccbc073e6857fb83ee073a224c5d6b4c334a1fda309f97b419c1",
+      "alg": "SHA-512",
+      "disposition": "answered",
+      "campaign": "general-inbound",
+      "interaction_type": "voice",
+      "interaction_id": "INT-MS-90012",
+      "skill": "hardware-tier2",
+      "party_history": [
+        {
+          "party": 2,
+          "event": "join",
+          "time": "2026-04-29T18:09:00+00:00"
+        },
+        {
+          "party": 1,
+          "event": "drop",
+          "time": "2026-04-29T18:09:00+00:00"
+        }
+      ]
+    }
+  ],
+  "analysis": [
+    {
+      "type": "summary",
+      "dialog": [
+        0,
+        1,
+        2
+      ],
+      "mediatype": "text/plain",
+      "vendor": "Anthropic",
+      "product": "Claude Sonnet 4.6",
+      "body": "Customer routed through IVR, briefly held by tier-1 agent, then transferred to hardware tier-2 specialist who replaced the unit under warranty.",
+      "encoding": "none"
+    }
+  ],
+  "extensions": [
+    "CC"
+  ]
+}
