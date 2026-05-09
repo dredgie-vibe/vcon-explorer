@@ -1,0 +1,104 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "ca087699-4fca-58f8-a38f-0fbbafd8d33c",
+  "created_at": "2026-05-03T14:20:00+00:00",
+  "subject": "Omni-channel \u2014 IBAN update (Roland K\u00fchn)",
+  "parties": [
+    {
+      "name": "Agent \u2014 Ines Macharia",
+      "tel": "+1-737-555-0211",
+      "mailto": "ines@helix.example",
+      "timezone": "America/New_York",
+      "role": "agent"
+    },
+    {
+      "name": "Customer \u2014 Roland K\u00fchn",
+      "tel": "+49-30-555-0044",
+      "mailto": "roland.kuehn@example.de",
+      "timezone": "Europe/Berlin",
+      "role": "customer"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-05-03T14:00:00+00:00",
+      "duration": 540.0,
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "audio/x-wav",
+      "filename": "13-cc-omnichannel-voice-sms-voice.wav",
+      "url": "https://media.vcon.example.net/13-cc-omnichannel-voice-sms-voice.wav",
+      "content_hash": "sha512-9b15ce3ab62b7c19acc9214050927a3023e4a7e92467ba8c3d7f75ff2258109285fc27a8bbd6f2f6d16fd72e1c240fb90e5ece59fc479b553d401f458526d4bb",
+      "alg": "SHA-512",
+      "disposition": "answered",
+      "campaign": "omnichannel-eu-support",
+      "interaction_type": "voice",
+      "interaction_id": "INT-OMNI-32118",
+      "skill": "tier2-eu"
+    },
+    {
+      "type": "text",
+      "start": "2026-05-03T14:12:00+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "text/plain",
+      "body": "Hi Roland \u2014 here's the link to verify the new IBAN: https://helix.example/verify/zg83",
+      "encoding": "none",
+      "interaction_id": "INT-OMNI-32118",
+      "interaction_type": "sms",
+      "campaign": "omnichannel-eu-support",
+      "skill": "tier2-eu"
+    },
+    {
+      "type": "text",
+      "start": "2026-05-03T14:14:00+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "text/plain",
+      "body": "Verified. Danke.",
+      "encoding": "none",
+      "interaction_id": "INT-OMNI-32118",
+      "interaction_type": "sms",
+      "campaign": "omnichannel-eu-support",
+      "skill": "tier2-eu"
+    }
+  ],
+  "analysis": [
+    {
+      "type": "transcript",
+      "dialog": [
+        0
+      ],
+      "mediatype": "text/plain",
+      "vendor": "OpenAI",
+      "product": "Whisper Large v3",
+      "body": "[00:00:02] Roland: I need to update the IBAN on my account. [00:00:08] Ines: I can help \u2014 verifying your identity first...",
+      "encoding": "none"
+    },
+    {
+      "type": "translation",
+      "dialog": [
+        0,
+        2
+      ],
+      "mediatype": "text/plain",
+      "vendor": "DeepL",
+      "product": "DeepL Pro",
+      "body": "(2) 'Verified. Thanks.'",
+      "encoding": "none"
+    }
+  ],
+  "extensions": [
+    "CC"
+  ]
+}
