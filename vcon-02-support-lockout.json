@@ -1,0 +1,74 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "6b1c7098-5593-5b3c-a3cd-70cced0426d2",
+  "created_at": "2026-05-01T13:30:04+00:00",
+  "subject": "Account lockout \u2014 Blanca Ortega",
+  "parties": [
+    {
+      "name": "Jordan Reyes",
+      "tel": "+1-512-555-0186",
+      "mailto": "jordan.reyes@helix.example",
+      "validation": "STIR-A",
+      "timezone": "America/New_York"
+    },
+    {
+      "name": "Blanca Ortega",
+      "tel": "+1-415-555-0144",
+      "mailto": "blanca.ortega@example.com",
+      "timezone": "America/Los_Angeles"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-05-01T13:28:04+00:00",
+      "duration": 82.1,
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "audio/x-wav",
+      "filename": "02-support-account-lockout.wav",
+      "url": "https://media.vcon.example.net/02-support-account-lockout.wav",
+      "content_hash": "sha512-9348326c2d25682f38037080d5e07ee6667c53e3b10969305d4785a62d680961713b38eb0a889f752766c79eb3c33ea71de9fe5cc3f49ed48284319445ab41fb",
+      "alg": "SHA-512",
+      "disposition": "answered"
+    }
+  ],
+  "analysis": [
+    {
+      "type": "transcript",
+      "dialog": [
+        0
+      ],
+      "mediatype": "text/plain",
+      "vendor": "OpenAI",
+      "product": "Whisper Large v3",
+      "body": "[00:00:01] Agent: Thanks for calling Helix Support, my name is Jordan.\n[00:00:05] Customer: Hi Jordan \u2014 my account is locked after the password reset and I have an investor demo in two hours.\n[00:00:12] Agent: Understood. Can I confirm your registered email and the last four of your phone?\n[00:00:22] Customer: blanca.ortega@example.com, last four is 4417.\n[00:00:30] Agent: Verified. I'm clearing the lockout and forcing a one-time reset link to that email.\n[00:01:05] Customer: Got it, logged in. Thank you.\n[00:01:09] Agent: Anything else I can help with today?",
+      "encoding": "none"
+    },
+    {
+      "type": "summary",
+      "dialog": [
+        0
+      ],
+      "mediatype": "text/plain",
+      "vendor": "Helix",
+      "product": "Internal Summarizer",
+      "body": "Customer locked out post-password-reset before investor demo; identity verified, lockout cleared, OTP reset link sent.",
+      "encoding": "none"
+    },
+    {
+      "type": "tone",
+      "dialog": [
+        0
+      ],
+      "mediatype": "application/json",
+      "vendor": "Cogito",
+      "product": "Tone Analyzer",
+      "body": "{\"customer_stress\": \"high_to_low\", \"agent_empathy\": 0.88}",
+      "encoding": "json"
+    }
+  ]
+}
