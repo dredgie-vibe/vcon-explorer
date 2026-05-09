@@ -84,7 +84,8 @@
       box-shadow: var(--shadow-sm); min-height: 240px;
       display: flex; flex-direction: column;
     }
-    .chart-card .chart-title { font-weight: 700; font-size: .85rem; color: var(--navy); margin-bottom: 6px; }
+    .chart-card .chart-title { font-weight: 700; font-size: .85rem; color: var(--navy); margin-bottom: 6px; display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+    .chart-card .chart-title .hint { font-weight: 400; font-size: .68rem; color: var(--blue); text-transform: uppercase; letter-spacing: .04em; }
     .chart-card .chart-wrap { flex: 1; position: relative; min-height: 200px; }
 
     /* ---------- Filter bar ---------- */
@@ -593,14 +594,25 @@ function renderList() {
     </div>
 
     <div class="chart-row">
-      <div class="chart-card"><div class="chart-title">Standard vs Extended</div>
+      <div class="chart-card"><div class="chart-title">Standard vs Extended <span class="hint">click to filter</span></div>
         <div class="chart-wrap"><canvas id="c-cat"></canvas></div></div>
-      <div class="chart-card"><div class="chart-title">Extension usage</div>
+      <div class="chart-card"><div class="chart-title">Extension usage <span class="hint">click to filter</span></div>
         <div class="chart-wrap"><canvas id="c-ext"></canvas></div></div>
-      <div class="chart-card"><div class="chart-title">Channels</div>
+      <div class="chart-card"><div class="chart-title">Channels <span class="hint">click to filter</span></div>
         <div class="chart-wrap"><canvas id="c-chan"></canvas></div></div>
       <div class="chart-card"><div class="chart-title">Conversations over time</div>
         <div class="chart-wrap"><canvas id="c-time"></canvas></div></div>
+    </div>
+
+    <div class="chart-row" style="margin-top:16px;">
+      <div class="chart-card"><div class="chart-title">Conversation duration</div>
+        <div class="chart-wrap"><canvas id="c-dur"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">Hour of day</div>
+        <div class="chart-wrap"><canvas id="c-hour"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">Top phone numbers <span class="hint">click to filter</span></div>
+        <div class="chart-wrap"><canvas id="c-phones"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">Analysis vendors</div>
+        <div class="chart-wrap"><canvas id="c-vendors"></canvas></div></div>
     </div>
 
     <h2>Filter &amp; search</h2>
@@ -649,11 +661,14 @@ function renderList() {
   bindFilterInputs();
 
   // Charts based on the FULL corpus (so the user always has the global picture).
-  // If you'd rather chart filtered results, swap `all` for `filtered` here.
-  drawCategoryChart('c-cat',  all);
-  drawExtensionChart('c-ext', all);
-  drawChannelChart('c-chan',  all);
-  drawTimelineChart('c-time', all);
+  drawCategoryChart('c-cat',     all);
+  drawExtensionChart('c-ext',    all);
+  drawChannelChart('c-chan',     all);
+  drawTimelineChart('c-time',    all);
+  drawDurationChart('c-dur',     all);
+  drawHourChart('c-hour',        all);
+  drawTopPhonesChart('c-phones', all);
+  drawVendorsChart('c-vendors',  all);
 }
 
 function pillHtml(group, val, label) {
@@ -728,7 +743,59 @@ function refreshCards() {
 function destroyCharts() { for (const k in STATE.charts) STATE.charts[k]?.destroy?.(); STATE.charts = {}; }
 
 const PALETTE = ['#1072ba','#65a7db','#17477e','#fdb73e','#8bad44','#5e91cc','#a4d0ef','#354c59'];
+const EXT_LIST_FOR_FILTER = ['CC','WTF','Consent','SIP','Lifecycle'];
 
+// ---- click-to-filter helpers (driven by chart clicks) ----
+function reflectFilterChanges() {
+  // Re-paint pills + cards. Don't redraw charts (they show the full corpus).
+  document.querySelectorAll('.pill').forEach(el => {
+    const set = STATE.filters[el.dataset.group];
+    if (set) el.classList.toggle('on', set.has(el.dataset.val));
+  });
+  const phoneEl = document.getElementById('f-phone');
+  if (phoneEl) phoneEl.value = STATE.filters.phone;
+  refreshCards();
+}
+function setExtensionFilter(values /* array of strings */) {
+  STATE.filters.extension = new Set(values.length ? values : ['__all__']);
+  reflectFilterChanges();
+}
+function toggleInSet(set, val) {
+  set.delete('__all__');
+  if (set.has(val)) set.delete(val); else set.add(val);
+  if (set.size === 0) set.add('__all__');
+}
+function clickedCategory(label) {
+  // 'Standard' selects only std vCons; 'Extended' selects vCons that have any extension
+  const set = STATE.filters.extension;
+  if (label === 'Standard') {
+    // toggle Standard alone
+    if (set.has('Standard') && set.size === 1) set.clear();
+    else { set.clear(); set.add('Standard'); }
+  } else { // 'Extended'
+    const wantedExt = new Set(EXT_LIST_FOR_FILTER);
+    const same = set.size === wantedExt.size && [...wantedExt].every(x => set.has(x));
+    if (same) set.clear();
+    else { set.clear(); EXT_LIST_FOR_FILTER.forEach(e => set.add(e)); }
+  }
+  if (set.size === 0) set.add('__all__');
+  reflectFilterChanges();
+}
+function clickedExtension(label) {
+  toggleInSet(STATE.filters.extension, label);
+  reflectFilterChanges();
+}
+function clickedChannel(label) {
+  toggleInSet(STATE.filters.channel, label);
+  reflectFilterChanges();
+}
+function clickedPhone(phone) {
+  // populate the phone filter with the digits of the clicked party tel
+  STATE.filters.phone = (STATE.filters.phone === phone) ? '' : phone;
+  reflectFilterChanges();
+}
+
+// ---- chart drawers ----
 function drawCategoryChart(id, vcons) {
   const ctx = document.getElementById(id);
   const std  = vcons.filter(v => !(v.extensions||[]).length).length;
@@ -736,8 +803,12 @@ function drawCategoryChart(id, vcons) {
   STATE.charts.cat = new Chart(ctx, {
     type: 'doughnut',
     data: {labels:['Standard','Extended'], datasets:[{data:[std,ext], backgroundColor:[PALETTE[1], PALETTE[0]], borderColor:'#fff', borderWidth:2}]},
-    options: {responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{position:'bottom', labels:{font:{family:'Roboto'}, color:'#5a646a'}}}},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom', labels:{font:{family:'Roboto'}, color:'#5a646a'}}},
+      onHover: (e, els) => { e.native.target.style.cursor = els.length ? 'pointer' : 'default'; },
+      onClick: (_e, els) => { if (els.length) clickedCategory(['Standard','Extended'][els[0].index]); },
+    },
   });
 }
 function drawExtensionChart(id, vcons) {
@@ -748,8 +819,13 @@ function drawExtensionChart(id, vcons) {
   STATE.charts.ext = new Chart(ctx, {
     type: 'bar',
     data: {labels, datasets:[{data: labels.map(l => counts[l]), backgroundColor: PALETTE, borderRadius:4}]},
-    options: {responsive:true, maintainAspectRatio:false, indexAxis:'y',
-      plugins:{legend:{display:false}}, scales:{x:{beginAtZero:true, ticks:{stepSize:1, color:'#5a646a'}}, y:{ticks:{color:'#17477e'}}}},
+    options: {
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      plugins:{legend:{display:false}},
+      scales:{x:{beginAtZero:true, ticks:{stepSize:1, color:'#5a646a'}}, y:{ticks:{color:'#17477e'}}},
+      onHover: (e, els) => { e.native.target.style.cursor = els.length ? 'pointer' : 'default'; },
+      onClick: (_e, els) => { if (els.length) clickedExtension(labels[els[0].index]); },
+    },
   });
 }
 function drawChannelChart(id, vcons) {
@@ -760,8 +836,13 @@ function drawChannelChart(id, vcons) {
   STATE.charts.chan = new Chart(ctx, {
     type: 'bar',
     data: {labels, datasets:[{data: labels.map(l => counts[l]), backgroundColor: PALETTE[0], borderRadius:4}]},
-    options: {responsive:true, maintainAspectRatio:false,
-      plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true, ticks:{stepSize:1, color:'#5a646a'}}, x:{ticks:{color:'#17477e'}}}},
+    options: {
+      responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{y:{beginAtZero:true, ticks:{stepSize:1, color:'#5a646a'}}, x:{ticks:{color:'#17477e'}}},
+      onHover: (e, els) => { e.native.target.style.cursor = els.length ? 'pointer' : 'default'; },
+      onClick: (_e, els) => { if (els.length) clickedChannel(labels[els[0].index]); },
+    },
   });
 }
 function drawTimelineChart(id, vcons) {
@@ -780,6 +861,86 @@ function drawTimelineChart(id, vcons) {
     options: {responsive:true, maintainAspectRatio:false,
       plugins:{legend:{display:false}},
       scales:{y:{beginAtZero:true, ticks:{stepSize:1, color:'#5a646a'}}, x:{ticks:{color:'#17477e', maxRotation:0, autoSkip:true, maxTicksLimit:8}}}},
+  });
+}
+function drawDurationChart(id, vcons) {
+  const ctx = document.getElementById(id);
+  const buckets = ['<1m','1–5m','5–15m','15–60m','>60m','none'];
+  const counts = [0,0,0,0,0,0];
+  for (const v of vcons) {
+    let total = 0, found = false;
+    for (const d of (v.dialog||[])) {
+      if (d.duration != null) { total += Number(d.duration); found = true; }
+    }
+    if (!found) { counts[5]++; continue; }
+    if      (total < 60)    counts[0]++;
+    else if (total < 300)   counts[1]++;
+    else if (total < 900)   counts[2]++;
+    else if (total < 3600)  counts[3]++;
+    else                    counts[4]++;
+  }
+  STATE.charts.dur = new Chart(ctx, {
+    type: 'bar',
+    data: {labels: buckets, datasets:[{data: counts, backgroundColor: PALETTE[1], borderRadius:4}]},
+    options: {responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{y:{beginAtZero:true, ticks:{stepSize:1, color:'#5a646a'}}, x:{ticks:{color:'#17477e'}}}},
+  });
+}
+function drawHourChart(id, vcons) {
+  const ctx = document.getElementById(id);
+  const hours = new Array(24).fill(0);
+  for (const v of vcons) for (const d of (v.dialog||[])) {
+    if (!d.start) continue;
+    const t = new Date(d.start);
+    if (!isNaN(t)) hours[t.getUTCHours()]++;
+  }
+  const labels = hours.map((_,i) => String(i).padStart(2,'0'));
+  STATE.charts.hour = new Chart(ctx, {
+    type: 'bar',
+    data: {labels, datasets:[{data: hours, backgroundColor: PALETTE[3], borderRadius:3}]},
+    options: {responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}, tooltip:{callbacks:{title:(items)=>'Hour ' + items[0].label + ' UTC'}}},
+      scales:{y:{beginAtZero:true, ticks:{stepSize:1, color:'#5a646a'}}, x:{ticks:{color:'#17477e', maxRotation:0, autoSkip:true, maxTicksLimit:12}}}},
+  });
+}
+function drawTopPhonesChart(id, vcons) {
+  const ctx = document.getElementById(id);
+  const counts = {};
+  for (const v of vcons) for (const p of (v.parties||[])) {
+    if (!p.tel) continue;
+    const norm = normalizePhone(p.tel);
+    counts[norm] = (counts[norm]||0)+1;
+  }
+  const labels = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([k])=>k);
+  const data   = labels.map(l => counts[l]);
+  STATE.charts.phones = new Chart(ctx, {
+    type: 'bar',
+    data: {labels, datasets:[{data, backgroundColor: PALETTE[0], borderRadius:4}]},
+    options: {
+      responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      plugins:{legend:{display:false}},
+      scales:{x:{beginAtZero:true, ticks:{stepSize:1, color:'#5a646a'}}, y:{ticks:{color:'#17477e', font:{family:'Roboto Mono', size:10}}}},
+      onHover: (e, els) => { e.native.target.style.cursor = els.length ? 'pointer' : 'default'; },
+      onClick: (_e, els) => { if (els.length) clickedPhone(labels[els[0].index]); },
+    },
+  });
+}
+function drawVendorsChart(id, vcons) {
+  const ctx = document.getElementById(id);
+  const counts = {};
+  for (const v of vcons) for (const a of (v.analysis||[])) {
+    if (!a.vendor) continue;
+    counts[a.vendor] = (counts[a.vendor]||0)+1;
+  }
+  const labels = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,10).map(([k])=>k);
+  const data   = labels.map(l => counts[l]);
+  STATE.charts.vendors = new Chart(ctx, {
+    type: 'bar',
+    data: {labels, datasets:[{data, backgroundColor: PALETTE.slice(0, labels.length), borderRadius:4}]},
+    options: {responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{y:{beginAtZero:true, ticks:{stepSize:1, color:'#5a646a'}}, x:{ticks:{color:'#17477e', maxRotation:30, minRotation:0}}}},
   });
 }
 
