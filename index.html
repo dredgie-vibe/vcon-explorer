@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>vCon Explorer | Alianza</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --blue: #1072ba; --blue-light: #65a7db; --gray: #5a646a;
+      --gold: #fdb73e; --navy: #17477e; --navy-deep: #354c59;
+      --blue-pale: #b9e0f7; --green: #8bad44;
+      --bg-soft: #f5f7f8;
+      --card-radius: 0 16px 0 16px;  /* Alianza signature */
+      --shadow-sm: 0 1px 2px rgba(23,71,126,.06), 0 2px 8px rgba(23,71,126,.04);
+      --shadow-md: 0 2px 4px rgba(23,71,126,.08), 0 8px 24px rgba(23,71,126,.06);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #fff; color: var(--gray);
+      display: flex; flex-direction: column;
+      min-height: 100vh;
+    }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, pre { font-family: 'Roboto Mono', monospace; }
+
+    /* ---------- Header ---------- */
+    header.app-header {
+      background: #fff; padding: 14px 32px;
+      border-bottom: 1px solid var(--blue-pale);
+      display: flex; align-items: center; gap: 24px; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+    }
+    header.app-header img.logo { height: 32px; }
+    header.app-header .title-block { display: flex; align-items: baseline; gap: 12px; flex: 1; min-width: 0; }
+    header.app-header .title-block h1 {
+      font-size: 1.05rem; font-weight: 700; color: var(--navy); letter-spacing: .02em;
+      text-transform: uppercase;
+    }
+    header.app-header .title-block span.sub {
+      color: var(--gray); font-size: .85rem; font-weight: 400;
+    }
+    header.app-header .header-right { display: flex; align-items: center; gap: 16px; }
+    button.help-btn, button.icon-btn {
+      background: transparent; border: 1px solid var(--blue-pale);
+      color: var(--blue); padding: 6px 14px; border-radius: 100px; cursor: pointer;
+      font-family: inherit; font-size: .85rem; font-weight: 500;
+    }
+    button.help-btn:hover, button.icon-btn:hover { background: var(--blue-pale); }
+
+    /* ---------- Main ---------- */
+    main {
+      flex: 1; max-width: 1280px; width: 100%; margin: 0 auto;
+      padding: 28px 32px 48px;
+    }
+    h2 { font-weight: 700; color: var(--blue); font-size: 1.1rem; margin: 28px 0 12px;
+         text-transform: uppercase; letter-spacing: .04em; }
+    h3 { font-weight: 700; color: var(--navy); font-size: 1rem; }
+    .muted { color: var(--gray); font-size: .85rem; }
+    .navy  { color: var(--navy); }
+
+    /* ---------- KPIs ---------- */
+    .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 12px; }
+    .kpi {
+      background: #fff; border: 1px solid var(--blue-pale);
+      border-radius: var(--card-radius); padding: 16px 18px;
+      box-shadow: var(--shadow-sm);
+    }
+    .kpi .label { font-size: .75rem; color: var(--gray); text-transform: uppercase; letter-spacing: .05em; font-weight: 500; }
+    .kpi .value { font-size: 1.9rem; font-weight: 300; color: var(--navy); margin-top: 4px; line-height: 1; }
+    .kpi .delta { font-size: .8rem; color: var(--blue); margin-top: 6px; }
+
+    /* ---------- Charts ---------- */
+    .chart-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .chart-card {
+      background: #fff; border: 1px solid var(--blue-pale);
+      border-radius: var(--card-radius); padding: 14px 16px 18px;
+      box-shadow: var(--shadow-sm); min-height: 240px;
+      display: flex; flex-direction: column;
+    }
+    .chart-card .chart-title { font-weight: 700; font-size: .85rem; color: var(--navy); margin-bottom: 6px; }
+    .chart-card .chart-wrap { flex: 1; position: relative; min-height: 200px; }
+
+    /* ---------- Filter bar ---------- */
+    .filter-bar {
+      background: var(--bg-soft); border: 1px solid var(--blue-pale);
+      border-radius: 12px; padding: 14px 16px;
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px;
+      align-items: end; margin: 12px 0 18px;
+    }
+    .filter-bar .field { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+    .filter-bar label { font-size: .72rem; text-transform: uppercase; letter-spacing: .05em; color: var(--gray); font-weight: 500; }
+    .filter-bar input, .filter-bar select {
+      font-family: inherit; padding: 7px 10px; border-radius: 6px;
+      border: 1px solid var(--blue-pale); background: #fff; color: var(--navy);
+      font-size: .9rem; min-width: 0;
+    }
+    .filter-bar input:focus, .filter-bar select:focus { outline: 2px solid var(--blue-light); border-color: var(--blue-light); }
+    .filter-bar .pill-group { display: flex; flex-wrap: wrap; gap: 6px; }
+    .pill {
+      display: inline-flex; align-items: center; gap: 4px;
+      padding: 4px 10px; border-radius: 999px; font-size: .75rem;
+      border: 1px solid var(--blue-pale); cursor: pointer;
+      background: #fff; color: var(--navy); user-select: none;
+    }
+    .pill.on { background: var(--blue); color: #fff; border-color: var(--blue); }
+    .filter-bar .reset-btn {
+      grid-column: 1 / -1;
+      justify-self: end;
+      background: transparent; border: 0; color: var(--blue);
+      cursor: pointer; font-size: .8rem; padding: 6px 10px; font-family: inherit;
+    }
+    .filter-bar .reset-btn:hover { text-decoration: underline; }
+    .result-line { font-size: .85rem; color: var(--gray); margin-bottom: 10px; }
+
+    /* ---------- Card grid ---------- */
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+    .vcon-card {
+      background: #fff; border: 1px solid var(--blue-pale);
+      border-radius: var(--card-radius); padding: 16px 18px 14px;
+      box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column; gap: 8px;
+      cursor: pointer; transition: transform .12s ease, box-shadow .12s ease;
+    }
+    .vcon-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    .vcon-card .subject { font-size: 1rem; font-weight: 500; color: var(--navy); line-height: 1.35; }
+    .vcon-card .meta { font-size: .78rem; color: var(--gray); display: flex; flex-wrap: wrap; gap: 10px; }
+    .vcon-card .badges { display: flex; flex-wrap: wrap; gap: 4px; }
+    .badge {
+      display: inline-flex; padding: 2px 8px; border-radius: 999px;
+      font-size: .7rem; font-weight: 500; letter-spacing: .04em;
+    }
+    .badge.std  { background: var(--bg-soft); color: var(--gray); border: 1px solid var(--blue-pale); }
+    .badge.cc   { background: var(--blue-pale); color: var(--navy); }
+    .badge.wtf  { background: #ecf6e2; color: #4d6627; border: 1px solid #cbe19f; }
+    .badge.cons { background: #fdebc6; color: #7a4f00; border: 1px solid #fcd58e; }
+    .badge.sip  { background: #e6e2f6; color: #2d2261; border: 1px solid #c8c0e4; }
+    .badge.life { background: #fde2ec; color: #722241; border: 1px solid #f4bbcd; }
+    .badge.channel { background: #fff; color: var(--blue); border: 1px solid var(--blue-pale); }
+
+    /* ---------- Detail page ---------- */
+    .back-link { display: inline-flex; align-items: center; gap: 6px;
+                 font-size: .85rem; color: var(--blue); margin-bottom: 14px; cursor: pointer; }
+    .back-link:hover { text-decoration: underline; }
+
+    .detail-header {
+      background: var(--bg-soft); border: 1px solid var(--blue-pale);
+      border-radius: var(--card-radius); padding: 20px 24px; margin-bottom: 24px;
+    }
+    .detail-header h1 { font-weight: 300; color: var(--navy); font-size: 1.7rem; line-height: 1.2; margin-bottom: 8px; }
+    .detail-header .meta-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px 24px;
+      font-size: .85rem; margin-top: 12px;
+    }
+    .detail-header .meta-grid div { display: flex; gap: 8px; }
+    .detail-header .meta-grid .key { color: var(--gray); min-width: 80px; }
+    .detail-header .meta-grid .val { color: var(--navy); font-weight: 500; word-break: break-all; }
+
+    .section {
+      background: #fff; border: 1px solid var(--blue-pale);
+      border-radius: var(--card-radius); padding: 18px 22px; margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .section h2 { margin-top: 0; font-size: 1rem; }
+
+    .party-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+    .party-card { padding: 12px 14px; background: var(--bg-soft);
+                  border-radius: 8px; border-left: 3px solid var(--blue-light); }
+    .party-card .pname { font-weight: 700; color: var(--navy); }
+    .party-card .pmeta { font-size: .8rem; margin-top: 4px; line-height: 1.5; }
+    .party-card .role { display: inline-block; font-size: .7rem; padding: 1px 8px;
+                        border-radius: 999px; background: var(--blue); color: #fff; margin-left: 6px; }
+
+    .dialog-card {
+      border: 1px solid var(--blue-pale); border-radius: 10px;
+      margin-bottom: 12px; overflow: hidden;
+    }
+    .dialog-head {
+      background: var(--bg-soft); padding: 10px 14px;
+      display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+      font-size: .82rem; color: var(--navy);
+      border-bottom: 1px solid var(--blue-pale);
+    }
+    .dialog-head .channel-icon { width: 22px; height: 22px; flex: 0 0 22px;
+                                 color: var(--blue); }
+    .dialog-body { padding: 14px; }
+    .dialog-body audio, .dialog-body video {
+      width: 100%; border-radius: 6px; background: #000; margin-bottom: 8px;
+    }
+    .dialog-body video { max-height: 360px; }
+    .dialog-body .text-bubble {
+      background: var(--bg-soft); border-left: 3px solid var(--blue-light);
+      padding: 10px 14px; border-radius: 4px; font-size: .92rem; color: var(--navy);
+      white-space: pre-wrap; word-wrap: break-word;
+    }
+    .dialog-body .url-line {
+      font-size: .78rem; color: var(--gray); margin-top: 6px; word-break: break-all;
+    }
+    .media-unavailable {
+      background: #fff8e6; border: 1px dashed var(--gold); border-radius: 6px;
+      padding: 8px 12px; font-size: .82rem; color: #7a4f00; margin-bottom: 8px;
+    }
+
+    .analysis-card { padding: 14px; border: 1px solid var(--blue-pale);
+                     border-radius: 8px; margin-bottom: 10px; }
+    .analysis-card .ahead { display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap;
+                            margin-bottom: 8px; }
+    .analysis-card .ahead .atype { font-weight: 700; color: var(--navy); text-transform: capitalize; }
+    .analysis-card .ahead .vendor { font-size: .78rem; color: var(--gray); }
+    .analysis-card .body-text {
+      white-space: pre-wrap; font-size: .88rem; color: var(--navy); line-height: 1.55;
+      background: var(--bg-soft); padding: 10px 12px; border-radius: 4px;
+    }
+    .wtf-segments { display: flex; flex-direction: column; gap: 4px; }
+    .wtf-seg {
+      display: grid; grid-template-columns: 90px 100px 1fr;
+      gap: 10px; padding: 6px 8px; border-radius: 4px;
+      cursor: pointer; font-size: .87rem; color: var(--navy);
+      align-items: start; line-height: 1.4;
+    }
+    .wtf-seg:hover { background: var(--blue-pale); }
+    .wtf-seg .ts { font-family: 'Roboto Mono', monospace; color: var(--gray); font-size: .8rem; }
+    .wtf-seg .speaker { font-weight: 700; color: var(--blue); font-size: .82rem; }
+    .wtf-seg .speaker .role { font-weight: 400; color: var(--gray); font-size: .72rem; display: block; }
+    .wtf-seg.redacted { background: #fff8e6; }
+    .wtf-seg.redacted .text { color: #7a4f00; font-style: italic; }
+
+    .kv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; }
+    .kv-grid .kv {
+      background: var(--bg-soft); padding: 10px 12px; border-radius: 6px; border-left: 3px solid var(--blue-light);
+    }
+    .kv .k { font-size: .72rem; color: var(--gray); text-transform: uppercase; letter-spacing: .04em; }
+    .kv .v { font-size: .95rem; color: var(--navy); font-weight: 500; margin-top: 2px; word-break: break-word; }
+
+    pre.json-block {
+      background: var(--navy); color: #d4e6f5;
+      padding: 14px 16px; border-radius: 8px;
+      font-size: .8rem; overflow-x: auto; line-height: 1.5;
+      max-height: 480px; overflow-y: auto;
+    }
+
+    details.collapsible { background: var(--bg-soft); border-radius: 8px;
+                          padding: 10px 14px; margin-top: 8px; }
+    details.collapsible summary { cursor: pointer; font-weight: 500; color: var(--navy); font-size: .9rem; }
+
+    /* Help modal */
+    .modal-bg {
+      position: fixed; inset: 0; background: rgba(23,71,126,.5);
+      display: none; align-items: center; justify-content: center; z-index: 100; padding: 24px;
+    }
+    .modal-bg.show { display: flex; }
+    .modal {
+      background: #fff; border-radius: var(--card-radius);
+      padding: 24px 28px; max-width: 640px; width: 100%;
+      box-shadow: 0 20px 60px rgba(23,71,126,.3);
+      max-height: 80vh; overflow-y: auto;
+    }
+    .modal h2 { margin-top: 0; }
+    .modal p, .modal li { font-size: .9rem; line-height: 1.55; margin-bottom: 8px; }
+    .modal ul { padding-left: 20px; }
+    .modal code { background: var(--bg-soft); padding: 1px 6px; border-radius: 3px; font-size: .82rem; }
+    .modal .close-row { display: flex; justify-content: flex-end; margin-top: 12px; }
+
+    /* Loading & error */
+    .loading {
+      text-align: center; padding: 60px 20px; color: var(--gray); font-size: .95rem;
+    }
+    .error-card {
+      background: #fff8e6; border: 1px solid var(--gold);
+      border-radius: var(--card-radius); padding: 18px 22px; color: #7a4f00;
+      font-size: .9rem; line-height: 1.55;
+    }
+    .error-card code { background: rgba(0,0,0,.06); padding: 1px 6px; border-radius: 3px; }
+
+    /* Footer */
+    footer.app-footer { margin-top: auto; padding-bottom: 24px; }
+    footer.app-footer img { width: 100%; display: block; }
+    .confidential { text-align: right; padding: 8px 24px;
+                    font-size: .75rem; color: var(--gray); }
+    .confidential a { color: var(--gray); }
+
+    /* small screens */
+    @media (max-width: 640px) {
+      header.app-header { padding: 12px 16px; }
+      main { padding: 16px; }
+      .detail-header h1 { font-size: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <img class="logo" alt="ALIANZA"
+         src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDQwMC4yIDExNS45Ij48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6IzE3NDc3ZTt9PC9zdHlsZT48L2RlZnM+PGc+PGcgaWQ9IkxheWVyXzEiPjxnPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTcwLjgsNjIuNGwtNy45LTE1LjUtOC4yLDE1LjVoMTYuMlpNNTksMzkuNWg4LjNsMjEuMiwzOC4xaC05LjdsLTQuNC04LjNoLTIzLjRsLTQuMyw4LjNoLTguNmwyMC45LTM4LjEiLz48cG9seWdvbiBjbGFzcz0iY2xzLTEiIHBvaW50cz0iOTYuMSAzOS41IDEwNC43IDM5LjUgMTA0LjcgNzAuNCAxMzIuNCA3MC40IDEzMi40IDc3LjYgOTYuMSA3Ny42IDk2LjEgMzkuNSIvPjxyZWN0IGNsYXNzPSJjbHMtMSIgeD0iMTQyLjIiIHk9IjM5LjUiIHdpZHRoPSI4LjYiIGhlaWdodD0iMzguMSIvPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTE5Mi40LDYyLjRsLTcuOS0xNS41LTguMywxNS41aDE2LjJaTTE4MC42LDM5LjVoOC4zbDIxLjIsMzguMWgtOS43bC00LjQtOC4zaC0yMy40bC00LjMsOC4zaC04LjZsMjAuOS0zOC4xIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMjE2LjIsMzkuNWg1LjlsMjYsMjIuNGMxLjUsMS4yLDIuOSwyLjYsNC4yLDQuMS0uMi0zLjItLjQtNS40LS40LTYuNnYtMjBoNy43djM4LjFoLTUuOWwtMjcuMi0yMy42Yy0xLjEtMS0yLjEtMS45LTMuMS0zLjEuMywyLjkuNCw0LjkuNCw2djIwLjZoLTcuN3YtMzguMVoiLz48cG9seWdvbiBjbGFzcz0iY2xzLTEiIHBvaW50cz0iMjY3LjcgNzMuNCAyOTMuNiA0Ni4zIDI3MC4zIDQ2LjMgMjcwLjMgMzkuNSAzMDcuNCAzOS41IDMwNy40IDQzLjIgMjgxLjIgNzAuNCAzMDcuNCA3MC40IDMwNy40IDc3LjYgMjY3LjcgNzcuNiAyNjcuNyA3My40Ii8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMzQ0LjQsNjIuNGwtNy45LTE1LjUtOC4yLDE1LjVoMTYuMlpNMzMyLjYsMzkuNWg4LjNsMjEuMiwzOC4xaC05LjdsLTQuNC04LjNoLTIzLjRsLTQuMyw4LjNoLTguNmwyMC45LTM4LjEiLz48L2c+PC9nPjwvZz48L3N2Zz4=" />
+    <div class="title-block">
+      <h1>vCon Explorer</h1>
+      <span class="sub">Conversation Data Containers — IETF vCon WG (draft-ietf-vcon-vcon-core-02)</span>
+    </div>
+    <div class="header-right">
+      <button class="help-btn" id="help-btn">Help</button>
+    </div>
+  </header>
+
+  <main id="app">
+    <div class="loading">Loading vCon corpus…</div>
+  </main>
+
+  <!-- Help modal -->
+  <div class="modal-bg" id="help-modal">
+    <div class="modal">
+      <h2>About this dashboard</h2>
+      <p>This is the <strong>vCon Explorer</strong> — a static dashboard for the
+        IETF vCon corpus stored alongside it in the same folder.</p>
+      <h3 style="margin-top:14px;">How it works</h3>
+      <ul>
+        <li>On load, the page fetches <code>index.json</code> and then each <code>vcon-*.json</code> file it lists.</li>
+        <li>Filter, search, and drill-down all run client-side. No server needed.</li>
+        <li>For audio (<code>.wav</code>) and video (<code>.mp4</code>), the player uses the <code>url</code> field on each dialog. If the URL doesn't resolve, you'll see a "media unavailable" notice — point the URLs at real assets to enable playback.</li>
+      </ul>
+      <h3 style="margin-top:14px;">Adding new vCons</h3>
+      <ul>
+        <li>Drop new <code>vcon-*.json</code> files into this folder.</li>
+        <li>Run <code>python3 _index.py</code> to rebuild <code>index.json</code>.</li>
+        <li>Commit and push — GitHub Pages re-serves and the dashboard reflects the changes.</li>
+      </ul>
+      <h3 style="margin-top:14px;">Running locally</h3>
+      <p>Open a terminal in this folder and run <code>python3 -m http.server 8000</code>, then visit
+        <code>http://localhost:8000/</code>. Opening the file directly via <code>file://</code>
+        will not work because browsers block <code>fetch()</code> from local files.</p>
+      <div class="close-row">
+        <button class="help-btn" id="help-close">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <img alt="" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJMYXllcl8xIiBkYXRhLW5hbWU9IkxheWVyIDEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDEwMjQuMjggNzguMDQiPjxkZWZzPjxzdHlsZT4uY2xzLTF7ZmlsbDojMTA3MmJhO30uY2xzLTJ7ZmlsbDojNjVhN2RiO30uY2xzLTN7ZmlsbDojZmRiNzNlO30uY2xzLTR7ZmlsbDojYTRkMGVmO30uY2xzLTV7ZmlsbDojYjllMGY3O30uY2xzLTZ7ZmlsbDojNWU5MWNjO30uY2xzLTd7ZmlsbDojMDg0Y2ExO308L3N0eWxlPjwvZGVmcz48cG9seWdvbiBjbGFzcz0iY2xzLTEiIHBvaW50cz0iMCA2NC40IDAgNjMuNCA2NTAuNzYgNjMuNCA3MzQuNjIgNTUuMiA4MzMuODggMjAuMzMgODc5LjM3IDM3LjczIDkyNi41MyA5LjkxIDkyNi43NyAxMC4wMyA5NjkuMjYgMzAuODIgMTAyMS4xNyAxMC45MSAxMDIxLjUzIDExLjg0IDk2OS4yMSAzMS45MSA5MjYuNTcgMTEuMDUgODc5LjQ2IDM4Ljg0IDgzMy44NiAyMS4zOSA3MzQuODQgNTYuMTggNjUwLjgxIDY0LjM5IDAgNjQuNCIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtMiIgcG9pbnRzPSI1NDMuOCA2Ni4zMiAwIDY2LjMyIDAgNjUuMzIgNTQzLjY3IDY1LjMyIDY2NS4wNCAzMy40MyA2NzguNDIgNDEuODkgNzUxLjk4IDE0LjEzIDc1Mi4xNyAxNC4yMiA4MDIuNjEgMzcuMDggODkyLjg3IDE0LjE1IDg5My4wMSAxNC4yIDk2My4xNyAzOS4zMSAxMDIzLjg2IDExLjQ3IDEwMjQuMjggMTIuMzggOTYzLjIyIDQwLjM5IDk2My4wMyA0MC4zMiA4OTIuODIgMTUuMTkgODAyLjUyIDM4LjEzIDc1MS45NCAxNS4yMSA2NzguMzEgNDMgNjY0Ljg3IDM0LjUxIDU0My44IDY2LjMyIi8+PHBvbHlnb24gY2xhc3M9ImNscy0zIiBwb2ludHM9IjAgNjguMjYgMCA2Ny4yNiA1NjUuNTcgNjcuMjYgNjY4LjQgNDYuNTMgNjc4LjYxIDU3LjEgODEyLjcgNDEuMTIgODQ3Ljc0IDMxLjI1IDg0Ny45IDMxLjMyIDg4NC40MiA0Ny4wNiA5MTguMTkgMzEuNTEgOTMyLjE2IDM2LjY1IDEwMTIuMjYgMS4zMSAxMDEyLjY3IDIuMjMgOTMyLjE5IDM3LjczIDkxOC4yMyAzMi41OSA4ODQuNDMgNDguMTUgODg0LjIyIDQ4LjA2IDg0Ny42NyAzMi4zMSA4MTIuODkgNDIuMDkgNjc4LjI0IDU4LjE1IDY3OC4wNyA1Ny45OCA2NjguMDYgNDcuNjIgNTY1LjY3IDY4LjI1IDAgNjguMjYiLz48cG9seWdvbiBjbGFzcz0iY2xzLTYiIHBvaW50cz0iNTg2Ljc0IDcwLjE5IDAgNzAuMTkgMCA2OS4xOSA1ODYuNjMgNjkuMTkgODM1LjczIDEyLjY5IDgzNS44OCAxMi43NSA4NzQuNjQgMjguMzMgOTQwLjM2IDAgOTQwLjU5IC4xOSA5NzEuMDQgMjQuNDcgMTAxNy41MSAyLjk1IDEwMTcuOTMgMy44NSA5NzAuOSAyNS42NCA5NzAuNjYgMjUuNDQgOTQwLjIgMS4xNiA4NzQuNjUgMjkuNDEgODc0LjQ2IDI5LjMzIDgzNS42NSAxMy43NCA1ODYuNzQgNzAuMTkiLz48cmVjdCBjbGFzcz0iY2xzLTUiIHk9IjcxLjI0IiB3aWR0aD0iNzMwLjI2IiBoZWlnaHQ9IjEiLz48cmVjdCBjbGFzcz0iY2xzLTQiIHk9IjczLjE3IiB3aWR0aD0iNjg5LjM1IiBoZWlnaHQ9IjEiLz48cmVjdCBjbGFzcz0iY2xzLTIiIHk9Ijc1LjExIiB3aWR0aD0iNTE5LjcxIiBoZWlnaHQ9IjEiLz48cmVjdCBjbGFzcz0iY2xzLTIiIHk9Ijc3LjA0IiB3aWR0aD0iNzY0LjgiIGhlaWdodD0iMSIvPjxnPjxwYXRoIGNsYXNzPSJjbHMtNyIgZD0iTTc5OS43OSw3MS4yNGwtMy41NC02LjkxLTMuNjcsNi45MWg3LjIxWk03OTQuNTMsNjEuMDVoMy43bDkuNDQsMTYuOTdoLTQuM2wtMS45OC0zLjcyaC0xMC40M2wtMS45MSwzLjcyaC0zLjgzbDkuMzEtMTYuOTciLz48cG9seWdvbiBjbGFzcz0iY2xzLTciIHBvaW50cz0iODExLjA1IDYxLjA1IDgxNC44OCA2MS4wNSA4MTQuODggNzQuODMgODI3LjIyIDc0LjgzIDgyNy4yMiA3OC4wMiA4MTEuMDUgNzguMDIgODExLjA1IDYxLjA1Ii8+PHJlY3QgY2xhc3M9ImNscy03IiB4PSI4MzEuNTYiIHk9IjYxLjA1IiB3aWR0aD0iMy44MyIgaGVpZ2h0PSIxNi45NyIvPjxwYXRoIGNsYXNzPSJjbHMtNyIgZD0iTTg1My45NSw3MS4yNGwtMy41NC02LjkxLTMuNjcsNi45MWg3LjIxWk04NDguNjgsNjEuMDVoMy43bDkuNDQsMTYuOTdoLTQuM2wtMS45OC0zLjcyaC0xMC40M2wtMS45MSwzLjcyaC0zLjgzbDkuMzEtMTYuOTciLz48cGF0aCBjbGFzcz0iY2xzLTciIGQ9Ik04NjQuNTQsNjEuMDVoMi42MmwxMS41OCwxMGMuNjcuNTYsMS4zMSwxLjE1LDEuODgsMS44NC0uMDktMS40Mi0uMTYtMi40LS4xNi0yLjkzdi04LjkxaDMuNDR2MTYuOTdoLTIuNjFsLTEyLjA5LTEwLjQ5Yy0uNDgtLjQzLS45Mi0uODUtMS4zNy0xLjM4LjEzLDEuMzEuMTYsMi4yLjE2LDIuNjl2OS4xN2gtMy40NXYtMTYuOTdaIi8+PHBvbHlnb24gY2xhc3M9ImNscy03IiBwb2ludHM9Ijg4Ny40NyA3Ni4xNyA4OTguOTggNjQuMDggODg4LjYxIDY0LjA3IDg4OC42MSA2MS4wNSA5MDUuMTQgNjEuMDYgOTA1LjE0IDYyLjczIDg5My40NiA3NC44MyA5MDUuMTQgNzQuODMgOTA1LjE0IDc4LjAyIDg4Ny40NyA3OC4wMiA4ODcuNDcgNzYuMTciLz48cGF0aCBjbGFzcz0iY2xzLTciIGQ9Ik05MjEuNjIsNzEuMjRsLTMuNTQtNi45MS0zLjY3LDYuOTFoNy4yMVpNOTE2LjM2LDYxLjA2aDMuN2w5LjQ0LDE2Ljk2aC00LjMxbC0xLjk4LTMuNzJoLTEwLjQzbC0xLjkxLDMuNzJoLTMuODJsOS4zMS0xNi45NiIvPjwvZz48L3N2Zz4=" />
+    <div class="confidential">Alianza, LLC Confidential &copy; <span id="yr"></span></div>
+  </footer>
+
+<script>
+//----------------------------------------------------------------------
+// vCon Explorer — single-file dashboard
+//----------------------------------------------------------------------
+
+const APP = document.getElementById('app');
+const STATE = {
+  index:   null,        // contents of index.json
+  vcons:   [],          // array of full vCon objects, in same order as index.vcons
+  byUuid:  new Map(),
+  filters: {
+    text:      '',
+    phone:     '',
+    dateFrom:  '',
+    dateTo:    '',
+    extension: new Set(['__all__']),  // 'CC','WTF','Consent','SIP','Lifecycle','Standard'
+    channel:   new Set(['__all__']),  // 'audio','video','text','email','sms','webchat','voicemail'
+  },
+  charts: {},
+};
+
+document.getElementById('yr').textContent = new Date().getFullYear();
+document.getElementById('help-btn').addEventListener('click',  () => document.getElementById('help-modal').classList.add('show'));
+document.getElementById('help-close').addEventListener('click',() => document.getElementById('help-modal').classList.remove('show'));
+document.getElementById('help-modal').addEventListener('click',(e) => {
+  if (e.target.id === 'help-modal') e.currentTarget.classList.remove('show');
+});
+
+//---------------- Boot -------------------------------------------------
+async function boot() {
+  try {
+    const idx = await fetch('./index.json', {cache:'no-cache'}).then(r => {
+      if (!r.ok) throw new Error('Could not load index.json (' + r.status + ')');
+      return r.json();
+    });
+    STATE.index = idx;
+
+    // Fetch every vCon listed in the index
+    const fetched = await Promise.all(idx.vcons.map(async (row) => {
+      try {
+        const v = await fetch('./' + row.file, {cache:'no-cache'}).then(r => r.json());
+        v.__file = row.file; v.__indexRow = row;
+        return v;
+      } catch(e) {
+        console.warn('Failed to load', row.file, e);
+        return null;
+      }
+    }));
+
+    STATE.vcons = fetched.filter(Boolean);
+    STATE.vcons.forEach(v => STATE.byUuid.set(v.uuid, v));
+
+    window.addEventListener('hashchange', route);
+    route();
+  } catch (err) {
+    APP.innerHTML = `
+      <div class="error-card">
+        <strong>Couldn't load the corpus.</strong><br>
+        ${escapeHtml(err.message)}<br><br>
+        If you opened this file directly with <code>file://</code>, browsers will block local
+        <code>fetch()</code> calls. Run a tiny static server in this folder instead:
+        <pre style="background:#fff8e6;border:0;padding:8px 0;margin-top:6px;">python3 -m http.server 8000</pre>
+        and visit <code>http://localhost:8000/</code>.
+      </div>`;
+  }
+}
+
+//---------------- Router ----------------------------------------------
+function route() {
+  const h = location.hash.replace(/^#\/?/, '');
+  if (h && STATE.byUuid.has(h)) {
+    renderDetail(STATE.byUuid.get(h));
+  } else {
+    renderList();
+  }
+  window.scrollTo({top: 0, behavior: 'smooth'});
+}
+
+//---------------- Helpers ---------------------------------------------
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[c]));
+}
+function fmtDate(s) {
+  if (!s) return '—';
+  try {
+    const d = new Date(s);
+    return d.toLocaleString(undefined, {year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit'});
+  } catch { return s; }
+}
+function fmtDateOnly(s) {
+  if (!s) return '—';
+  try { return new Date(s).toLocaleDateString(undefined, {year:'numeric', month:'short', day:'2-digit'}); }
+  catch { return s; }
+}
+function fmtDuration(secs) {
+  if (secs == null) return '—';
+  secs = Math.round(Number(secs));
+  const h = Math.floor(secs/3600), m = Math.floor((secs%3600)/60), s = secs%60;
+  if (h) return `${h}h ${String(m).padStart(2,'0')}m ${String(s).padStart(2,'0')}s`;
+  if (m) return `${m}m ${String(s).padStart(2,'0')}s`;
+  return `${s}s`;
+}
+function normalizePhone(s) {
+  if (!s) return '';
+  let p = String(s).replace(/[^\d+]/g,'');
+  if (!p.startsWith('+')) p = '+' + p;
+  return p;
+}
+function classifyChannel(d) {
+  // Returns the high-level channel for filtering: audio, video, sms, email, webchat, voicemail, text, other
+  if (!d) return 'other';
+  const mt = (d.mediatype || '').toLowerCase();
+  const t  = (d.type || '').toLowerCase();
+  if (t === 'recording') {
+    if (d.disposition === 'voicemail') return 'voicemail';
+    if (mt.startsWith('video/'))       return 'video';
+    if (mt.startsWith('audio/'))       return 'audio';
+    return 'audio';
+  }
+  if (mt === 'message/rfc822')         return 'email';
+  if (mt === 'text/plain' || t === 'text') {
+    // SMS heuristic: tel-only parties + short body
+    return 'text';
+  }
+  return t || 'other';
+}
+function vconChannels(v) {
+  const set = new Set((v.dialog || []).map(classifyChannel));
+  // refine: webchat vs sms vs email vs text
+  if (set.has('text')) {
+    const subj = (v.subject || '').toLowerCase();
+    const file = (v.__file  || '').toLowerCase();
+    if (subj.includes('sms') || file.includes('sms')) { set.delete('text'); set.add('sms'); }
+    else if (subj.includes('webchat') || file.includes('webchat')) { set.delete('text'); set.add('webchat'); }
+  }
+  return set;
+}
+function badgeForExt(e) {
+  const map = {CC:'cc', WTF:'wtf', Consent:'cons', SIP:'sip', Lifecycle:'life'};
+  return `<span class="badge ${map[e] || 'std'}">${escapeHtml(e)}</span>`;
+}
+function badgeForChannel(c) {
+  return `<span class="badge channel">${escapeHtml(c)}</span>`;
+}
+
+//---------------- Filtering --------------------------------------------
+function vconMatchesFilters(v) {
+  const f = STATE.filters;
+
+  // Text search
+  if (f.text) {
+    const q = f.text.toLowerCase();
+    let hay = (v.subject || '').toLowerCase() + ' ' + (v.__file || '').toLowerCase();
+    for (const p of v.parties || []) hay += ' ' + [p.name, p.tel, p.mailto, p.role].filter(Boolean).join(' ').toLowerCase();
+    for (const a of v.analysis || []) {
+      if (typeof a.body === 'string') hay += ' ' + a.body.toLowerCase();
+    }
+    for (const d of v.dialog || []) {
+      if (typeof d.body === 'string') hay += ' ' + d.body.toLowerCase();
+    }
+    if (!hay.includes(q)) return false;
+  }
+
+  // Phone search
+  if (f.phone) {
+    const q = normalizePhone(f.phone).replace(/^\+/, '');
+    if (q.length >= 3) {
+      let hit = false;
+      for (const p of v.parties || []) {
+        const tel = normalizePhone(p.tel || '').replace(/^\+/, '');
+        if (tel && tel.includes(q)) { hit = true; break; }
+      }
+      if (!hit) return false;
+    }
+  }
+
+  // Date range
+  if (f.dateFrom) {
+    if (!v.created_at || new Date(v.created_at) < new Date(f.dateFrom)) return false;
+  }
+  if (f.dateTo) {
+    const end = new Date(f.dateTo); end.setHours(23,59,59,999);
+    if (!v.created_at || new Date(v.created_at) > end) return false;
+  }
+
+  // Extension filter
+  if (!f.extension.has('__all__')) {
+    const ext = v.extensions || [];
+    let ok = false;
+    for (const want of f.extension) {
+      if (want === 'Standard' && ext.length === 0) { ok = true; break; }
+      if (ext.includes(want)) { ok = true; break; }
+    }
+    if (!ok) return false;
+  }
+
+  // Channel filter
+  if (!f.channel.has('__all__')) {
+    const ch = vconChannels(v);
+    let ok = false;
+    for (const want of f.channel) if (ch.has(want)) { ok = true; break; }
+    if (!ok) return false;
+  }
+
+  return true;
+}
+
+//---------------- List view --------------------------------------------
+function renderList() {
+  destroyCharts();
+  const all = STATE.vcons;
+  const filtered = all.filter(vconMatchesFilters);
+
+  // KPIs based on full corpus
+  const totals = {
+    total:    all.length,
+    standard: all.filter(v => !v.extensions || v.extensions.length === 0).length,
+    extended: all.filter(v => v.extensions && v.extensions.length > 0).length,
+  };
+  const allParties = new Set();
+  const allTels = new Set();
+  let totalAnalysis = 0, totalDialogs = 0;
+  for (const v of all) {
+    for (const p of v.parties || []) {
+      if (p.tel)    allTels.add(normalizePhone(p.tel));
+      if (p.name)   allParties.add(p.name.trim().toLowerCase());
+      if (p.mailto) allParties.add(p.mailto.trim().toLowerCase());
+    }
+    totalAnalysis += (v.analysis || []).length;
+    totalDialogs  += (v.dialog || []).length;
+  }
+
+  APP.innerHTML = `
+    <h2>Corpus summary</h2>
+    <div class="kpi-row">
+      <div class="kpi"><div class="label">Total vCons</div><div class="value">${totals.total}</div>
+        <div class="delta">${totals.standard} standard · ${totals.extended} extended</div></div>
+      <div class="kpi"><div class="label">Unique parties</div><div class="value">${allParties.size}</div>
+        <div class="delta">${allTels.size} unique phone numbers</div></div>
+      <div class="kpi"><div class="label">Dialogs</div><div class="value">${totalDialogs}</div>
+        <div class="delta">across all conversations</div></div>
+      <div class="kpi"><div class="label">Analysis records</div><div class="value">${totalAnalysis}</div>
+        <div class="delta">transcripts, summaries, scores…</div></div>
+    </div>
+
+    <div class="chart-row">
+      <div class="chart-card"><div class="chart-title">Standard vs Extended</div>
+        <div class="chart-wrap"><canvas id="c-cat"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">Extension usage</div>
+        <div class="chart-wrap"><canvas id="c-ext"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">Channels</div>
+        <div class="chart-wrap"><canvas id="c-chan"></canvas></div></div>
+      <div class="chart-card"><div class="chart-title">Conversations over time</div>
+        <div class="chart-wrap"><canvas id="c-time"></canvas></div></div>
+    </div>
+
+    <h2>Filter &amp; search</h2>
+    <div class="filter-bar">
+      <div class="field">
+        <label for="f-text">Free text</label>
+        <input id="f-text"  type="search" placeholder="subject, names, transcripts…" value="${escapeHtml(STATE.filters.text)}">
+      </div>
+      <div class="field">
+        <label for="f-phone">Phone number</label>
+        <input id="f-phone" type="search" placeholder="e.g. 415 555 0177" value="${escapeHtml(STATE.filters.phone)}">
+      </div>
+      <div class="field">
+        <label for="f-from">From</label>
+        <input id="f-from"  type="date" value="${escapeHtml(STATE.filters.dateFrom)}">
+      </div>
+      <div class="field">
+        <label for="f-to">To</label>
+        <input id="f-to"    type="date" value="${escapeHtml(STATE.filters.dateTo)}">
+      </div>
+      <div class="field" style="grid-column: span 2; min-width:0;">
+        <label>Extensions</label>
+        <div class="pill-group" id="pg-ext">
+          ${pillHtml('extension','__all__','Any')}
+          ${['Standard','CC','WTF','Consent','SIP','Lifecycle'].map(e => pillHtml('extension',e,e)).join('')}
+        </div>
+      </div>
+      <div class="field" style="grid-column: span 2; min-width:0;">
+        <label>Channels</label>
+        <div class="pill-group" id="pg-chan">
+          ${pillHtml('channel','__all__','Any')}
+          ${['audio','video','sms','webchat','email','voicemail'].map(c => pillHtml('channel',c,c)).join('')}
+        </div>
+      </div>
+      <button class="reset-btn" id="reset">Reset filters</button>
+    </div>
+
+    <div class="result-line">Showing <strong>${filtered.length}</strong> of ${all.length} vCons</div>
+
+    <div class="card-grid" id="card-grid">
+      ${filtered.map(renderCard).join('') || '<div class="muted">No matching vCons.</div>'}
+    </div>
+  `;
+
+  // Wire filter inputs
+  bindFilterInputs();
+
+  // Charts based on the FULL corpus (so the user always has the global picture).
+  // If you'd rather chart filtered results, swap `all` for `filtered` here.
+  drawCategoryChart('c-cat',  all);
+  drawExtensionChart('c-ext', all);
+  drawChannelChart('c-chan',  all);
+  drawTimelineChart('c-time', all);
+}
+
+function pillHtml(group, val, label) {
+  const set = STATE.filters[group];
+  const on  = set.has(val) ? ' on' : '';
+  return `<span class="pill${on}" data-group="${group}" data-val="${escapeHtml(val)}">${escapeHtml(label)}</span>`;
+}
+
+function renderCard(v) {
+  const r = v.__indexRow || {};
+  const created = fmtDateOnly(v.created_at);
+  const partyChips = (v.parties || []).slice(0,3).map(p => escapeHtml(p.name || p.tel || p.mailto || 'party')).join(' · ');
+  const more       = (v.parties||[]).length > 3 ? ` +${v.parties.length-3}` : '';
+  const extBadges  = (v.extensions || []).map(badgeForExt).join('');
+  const stdBadge   = (!v.extensions || !v.extensions.length) ? '<span class="badge std">standard</span>' : '';
+  const channels   = [...vconChannels(v)].slice(0,3).map(badgeForChannel).join('');
+  const dialogs    = (v.dialog||[]).length;
+  return `
+    <div class="vcon-card" onclick="location.hash='/${v.uuid}'">
+      <div class="badges">${stdBadge}${extBadges}${channels}</div>
+      <div class="subject">${escapeHtml(v.subject || '(no subject)')}</div>
+      <div class="muted" style="font-size:.78rem;">${escapeHtml(partyChips)}${more}</div>
+      <div class="meta">
+        <span>📅 ${created}</span>
+        <span>💬 ${dialogs} dialog${dialogs===1?'':'s'}</span>
+        <span>📊 ${(v.analysis||[]).length} analysis</span>
+        ${(v.attachments||[]).length ? `<span>📎 ${v.attachments.length}</span>` : ''}
+      </div>
+    </div>`;
+}
+
+function bindFilterInputs() {
+  document.getElementById('f-text').addEventListener('input',  e => { STATE.filters.text     = e.target.value; refreshCards(); });
+  document.getElementById('f-phone').addEventListener('input', e => { STATE.filters.phone    = e.target.value; refreshCards(); });
+  document.getElementById('f-from').addEventListener('change', e => { STATE.filters.dateFrom = e.target.value; refreshCards(); });
+  document.getElementById('f-to').addEventListener('change',   e => { STATE.filters.dateTo   = e.target.value; refreshCards(); });
+  document.querySelectorAll('.pill').forEach(p => {
+    p.addEventListener('click', () => {
+      const grp = p.dataset.group;
+      const val = p.dataset.val;
+      const set = STATE.filters[grp];
+      if (val === '__all__') {
+        set.clear(); set.add('__all__');
+      } else {
+        set.delete('__all__');
+        if (set.has(val)) set.delete(val); else set.add(val);
+        if (set.size === 0) set.add('__all__');
+      }
+      // Repaint pills + cards
+      document.querySelectorAll(`.pill[data-group="${grp}"]`).forEach(el => {
+        el.classList.toggle('on', set.has(el.dataset.val));
+      });
+      refreshCards();
+    });
+  });
+  document.getElementById('reset').addEventListener('click', () => {
+    STATE.filters = {text:'', phone:'', dateFrom:'', dateTo:'',
+                     extension:new Set(['__all__']), channel:new Set(['__all__'])};
+    renderList();
+  });
+}
+
+function refreshCards() {
+  const filtered = STATE.vcons.filter(vconMatchesFilters);
+  document.getElementById('card-grid').innerHTML =
+    filtered.map(renderCard).join('') || '<div class="muted">No matching vCons.</div>';
+  document.querySelector('.result-line').innerHTML =
+    `Showing <strong>${filtered.length}</strong> of ${STATE.vcons.length} vCons`;
+}
+
+//---------------- Charts ----------------------------------------------
+function destroyCharts() { for (const k in STATE.charts) STATE.charts[k]?.destroy?.(); STATE.charts = {}; }
+
+const PALETTE = ['#1072ba','#65a7db','#17477e','#fdb73e','#8bad44','#5e91cc','#a4d0ef','#354c59'];
+
+function drawCategoryChart(id, vcons) {
+  const ctx = document.getElementById(id);
+  const std  = vcons.filter(v => !(v.extensions||[]).length).length;
+  const ext  = vcons.length - std;
+  STATE.charts.cat = new Chart(ctx, {
+    type: 'doughnut',
+    data: {labels:['Standard','Extended'], datasets:[{data:[std,ext], backgroundColor:[PALETTE[1], PALETTE[0]], borderColor:'#fff', borderWidth:2}]},
+    options: {responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{position:'bottom', labels:{font:{family:'Roboto'}, color:'#5a646a'}}}},
+  });
+}
+function drawExtensionChart(id, vcons) {
+  const ctx = document.getElementById(id);
+  const counts = {};
+  for (const v of vcons) for (const e of (v.extensions||[])) counts[e] = (counts[e]||0)+1;
+  const labels = Object.keys(counts).sort();
+  STATE.charts.ext = new Chart(ctx, {
+    type: 'bar',
+    data: {labels, datasets:[{data: labels.map(l => counts[l]), backgroundColor: PALETTE, borderRadius:4}]},
+    options: {responsive:true, maintainAspectRatio:false, indexAxis:'y',
+      plugins:{legend:{display:false}}, scales:{x:{beginAtZero:true, ticks:{stepSize:1, color:'#5a646a'}}, y:{ticks:{color:'#17477e'}}}},
+  });
+}
+function drawChannelChart(id, vcons) {
+  const ctx = document.getElementById(id);
+  const counts = {};
+  for (const v of vcons) for (const ch of vconChannels(v)) counts[ch] = (counts[ch]||0)+1;
+  const labels = Object.keys(counts).sort();
+  STATE.charts.chan = new Chart(ctx, {
+    type: 'bar',
+    data: {labels, datasets:[{data: labels.map(l => counts[l]), backgroundColor: PALETTE[0], borderRadius:4}]},
+    options: {responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}}, scales:{y:{beginAtZero:true, ticks:{stepSize:1, color:'#5a646a'}}, x:{ticks:{color:'#17477e'}}}},
+  });
+}
+function drawTimelineChart(id, vcons) {
+  const ctx = document.getElementById(id);
+  const buckets = {};
+  for (const v of vcons) {
+    if (!v.created_at) continue;
+    const d = new Date(v.created_at);
+    const key = d.toISOString().slice(0,10);
+    buckets[key] = (buckets[key]||0)+1;
+  }
+  const labels = Object.keys(buckets).sort();
+  STATE.charts.time = new Chart(ctx, {
+    type: 'line',
+    data: {labels, datasets:[{data: labels.map(l => buckets[l]), borderColor: PALETTE[0], backgroundColor:'rgba(16,114,186,.15)', tension:.3, fill:true, pointRadius:3, pointBackgroundColor:PALETTE[0]}]},
+    options: {responsive:true, maintainAspectRatio:false,
+      plugins:{legend:{display:false}},
+      scales:{y:{beginAtZero:true, ticks:{stepSize:1, color:'#5a646a'}}, x:{ticks:{color:'#17477e', maxRotation:0, autoSkip:true, maxTicksLimit:8}}}},
+  });
+}
+
+//---------------- Detail view -----------------------------------------
+function renderDetail(v) {
+  destroyCharts();
+  const dialogsHtml = (v.dialog || []).map((d,i) => renderDialog(d,i,v)).join('');
+  const analysisHtml = (v.analysis || []).map((a,i) => renderAnalysis(a,i,v)).join('') ||
+                       '<div class="muted">No analysis records.</div>';
+  const attHtml = (v.attachments || []).map((a,i) => renderAttachment(a,i,v)).join('') ||
+                       '<div class="muted">No attachments.</div>';
+  const partiesHtml = (v.parties || []).map(renderParty).join('');
+
+  const groupHtml = (v.group || []).length ?
+    `<div class="section">
+       <h2>Linked vCons (group)</h2>
+       <ul style="margin-left:18px;font-size:.9rem;line-height:1.7;">
+         ${(v.group).map(g => {
+            const linked = STATE.byUuid.get(g.uuid);
+            if (linked) return `<li><a href="#/${g.uuid}">${escapeHtml(linked.subject || g.uuid)}</a></li>`;
+            return `<li><span class="muted">${escapeHtml(g.uuid)} (not in this corpus)</span></li>`;
+         }).join('')}
+       </ul></div>` : '';
+
+  const ext = v.extensions || [];
+  const stdBadge = !ext.length ? '<span class="badge std">standard</span>' : '';
+
+  APP.innerHTML = `
+    <a class="back-link" onclick="history.back()">&larr; Back to all vCons</a>
+
+    <div class="detail-header">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;">
+        ${stdBadge}${ext.map(badgeForExt).join('')}
+        ${[...vconChannels(v)].map(badgeForChannel).join('')}
+      </div>
+      <h1>${escapeHtml(v.subject || '(no subject)')}</h1>
+      <div class="meta-grid">
+        <div><span class="key">UUID</span><span class="val" style="font-family:'Roboto Mono',monospace;font-size:.78rem;">${escapeHtml(v.uuid)}</span></div>
+        <div><span class="key">Created</span><span class="val">${fmtDate(v.created_at)}</span></div>
+        ${v.updated_at ? `<div><span class="key">Updated</span><span class="val">${fmtDate(v.updated_at)}</span></div>` : ''}
+        <div><span class="key">vCon ver.</span><span class="val">${escapeHtml(v.vcon || '—')}</span></div>
+        <div><span class="key">File</span><span class="val">${escapeHtml(v.__file)}</span></div>
+        ${v.must_support && v.must_support.length ? `<div><span class="key">Must support</span><span class="val">${v.must_support.map(escapeHtml).join(', ')}</span></div>` : ''}
+      </div>
+    </div>
+
+    <div class="section"><h2>Parties (${(v.parties||[]).length})</h2>
+      <div class="party-grid">${partiesHtml}</div></div>
+
+    <div class="section"><h2>Dialogs (${(v.dialog||[]).length})</h2>
+      ${dialogsHtml}</div>
+
+    <div class="section"><h2>Analysis (${(v.analysis||[]).length})</h2>
+      ${analysisHtml}</div>
+
+    <div class="section"><h2>Attachments (${(v.attachments||[]).length})</h2>
+      ${attHtml}</div>
+
+    ${groupHtml}
+
+    <div class="section">
+      <h2>Raw vCon JSON</h2>
+      <details class="collapsible">
+        <summary>Show raw JSON</summary>
+        <pre class="json-block">${escapeHtml(JSON.stringify(v, (k, val) => (typeof k === 'string' && k.startsWith('__')) ? undefined : val, 2))}</pre>
+      </details>
+    </div>
+  `;
+
+  // Wire up media error handlers (script tags injected via innerHTML don't execute)
+  (v.dialog || []).forEach((d, i) => {
+    if (d.type !== 'recording') return;
+    const m = document.getElementById('media-' + i);
+    if (!m) return;
+    m.addEventListener('error', () => {
+      const wrap = document.getElementById('media-wrap-' + i);
+      if (!wrap) return;
+      const isVideo = m.dataset.isvideo === '1';
+      const ext = isVideo ? 'mp4' : 'wav';
+      wrap.innerHTML =
+        `<div class="media-unavailable">⚠️ Media unavailable at this URL. Update ` +
+        `<code>dialog[${i}].url</code> in the vCon to point at a real <code>.${ext}</code> asset.</div>` +
+        wrap.innerHTML;
+    });
+  });
+
+  // Wire up WTF segment seek handlers
+  document.querySelectorAll('.wtf-seg[data-dialog][data-start]').forEach(seg => {
+    seg.addEventListener('click', () => {
+      const dIdx = seg.dataset.dialog;
+      if (dIdx === '') return;
+      const start = parseFloat(seg.dataset.start);
+      const m = document.getElementById('media-' + dIdx);
+      if (m) {
+        m.currentTime = start;
+        m.play().catch(()=>{});
+        m.scrollIntoView({behavior:'smooth', block:'center'});
+      }
+    });
+  });
+}
+
+function renderParty(p, i) {
+  const role = p.role ? `<span class="role">${escapeHtml(p.role)}</span>` : '';
+  const rows = [];
+  if (p.tel)          rows.push(`<div>📞 <a href="tel:${escapeHtml(p.tel)}">${escapeHtml(p.tel)}</a></div>`);
+  if (p.mailto)       rows.push(`<div>✉️ <a href="mailto:${escapeHtml(p.mailto)}">${escapeHtml(p.mailto)}</a></div>`);
+  if (p.timezone)     rows.push(`<div>🕐 ${escapeHtml(p.timezone)}</div>`);
+  if (p.validation)   rows.push(`<div>✓ ${escapeHtml(p.validation)}</div>`);
+  if (p.contact_list) rows.push(`<div>📋 ${escapeHtml(p.contact_list)}</div>`);
+  if (p.civicaddress) rows.push(`<div>📍 ${escapeHtml([p.civicaddress.locality, p.civicaddress.region, p.civicaddress.country].filter(Boolean).join(', '))}</div>`);
+  return `
+    <div class="party-card">
+      <div class="pname">${escapeHtml(p.name || '(unnamed)')}${role}</div>
+      <div class="pmeta">${rows.join('')}</div>
+    </div>`;
+}
+
+const CHANNEL_ICONS = {
+  audio:    '🎙️', video: '🎬', text: '💬', sms: '💬',
+  webchat:  '💻', email: '✉️', voicemail: '📭', other: '📦',
+};
+function renderDialog(d, i, v) {
+  const ch = classifyChannel(d);
+  const icon = CHANNEL_ICONS[ch] || '📦';
+  const partiesNames = (d.parties||[]).map(p => (v.parties[p]?.name || `party#${p}`)).join(', ');
+  const orig = (d.originator != null) ? (v.parties[d.originator]?.name || `party#${d.originator}`) : '—';
+  let body = '';
+
+  if (d.type === 'recording') {
+    const isVideo = (d.mediatype || '').startsWith('video/');
+    const url = d.url || '';
+    const tag = isVideo ?
+      `<video id="media-${i}" data-isvideo="1" controls preload="metadata" src="${escapeHtml(url)}"></video>` :
+      `<audio id="media-${i}" data-isvideo="0" controls preload="metadata" src="${escapeHtml(url)}"></audio>`;
+    body = `
+      <div id="media-wrap-${i}">${tag}</div>
+      <div class="url-line">📎 <a href="${escapeHtml(url)}" target="_blank" rel="noopener">${escapeHtml(d.filename || url)}</a></div>
+      ${d.content_hash ? `<div class="url-line">🔐 ${escapeHtml(d.content_hash)} (${escapeHtml(d.alg||'')})</div>` : ''}
+    `;
+  } else if (typeof d.body === 'string') {
+    body = `<div class="text-bubble">${escapeHtml(d.body)}</div>`;
+  } else if (d.url) {
+    body = `<div class="url-line">📎 <a href="${escapeHtml(d.url)}" target="_blank" rel="noopener">${escapeHtml(d.filename || d.url)}</a></div>`;
+  }
+
+  // CC extension fields
+  const cc = [];
+  if (d.campaign)         cc.push(`<span class="badge cc">campaign: ${escapeHtml(d.campaign)}</span>`);
+  if (d.interaction_type) cc.push(`<span class="badge cc">${escapeHtml(d.interaction_type)}</span>`);
+  if (d.interaction_id)   cc.push(`<span class="badge cc">int: ${escapeHtml(d.interaction_id)}</span>`);
+  if (d.skill)            cc.push(`<span class="badge cc">skill: ${escapeHtml(d.skill)}</span>`);
+
+  const partyHist = d.party_history && d.party_history.length ? `
+    <details class="collapsible" style="margin-top:8px;">
+      <summary>Party history (${d.party_history.length})</summary>
+      <ul style="margin-left:18px;font-size:.83rem;line-height:1.6;margin-top:4px;">
+        ${d.party_history.map(h => `<li><strong>${escapeHtml(v.parties[h.party]?.name || 'party#'+h.party)}</strong> — ${escapeHtml(h.event)} @ ${fmtDate(h.time)}</li>`).join('')}
+      </ul>
+    </details>` : '';
+
+  return `
+    <div class="dialog-card">
+      <div class="dialog-head">
+        <span style="font-size:1.2rem;">${icon}</span>
+        <strong style="text-transform:capitalize;">${escapeHtml(d.type || 'dialog')}</strong>
+        <span class="muted">·</span>
+        <span>${fmtDate(d.start)}</span>
+        ${d.duration!=null ? `<span class="muted">· ${fmtDuration(d.duration)}</span>` : ''}
+        <span class="muted">·</span>
+        <span>${escapeHtml(d.mediatype || '—')}</span>
+        <span class="muted">·</span>
+        <span>parties: ${escapeHtml(partiesNames)} (orig: ${escapeHtml(orig)})</span>
+        ${d.disposition ? `<span class="badge std">${escapeHtml(d.disposition)}</span>` : ''}
+        ${cc.join('')}
+      </div>
+      <div class="dialog-body">
+        ${body}
+        ${partyHist}
+      </div>
+    </div>`;
+}
+
+function tryParseJson(s) { try { return [true, JSON.parse(s)]; } catch { return [false, null]; } }
+
+function renderAnalysis(a, i, v) {
+  const head = `
+    <div class="ahead">
+      <span class="atype">${escapeHtml(a.type || 'analysis')}</span>
+      <span class="vendor">${escapeHtml([a.vendor, a.product, a.schema].filter(Boolean).join(' · '))}</span>
+      ${(a.dialog||[]).length ? `<span class="vendor">→ dialog ${a.dialog.join(', ')}</span>` : ''}
+    </div>`;
+
+  // WTF transcript: schema starts with WTF or body parses as JSON with .segments
+  let parsed = null;
+  if (typeof a.body === 'string') {
+    const [ok, obj] = tryParseJson(a.body);
+    if (ok) parsed = obj;
+  }
+
+  let body;
+  if (parsed && Array.isArray(parsed.segments)) {
+    // WTF-style transcript
+    const refDialog = (a.dialog && a.dialog.length) ? a.dialog[0] : null;
+    const speakers = parsed.speakers || [];
+    const speakerLookup = {};
+    for (const sp of speakers) speakerLookup[sp.speaker] = sp;
+    const segs = parsed.segments.map(seg => {
+      const sp = speakerLookup[seg.speaker] || {};
+      const partyName = (sp.party != null && v.parties[sp.party]) ? v.parties[sp.party].name : seg.speaker;
+      const role = sp.role ? `<span class="role">${escapeHtml(sp.role)}</span>` : '';
+      const ts = `${seg.start.toFixed(1)}s → ${seg.end.toFixed(1)}s`;
+      const cls = seg.redaction ? 'wtf-seg redacted' : 'wtf-seg';
+      return `<div class="${cls}" data-dialog="${refDialog!=null?refDialog:''}" data-start="${seg.start}">
+        <span class="ts">${escapeHtml(ts)}</span>
+        <span class="speaker">${escapeHtml(partyName)}${role}</span>
+        <span class="text">${escapeHtml(seg.text)}</span>
+      </div>`;
+    }).join('');
+    const meta = parsed.quality ? `<div class="muted" style="font-size:.78rem;margin-bottom:6px;">confidence: ${parsed.quality.overall_confidence ?? '—'} · redaction: ${parsed.quality.redaction_applied ? 'yes' : 'no'}</div>` : '';
+    body = `${meta}<div class="wtf-segments">${segs}</div>`;
+  } else if (parsed && typeof parsed === 'object') {
+    // Generic JSON (sentiment / scorecard / disposition / etc.) — pretty kv
+    body = renderJsonKv(parsed);
+  } else if (typeof a.body === 'string') {
+    body = `<div class="body-text">${escapeHtml(a.body)}</div>`;
+  } else if (a.url) {
+    body = `<div class="url-line">📎 <a href="${escapeHtml(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.filename || a.url)}</a></div>`;
+  } else {
+    body = '<div class="muted">(empty)</div>';
+  }
+
+  return `<div class="analysis-card">${head}${body}</div>`;
+}
+
+function renderJsonKv(obj) {
+  // If it's a flat object with primitives, render as KV grid; otherwise fall back to JSON block.
+  const isFlatPrim = obj && typeof obj === 'object' && !Array.isArray(obj) &&
+    Object.values(obj).every(v => v == null || ['string','number','boolean'].includes(typeof v));
+  if (isFlatPrim) {
+    const items = Object.entries(obj).map(([k,v]) => `
+      <div class="kv">
+        <div class="k">${escapeHtml(k)}</div>
+        <div class="v">${escapeHtml(String(v))}</div>
+      </div>`).join('');
+    return `<div class="kv-grid">${items}</div>`;
+  }
+  // Try arrays of flat objects (e.g. action items)
+  if (Array.isArray(obj) && obj.every(o => o && typeof o === 'object' && !Array.isArray(o))) {
+    const cols = Array.from(new Set(obj.flatMap(o => Object.keys(o))));
+    return `<div style="overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; font-size:.85rem;">
+        <thead><tr>${cols.map(c => `<th style="text-align:left;padding:6px 10px;border-bottom:1px solid var(--blue-pale);color:var(--gray);text-transform:uppercase;font-size:.72rem;">${escapeHtml(c)}</th>`).join('')}</tr></thead>
+        <tbody>${obj.map(row => `<tr>${cols.map(c => `<td style="padding:6px 10px;border-bottom:1px solid var(--bg-soft);color:var(--navy);">${escapeHtml(row[c] != null ? String(row[c]) : '')}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table></div>`;
+  }
+  // Else: JSON block
+  return `<pre class="json-block">${escapeHtml(JSON.stringify(obj, null, 2))}</pre>`;
+}
+
+function renderAttachment(a, i, v) {
+  const head = `<div class="ahead">
+    <span class="atype">${escapeHtml(a.type || 'attachment')}</span>
+    <span class="vendor">${escapeHtml(a.mediatype || '')} ${a.filename ? '· ' + escapeHtml(a.filename) : ''}</span>
+    ${a.party != null ? `<span class="vendor">party: ${escapeHtml(v.parties[a.party]?.name || ('#'+a.party))}</span>` : ''}
+    ${(a.dialog||[]).length ? `<span class="vendor">→ dialog ${a.dialog.join(', ')}</span>` : ''}
+  </div>`;
+  let body = '';
+  if (typeof a.body === 'string') {
+    const [ok, obj] = tryParseJson(a.body);
+    if (ok) body = renderJsonKv(obj);
+    else    body = `<div class="body-text">${escapeHtml(a.body)}</div>`;
+  } else if (a.url) {
+    body = `<div class="url-line">📎 <a href="${escapeHtml(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.filename || a.url)}</a></div>
+            ${a.content_hash ? `<div class="url-line">🔐 ${escapeHtml(a.content_hash)} (${escapeHtml(a.alg||'')})</div>` : ''}`;
+  } else {
+    body = '<div class="muted">(empty)</div>';
+  }
+  return `<div class="analysis-card">${head}${body}</div>`;
+}
+
+//---------------- Boot ------------------------------------------------
+boot();
+</script>
+
+</body>
+</html>
