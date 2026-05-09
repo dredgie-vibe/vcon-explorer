@@ -1,0 +1,71 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "de8adbcd-5c41-5f14-a683-106173be2dfd",
+  "created_at": "2026-05-07T14:28:18+00:00",
+  "subject": "Inbound \u2014 duplicate seat charge",
+  "parties": [
+    {
+      "name": "Agent \u2014 Naomi Sayid",
+      "tel": "+1-737-555-0101",
+      "mailto": "naomi.sayid@helix.example",
+      "timezone": "America/New_York",
+      "role": "agent"
+    },
+    {
+      "name": "Customer \u2014 Petros Andriotis",
+      "tel": "+1-617-555-0173",
+      "mailto": "petros@example.com",
+      "timezone": "America/New_York",
+      "role": "customer"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-05-07T14:22:18+00:00",
+      "duration": 298.6,
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "audio/x-wav",
+      "filename": "11-cc-inbound-support-billing.wav",
+      "url": "https://media.vcon.example.net/11-cc-inbound-support-billing.wav",
+      "content_hash": "sha512-bfccb4d3cbdbf1e2794da77ce2628267ccbc681ae17394fff16db30147de1e774add0740ae2163398947bc32a6c44d5d9033c6a47db687cdc25dc709d1641729",
+      "alg": "SHA-512",
+      "disposition": "answered",
+      "campaign": "2026-Q2-billing-inbound",
+      "interaction_type": "voice",
+      "interaction_id": "INT-8814226",
+      "skill": "billing-tier2"
+    }
+  ],
+  "analysis": [
+    {
+      "type": "transcript",
+      "dialog": [
+        0
+      ],
+      "mediatype": "text/plain",
+      "vendor": "Deepgram",
+      "product": "Nova-3",
+      "body": "[00:00:02] Naomi: Helix billing, this is Naomi. [00:00:05] Petros: Hi, my invoice double-charged me for seats this month...",
+      "encoding": "none"
+    },
+    {
+      "type": "summary",
+      "dialog": [
+        0
+      ],
+      "mediatype": "text/plain",
+      "vendor": "Anthropic",
+      "product": "Claude Sonnet 4.6",
+      "body": "Customer reported duplicate seat charge on April invoice. Agent verified prorate bug from mid-cycle plan change, issued credit memo CM-44219 ($284.00), confirmed customer would see credit on next invoice.",
+      "encoding": "none"
+    }
+  ],
+  "extensions": [
+    "CC"
+  ]
+}
