@@ -1,0 +1,74 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "a878bf3c-e684-5957-aaf6-aa2a46530342",
+  "created_at": "2026-05-07T20:16:00+00:00",
+  "subject": "STIR/SHAKEN-attested support call",
+  "parties": [
+    {
+      "name": "Agent \u2014 Imani Robertson",
+      "tel": "+1-737-555-0911",
+      "mailto": "imani.r@northwind.example",
+      "validation": "STIR-A",
+      "timezone": "America/New_York",
+      "role": "agent"
+    },
+    {
+      "name": "Customer \u2014 Sergei Vasiliev",
+      "tel": "+1-415-555-0998",
+      "validation": "STIR-B",
+      "timezone": "America/New_York",
+      "role": "customer"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-05-07T20:11:00+00:00",
+      "duration": 240.5,
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "audio/x-wav",
+      "filename": "18-cc-sip-signaling-attached.wav",
+      "url": "https://media.vcon.example.net/18-cc-sip-signaling-attached.wav",
+      "content_hash": "sha512-97fa0a7a64edbc6162316dcd0c5df24347b38388285676736ced089b97b5768839b048be502ebf18fc31695fc0e5414af887081d4d17637898ed3042514c7327",
+      "alg": "SHA-512",
+      "disposition": "answered",
+      "campaign": "general-inbound",
+      "interaction_type": "voice",
+      "interaction_id": "INT-SIP-77019",
+      "skill": "general-tier1"
+    }
+  ],
+  "analysis": [
+    {
+      "type": "transcript",
+      "dialog": [
+        0
+      ],
+      "mediatype": "text/plain",
+      "vendor": "Deepgram",
+      "product": "Nova-3",
+      "body": "[00:00:01] Imani: Northwind support, how can I help? ...",
+      "encoding": "none"
+    }
+  ],
+  "attachments": [
+    {
+      "type": "sip_signaling",
+      "mediatype": "application/vcon-sip+json",
+      "filename": "18-cc-sip-signaling-attached-sip.json",
+      "dialog": [
+        0
+      ],
+      "body": "{\n  \"sip_signaling_version\": \"0.1\",\n  \"call_id\": \"a47f8b2e-9c1d-4a5b-9f3a-1e2f3a4b5c6d@edge1.northwind.example\",\n  \"from\": {\n    \"uri\": \"sip:+14155550998@carrier.example\",\n    \"tag\": \"as5d8f9a\"\n  },\n  \"to\": {\n    \"uri\": \"sip:+17375550911@northwind.example\",\n    \"tag\": \"r19f8c2b\"\n  },\n  \"passport\": {\n    \"verstat\": \"TN-Validation-Passed-A\",\n    \"attestation\": \"A\",\n    \"origid\": \"01HZX0K9ZP\",\n    \"iat\": 1778184660\n  },\n  \"media\": [\n    {\n      \"m\": \"audio\",\n      \"codec\": \"opus/48000/2\",\n      \"srtp\": \"AES_CM_128_HMAC_SHA1_80\"\n    }\n  ]\n}",
+      "encoding": "json"
+    }
+  ],
+  "extensions": [
+    "CC",
+    "SIP"
+  ]
+}
