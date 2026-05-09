@@ -1,0 +1,64 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "8c95b6cf-5cbf-58ea-a146-4dde7e4c7bcb",
+  "created_at": "2026-04-28T21:04:00+00:00",
+  "subject": "Q3 partner integration roadmap",
+  "parties": [
+    {
+      "name": "Theo Vance",
+      "mailto": "theo.vance@northwind.example",
+      "timezone": "America/New_York"
+    },
+    {
+      "name": "Aiyana Whitehorse",
+      "mailto": "aiyana@northwind.example",
+      "timezone": "America/New_York"
+    },
+    {
+      "name": "Diego Halpert",
+      "mailto": "diego@northwind.example",
+      "timezone": "America/New_York"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "text",
+      "start": "2026-04-28T16:04:00+00:00",
+      "parties": [
+        0,
+        1,
+        2
+      ],
+      "originator": 0,
+      "mediatype": "message/rfc822",
+      "body": "Subject: Re: Q3 partner integration roadmap\n\nTeam \u2014 attaching the updated roadmap. Key changes: pulled the Salesforce connector forward to August, pushed the Hubspot one to October to align with their API v4 GA. Let me know by EOW if anything looks off. \u2014 Theo",
+      "encoding": "none"
+    },
+    {
+      "type": "text",
+      "start": "2026-04-28T20:04:00+00:00",
+      "parties": [
+        0,
+        1,
+        2
+      ],
+      "originator": 1,
+      "mediatype": "message/rfc822",
+      "body": "Subject: Re: Q3 partner integration roadmap\n\nReply: Looks good. The August date is tight but doable if we get the sandbox creds by next Friday. \u2014 Aiyana",
+      "encoding": "none"
+    }
+  ],
+  "attachments": [
+    {
+      "type": "document",
+      "mediatype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      "filename": "05-email-q3-roadmap-roadmap.xlsx",
+      "dialog": [
+        0
+      ],
+      "url": "https://media.vcon.example.net/05-email-q3-roadmap-roadmap.xlsx",
+      "content_hash": "sha512-9c50da46996aab6b142db1316ea6dfd53a2c201ee75801235d91c3a70c805df6b38433248e03677d1f639de0f2784d09902cf52c2a6447533bd7e400a66c9b0c",
+      "alg": "SHA-512"
+    }
+  ]
+}
