@@ -1,0 +1,75 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "f6486ffb-ba18-5de2-83a3-aea89b932dda",
+  "created_at": "2026-05-05T15:40:00+00:00",
+  "subject": "KYC refresh \u2014 recorded with explicit consent",
+  "parties": [
+    {
+      "name": "Agent \u2014 Esther Lindqvist",
+      "tel": "+1-617-555-0501",
+      "mailto": "esther@kestrelpay.example",
+      "timezone": "America/New_York",
+      "role": "agent"
+    },
+    {
+      "name": "Customer \u2014 Adaeze Nnamani",
+      "tel": "+1-202-555-0411",
+      "mailto": "adaeze.n@example.com",
+      "timezone": "America/New_York",
+      "role": "customer"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-05-05T15:30:00+00:00",
+      "duration": 486.2,
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "audio/x-wav",
+      "filename": "15-cc-consent-recording-attached.wav",
+      "url": "https://media.vcon.example.net/15-cc-consent-recording-attached.wav",
+      "content_hash": "sha512-304d7937c992cab358574bd77534bc10e62e64f22a56aa408db3e26fca6638c4c3fd600ae8ab690b38a85de53c0c496d4fb11d8304dff7030a99c70ded9ccb31",
+      "alg": "SHA-512",
+      "disposition": "answered",
+      "campaign": "kyc-refresh",
+      "interaction_type": "voice",
+      "interaction_id": "INT-KYC-55421",
+      "skill": "kyc-verification"
+    }
+  ],
+  "analysis": [
+    {
+      "type": "transcript",
+      "dialog": [
+        0
+      ],
+      "mediatype": "text/plain",
+      "vendor": "Deepgram",
+      "product": "Nova-3",
+      "body": "[00:00:00] Esther: ...this call is being recorded for verification purposes; do I have your consent? [00:00:10] Adaeze: Yes, that's fine.",
+      "encoding": "none"
+    }
+  ],
+  "attachments": [
+    {
+      "type": "consent",
+      "mediatype": "application/vcon-consent+json",
+      "filename": "15-cc-consent-recording-attached-consent.json",
+      "party": 1,
+      "dialog": [
+        0
+      ],
+      "start": "2026-05-05T15:30:10+00:00",
+      "body": "{\n  \"consent_version\": \"vCon-Consent/0.1\",\n  \"expires_at\": \"2027-05-05T15:30:00+00:00\",\n  \"parties\": [\n    1\n  ],\n  \"dialog\": [\n    0\n  ],\n  \"consents\": [\n    {\n      \"purpose\": \"recording\",\n      \"granted\": true,\n      \"granted_at\": \"2026-05-05T15:30:10+00:00\"\n    },\n    {\n      \"purpose\": \"transcription\",\n      \"granted\": true,\n      \"granted_at\": \"2026-05-05T15:30:10+00:00\"\n    },\n    {\n      \"purpose\": \"qa_review\",\n      \"granted\": true,\n      \"granted_at\": \"2026-05-05T15:30:10+00:00\"\n    },\n    {\n      \"purpose\": \"ai_training\",\n      \"granted\": false\n    },\n    {\n      \"purpose\": \"third_party_share\",\n      \"granted\": false\n    }\n  ],\n  \"ai_preferences\": {\n    \"allow_inference\": true,\n    \"allow_training\": false\n  },\n  \"scitt_receipt\": {\n    \"transparency_service\": \"https://scitt.example.org/v1\",\n    \"receipt_id\": \"urn:scitt:receipt:01HZX9KQ4D\"\n  }\n}",
+      "encoding": "json"
+    }
+  ],
+  "extensions": [
+    "CC",
+    "Consent"
+  ]
+}
