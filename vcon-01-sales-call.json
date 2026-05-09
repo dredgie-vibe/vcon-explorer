@@ -1,0 +1,79 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "1a51cb6a-b0e1-5d9f-bf21-7214e5c383d5",
+  "created_at": "2026-04-12T14:09:22+00:00",
+  "subject": "Northwind Enterprise license \u2014 pricing walkthrough",
+  "parties": [
+    {
+      "name": "Marcus Bell",
+      "tel": "+1-617-555-0142",
+      "mailto": "marcus.bell@northwind.example",
+      "validation": "STIR-A",
+      "timezone": "America/New_York",
+      "civicaddress": {
+        "country": "US",
+        "region": "MA",
+        "locality": "Boston"
+      }
+    },
+    {
+      "name": "Priya Shah",
+      "tel": "+1-415-555-0177",
+      "mailto": "priya@kestrelpay.example",
+      "timezone": "America/Los_Angeles"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-04-12T14:05:22+00:00",
+      "duration": 78.4,
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "audio/x-wav",
+      "filename": "01-sales-call-priya-northwind.wav",
+      "url": "https://media.vcon.example.net/01-sales-call-priya-northwind.wav",
+      "content_hash": "sha512-76588bd607674dc28fb0587462c47a68062ad304a128a24c6e055a0e0bd46f266536b6cc69eae806398dc68f5056d17af2ca41e21211b28010cd7f1d8a628e33",
+      "alg": "SHA-512",
+      "disposition": "answered"
+    }
+  ],
+  "analysis": [
+    {
+      "type": "transcript",
+      "dialog": [
+        0
+      ],
+      "mediatype": "text/plain",
+      "vendor": "Deepgram",
+      "product": "Nova-3",
+      "body": "[00:00:02] Agent: Good morning, this is Marcus from Northwind Software, am I speaking with Priya?\n[00:00:06] Customer: Yes, this is Priya. You sent over the proposal yesterday.\n[00:00:10] Agent: Perfect. I wanted to walk through the licensing tiers and answer any questions on the migration plan.\n[00:00:18] Customer: Pricing looked reasonable but I want to understand the SSO add-on.\n[00:00:24] Agent: SSO is included in the Enterprise tier \u2014 SAML and OIDC, with SCIM provisioning.\n[00:01:02] Customer: Send the redlined MSA by Friday and we have a deal.\n[00:01:08] Agent: Will do, thanks Priya.",
+      "encoding": "none"
+    },
+    {
+      "type": "summary",
+      "dialog": [
+        0
+      ],
+      "mediatype": "text/plain",
+      "vendor": "Anthropic",
+      "product": "Claude Sonnet 4.6",
+      "body": "Northwind sales rep walked Priya through Enterprise-tier SSO and pricing; Priya committed to redlined MSA by Friday.",
+      "encoding": "none"
+    },
+    {
+      "type": "sentiment",
+      "dialog": [
+        0
+      ],
+      "mediatype": "application/json",
+      "vendor": "Recall.ai",
+      "product": "Sentiment v2",
+      "body": "{\"agent_sentiment\": \"positive\", \"customer_sentiment\": \"positive\", \"overall\": 0.74}",
+      "encoding": "json"
+    }
+  ]
+}
