@@ -1,0 +1,314 @@
+{
+  "schema": "vcon-corpus-index/0.1",
+  "generated_at": "2026-05-09T23:02:24+00:00",
+  "spec_references": [
+    "draft-ietf-vcon-vcon-core-02",
+    "draft-ietf-vcon-cc-extension-01",
+    "draft-howe-vcon-wtf-extension-02",
+    "draft-howe-vcon-consent-00",
+    "draft-howe-vcon-sip-signaling-00",
+    "draft-howe-vcon-lifecycle-01"
+  ],
+  "extensions_known": {
+    "CC": "Contact Center (draft-ietf-vcon-cc-extension)",
+    "WTF": "World Transcription Format (draft-howe-vcon-wtf-extension)",
+    "Consent": "Consent attachment (draft-howe-vcon-consent)",
+    "SIP": "SIP signaling (draft-howe-vcon-sip-signaling)",
+    "Lifecycle": "SCITT lifecycle (draft-howe-vcon-lifecycle)"
+  },
+  "count": 20,
+  "vcons": [
+    {
+      "file": "vcon-01-sales-call.json",
+      "uuid": "1a51cb6a-b0e1-5d9f-bf21-7214e5c383d5",
+      "subject": "Northwind Enterprise license \u2014 pricing walkthrough",
+      "created_at": "2026-04-12T14:09:22+00:00",
+      "extensions": [],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 1,
+      "analysis_count": 3,
+      "attachment_count": 0,
+      "category": "standard"
+    },
+    {
+      "file": "vcon-02-support-lockout.json",
+      "uuid": "6b1c7098-5593-5b3c-a3cd-70cced0426d2",
+      "subject": "Account lockout \u2014 Blanca Ortega",
+      "created_at": "2026-05-01T13:30:04+00:00",
+      "extensions": [],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 1,
+      "analysis_count": 3,
+      "attachment_count": 0,
+      "category": "standard"
+    },
+    {
+      "file": "vcon-03-team-standup.json",
+      "uuid": "3a9e23b7-98b6-5717-a185-2fe25a72a78e",
+      "subject": "Platform standup \u2014 vCon dashboard initiative",
+      "created_at": "2026-05-04T13:20:00+00:00",
+      "extensions": [],
+      "must_support": [],
+      "party_count": 4,
+      "dialog_count": 1,
+      "analysis_count": 2,
+      "attachment_count": 1,
+      "category": "standard"
+    },
+    {
+      "file": "vcon-04-sms-thread.json",
+      "uuid": "5bc6ad31-340f-55c1-8e30-38ba60b0469c",
+      "subject": "SMS \u2014 3pm walkthrough confirmation",
+      "created_at": "2026-04-22T19:12:00+00:00",
+      "extensions": [],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 4,
+      "analysis_count": 0,
+      "attachment_count": 0,
+      "category": "standard"
+    },
+    {
+      "file": "vcon-05-email-thread.json",
+      "uuid": "8c95b6cf-5cbf-58ea-a146-4dde7e4c7bcb",
+      "subject": "Q3 partner integration roadmap",
+      "created_at": "2026-04-28T21:04:00+00:00",
+      "extensions": [],
+      "must_support": [],
+      "party_count": 3,
+      "dialog_count": 2,
+      "analysis_count": 0,
+      "attachment_count": 1,
+      "category": "standard"
+    },
+    {
+      "file": "vcon-06-webchat.json",
+      "uuid": "d769c04d-3660-593b-a4db-b92e9ead1732",
+      "subject": "Web chat \u2014 metrics page 500 errors",
+      "created_at": "2026-05-05T17:46:12+00:00",
+      "extensions": [],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 6,
+      "analysis_count": 1,
+      "attachment_count": 0,
+      "category": "standard"
+    },
+    {
+      "file": "vcon-07-voicemail.json",
+      "uuid": "1bce2811-c033-549e-9c31-55dbf4fc7c6b",
+      "subject": "Voicemail \u2014 closing package signature",
+      "created_at": "2026-05-06T22:15:30+00:00",
+      "extensions": [],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 1,
+      "analysis_count": 2,
+      "attachment_count": 0,
+      "category": "standard"
+    },
+    {
+      "file": "vcon-08-conference-call.json",
+      "uuid": "4879312b-2c1e-5094-b78e-b1b58fec8a81",
+      "subject": "Billing platform migration \u2014 architecture review",
+      "created_at": "2026-04-30T16:10:00+00:00",
+      "extensions": [],
+      "must_support": [],
+      "party_count": 5,
+      "dialog_count": 1,
+      "analysis_count": 2,
+      "attachment_count": 0,
+      "category": "standard"
+    },
+    {
+      "file": "vcon-09-telehealth.json",
+      "uuid": "c8b2a0cf-ff79-57db-ad41-650334119dcf",
+      "subject": "Telehealth follow-up \u2014 Liam Chen",
+      "created_at": "2026-05-02T19:45:00+00:00",
+      "extensions": [],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 1,
+      "analysis_count": 2,
+      "attachment_count": 1,
+      "category": "standard"
+    },
+    {
+      "file": "vcon-10-job-interview.json",
+      "uuid": "e333d68d-5264-5cf7-9ad8-1a16611dfdf2",
+      "subject": "Interview \u2014 Staff Platform Engineer (River Kobayashi)",
+      "created_at": "2026-04-26T17:00:00+00:00",
+      "extensions": [],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 1,
+      "analysis_count": 2,
+      "attachment_count": 0,
+      "category": "standard"
+    },
+    {
+      "file": "vcon-11-cc-inbound-billing.json",
+      "uuid": "de8adbcd-5c41-5f14-a683-106173be2dfd",
+      "subject": "Inbound \u2014 duplicate seat charge",
+      "created_at": "2026-05-07T14:28:18+00:00",
+      "extensions": [
+        "CC"
+      ],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 1,
+      "analysis_count": 2,
+      "attachment_count": 0,
+      "category": "extended"
+    },
+    {
+      "file": "vcon-12-cc-outbound-renewal-wtf.json",
+      "uuid": "338cf4ca-f2cc-5a74-8201-7a6d690e2540",
+      "subject": "Outbound renewal \u2014 Yuki Watanabe (Q2 2026)",
+      "created_at": "2026-05-06T19:25:00+00:00",
+      "extensions": [
+        "CC",
+        "WTF"
+      ],
+      "must_support": [
+        "WTF"
+      ],
+      "party_count": 2,
+      "dialog_count": 1,
+      "analysis_count": 3,
+      "attachment_count": 0,
+      "category": "extended"
+    },
+    {
+      "file": "vcon-13-cc-omnichannel.json",
+      "uuid": "ca087699-4fca-58f8-a38f-0fbbafd8d33c",
+      "subject": "Omni-channel \u2014 IBAN update (Roland K\u00fchn)",
+      "created_at": "2026-05-03T14:20:00+00:00",
+      "extensions": [
+        "CC"
+      ],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 3,
+      "analysis_count": 2,
+      "attachment_count": 0,
+      "category": "extended"
+    },
+    {
+      "file": "vcon-14-cc-escalation-wtf.json",
+      "uuid": "4bc300a4-cc7a-5326-99f8-f02b0afc299e",
+      "subject": "Tier-3 escalation \u2014 duplicate charge refund",
+      "created_at": "2026-05-08T17:25:00+00:00",
+      "extensions": [
+        "CC",
+        "WTF"
+      ],
+      "must_support": [
+        "WTF"
+      ],
+      "party_count": 4,
+      "dialog_count": 1,
+      "analysis_count": 2,
+      "attachment_count": 0,
+      "category": "extended"
+    },
+    {
+      "file": "vcon-15-cc-with-consent.json",
+      "uuid": "f6486ffb-ba18-5de2-83a3-aea89b932dda",
+      "subject": "KYC refresh \u2014 recorded with explicit consent",
+      "created_at": "2026-05-05T15:40:00+00:00",
+      "extensions": [
+        "CC",
+        "Consent"
+      ],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 1,
+      "analysis_count": 1,
+      "attachment_count": 1,
+      "category": "extended"
+    },
+    {
+      "file": "vcon-16-cc-multisegment-transfer.json",
+      "uuid": "6a990b9a-43ff-5c9a-97c3-c360c7bfc1f4",
+      "subject": "Multi-segment hardware support call",
+      "created_at": "2026-04-29T18:20:00+00:00",
+      "extensions": [
+        "CC"
+      ],
+      "must_support": [],
+      "party_count": 4,
+      "dialog_count": 3,
+      "analysis_count": 1,
+      "attachment_count": 0,
+      "category": "extended"
+    },
+    {
+      "file": "vcon-17-cc-supervisor-monitor.json",
+      "uuid": "ab05e8b7-6973-5296-8898-81e51c7cf6f9",
+      "subject": "QM-monitored support call (router intermittent)",
+      "created_at": "2026-05-04T17:00:00+00:00",
+      "extensions": [
+        "CC"
+      ],
+      "must_support": [],
+      "party_count": 3,
+      "dialog_count": 1,
+      "analysis_count": 2,
+      "attachment_count": 0,
+      "category": "extended"
+    },
+    {
+      "file": "vcon-18-cc-sip-signaling.json",
+      "uuid": "a878bf3c-e684-5957-aaf6-aa2a46530342",
+      "subject": "STIR/SHAKEN-attested support call",
+      "created_at": "2026-05-07T20:16:00+00:00",
+      "extensions": [
+        "CC",
+        "SIP"
+      ],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 1,
+      "analysis_count": 1,
+      "attachment_count": 1,
+      "category": "extended"
+    },
+    {
+      "file": "vcon-19-cc-lifecycle-scitt.json",
+      "uuid": "3647406c-ad07-5a99-9369-84012e082811",
+      "subject": "Renewal call w/ SCITT lifecycle audit",
+      "created_at": "2026-04-24T18:12:00+00:00",
+      "extensions": [
+        "CC",
+        "Lifecycle"
+      ],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 1,
+      "analysis_count": 1,
+      "attachment_count": 1,
+      "category": "extended"
+    },
+    {
+      "file": "vcon-20-cc-redacted-pci-pii.json",
+      "uuid": "6e5e1670-1020-5378-9348-a0209487a682",
+      "subject": "Card-on-file update (PCI/PII redacted)",
+      "created_at": "2026-05-06T21:13:00+00:00",
+      "extensions": [
+        "CC",
+        "WTF"
+      ],
+      "must_support": [
+        "WTF"
+      ],
+      "party_count": 2,
+      "dialog_count": 1,
+      "analysis_count": 2,
+      "attachment_count": 0,
+      "category": "extended"
+    }
+  ]
+}
