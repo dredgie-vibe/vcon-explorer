@@ -1,0 +1,85 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "3a9e23b7-98b6-5717-a185-2fe25a72a78e",
+  "created_at": "2026-05-04T13:20:00+00:00",
+  "subject": "Platform standup \u2014 vCon dashboard initiative",
+  "parties": [
+    {
+      "name": "Maya Lindholm",
+      "mailto": "maya@alianza.example",
+      "timezone": "America/New_York"
+    },
+    {
+      "name": "Eli Chen",
+      "mailto": "eli@alianza.example",
+      "timezone": "America/New_York"
+    },
+    {
+      "name": "Devi Rao",
+      "mailto": "devi@alianza.example",
+      "timezone": "America/New_York"
+    },
+    {
+      "name": "Tom\u00e1s Fuentes",
+      "mailto": "tomas@alianza.example",
+      "timezone": "America/New_York"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-05-04T13:00:00+00:00",
+      "duration": 912.0,
+      "parties": [
+        0,
+        1,
+        2,
+        3
+      ],
+      "originator": 0,
+      "mediatype": "video/mp4",
+      "filename": "03-team-standup-vcon-dashboard.mp4",
+      "url": "https://media.vcon.example.net/03-team-standup-vcon-dashboard.mp4",
+      "content_hash": "sha512-578e118d9b4e6233be03d55c87beefa45ac85018e225273bc8c08e3340749abcabd6735151ce61c26c54cfd27aa97c9c865b9500f2a76a504778a019ca90a6a4",
+      "alg": "SHA-512",
+      "disposition": "answered"
+    }
+  ],
+  "analysis": [
+    {
+      "type": "transcript",
+      "dialog": [
+        0
+      ],
+      "mediatype": "text/plain",
+      "vendor": "Otter.ai",
+      "product": "Otter v3",
+      "body": "Standup notes \u2014 Platform team \u2014 vCon dashboard initiative.\nYesterday: Maya finished the parties parser; Eli wired up the search index.\nToday: Maya integrates analysis filtering; Eli adds attachment previews; Devi\ninvestigates SCITT receipt verification. Blockers: waiting on the design system\nupdate from Brand for the dialog timeline component.",
+      "encoding": "none"
+    },
+    {
+      "type": "summary",
+      "dialog": [
+        0
+      ],
+      "mediatype": "application/json",
+      "vendor": "Otter.ai",
+      "product": "Action Items",
+      "body": "[{\"owner\": \"Maya\", \"task\": \"Integrate analysis filtering\"}, {\"owner\": \"Eli\", \"task\": \"Add attachment previews\"}, {\"owner\": \"Devi\", \"task\": \"Investigate SCITT receipt verification\"}]",
+      "encoding": "json"
+    }
+  ],
+  "attachments": [
+    {
+      "type": "slides",
+      "mediatype": "application/pdf",
+      "filename": "03-team-standup-vcon-dashboard-slides.pdf",
+      "dialog": [
+        0
+      ],
+      "url": "https://media.vcon.example.net/03-team-standup-vcon-dashboard-slides.pdf",
+      "content_hash": "sha512-5af10c1ba01424bce8854ec9646b041f2a5c028971efe5267034d96faa118d5f9ba69be751e50cefbe719b599252dcb3d16ae69493648078daa7919dbec80c30",
+      "alg": "SHA-512"
+    }
+  ]
+}
