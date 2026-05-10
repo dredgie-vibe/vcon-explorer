@@ -1,0 +1,71 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "fd41d640-10b8-5623-87ea-c3ca010b1c33",
+  "created_at": "2026-05-04T17:15:00+00:00",
+  "subject": "Santa Clarita CA \u2192 Scottsdale AZ \u2014 pristine line",
+  "parties": [
+    {
+      "name": "Mariana Velasco",
+      "tel": "+1-661-555-0142",
+      "civicaddress": {
+        "locality": "Santa Clarita",
+        "region": "CA",
+        "country": "US"
+      },
+      "timezone": "America/Los_Angeles"
+    },
+    {
+      "name": "Trent Halverson",
+      "tel": "+1-480-555-0188",
+      "civicaddress": {
+        "locality": "Scottsdale",
+        "region": "AZ",
+        "country": "US"
+      },
+      "timezone": "America/Phoenix"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-05-04T17:12:00+00:00",
+      "duration": 392.7,
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "audio/x-wav",
+      "disposition": "answered",
+      "metadata_only": true
+    }
+  ],
+  "analysis": [
+    {
+      "type": "call_quality",
+      "dialog": [
+        0
+      ],
+      "vendor": "Cygnus Voice Quality Probe",
+      "product": "VQProbe v3.4 (RFC 3611 / G.107 E-model)",
+      "schema": "RFC3611-XR / G.107-Emodel",
+      "mediatype": "application/json",
+      "encoding": "json",
+      "filename": "21-quality-santaclarita-scottsdale-pristine-quality.json",
+      "body": "{\n  \"mos\": 4.42,\n  \"r_factor\": 92.0,\n  \"concealed_seconds\": 0.0,\n  \"jitter_buffer_discards\": 3,\n  \"burst_loss_avg_packets\": 0.0,\n  \"codec_impact_ie\": 5,\n  \"codec\": \"G.722/16000\",\n  \"jitter_ms\": 4.1,\n  \"avg_loss_pct\": 0.05,\n  \"latency_ms_round_trip\": 36,\n  \"samples_total\": 19635,\n  \"rating\": \"excellent\"\n}"
+    }
+  ],
+  "attachments": [
+    {
+      "type": "sip_pcap",
+      "mediatype": "application/vnd.tcpdump.pcap",
+      "filename": "21-quality-santaclarita-scottsdale-pristine-trace.pcap",
+      "dialog": [
+        0
+      ],
+      "url": "https://media.vcon.example.net/21-quality-santaclarita-scottsdale-pristine-trace.pcap",
+      "content_hash": "sha512-4357e443d164c5fb0c8a6e3416fc8e00f9c0927cea558a41a6814734ae1f75b561c17452b6c6388d20cfaa12bcda067e850e8de5a329c87bb323ec130d841276",
+      "alg": "SHA-512"
+    }
+  ]
+}

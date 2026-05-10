@@ -1,0 +1,71 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "23f3b52a-ca86-5e1a-b7f4-e8507011a387",
+  "created_at": "2026-05-07T11:07:12+00:00",
+  "subject": "London \u2192 Tokyo \u2014 high-latency international",
+  "parties": [
+    {
+      "name": "Niamh \u00d3 Briain",
+      "tel": "+44-20-7946-0123",
+      "civicaddress": {
+        "locality": "London",
+        "region": "England",
+        "country": "GB"
+      },
+      "timezone": "Europe/London"
+    },
+    {
+      "name": "Aiko Tanaka",
+      "tel": "+81-3-5555-1234",
+      "civicaddress": {
+        "locality": "Tokyo",
+        "region": "Tokyo",
+        "country": "JP"
+      },
+      "timezone": "Asia/Tokyo"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-05-07T11:04:12+00:00",
+      "duration": 248.0,
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "audio/x-wav",
+      "disposition": "answered",
+      "metadata_only": true
+    }
+  ],
+  "analysis": [
+    {
+      "type": "call_quality",
+      "dialog": [
+        0
+      ],
+      "vendor": "Cygnus Voice Quality Probe",
+      "product": "VQProbe v3.4 (RFC 3611 / G.107 E-model)",
+      "schema": "RFC3611-XR / G.107-Emodel",
+      "mediatype": "application/json",
+      "encoding": "json",
+      "filename": "24-quality-london-tokyo-latency-quality.json",
+      "body": "{\n  \"mos\": 2.91,\n  \"r_factor\": 58.4,\n  \"concealed_seconds\": 5.1,\n  \"jitter_buffer_discards\": 34,\n  \"burst_loss_avg_packets\": 2.0,\n  \"codec_impact_ie\": 11,\n  \"codec\": \"G.729/8000\",\n  \"jitter_ms\": 22.5,\n  \"avg_loss_pct\": 1.0,\n  \"latency_ms_round_trip\": 248,\n  \"samples_total\": 12400,\n  \"rating\": \"poor\"\n}"
+    }
+  ],
+  "attachments": [
+    {
+      "type": "sip_pcap",
+      "mediatype": "application/vnd.tcpdump.pcap",
+      "filename": "24-quality-london-tokyo-latency-trace.pcap",
+      "dialog": [
+        0
+      ],
+      "url": "https://media.vcon.example.net/24-quality-london-tokyo-latency-trace.pcap",
+      "content_hash": "sha512-c7bfab48675b401db166bdc8511fa648054dddb1993548d8c86a0aae6fe0526bd0f2ed8e10f17630db9b4bcd9e0d0c0bbd992f3a2650c36d802cf3904abb9b64",
+      "alg": "SHA-512"
+    }
+  ]
+}

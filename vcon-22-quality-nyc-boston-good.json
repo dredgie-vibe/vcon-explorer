@@ -1,0 +1,71 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "fd3c18f5-e7fe-5596-a315-4fe51d6c30f8",
+  "created_at": "2026-05-05T14:36:18+00:00",
+  "subject": "Manhattan NY \u2192 Boston MA \u2014 good narrowband",
+  "parties": [
+    {
+      "name": "Devorah Greenwald",
+      "tel": "+1-212-555-0301",
+      "civicaddress": {
+        "locality": "New York",
+        "region": "NY",
+        "country": "US"
+      },
+      "timezone": "America/New_York"
+    },
+    {
+      "name": "Marcus O'Connell",
+      "tel": "+1-617-555-0719",
+      "civicaddress": {
+        "locality": "Boston",
+        "region": "MA",
+        "country": "US"
+      },
+      "timezone": "America/New_York"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-05-05T14:33:18+00:00",
+      "duration": 184.2,
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "audio/x-wav",
+      "disposition": "answered",
+      "metadata_only": true
+    }
+  ],
+  "analysis": [
+    {
+      "type": "call_quality",
+      "dialog": [
+        0
+      ],
+      "vendor": "Cygnus Voice Quality Probe",
+      "product": "VQProbe v3.4 (RFC 3611 / G.107 E-model)",
+      "schema": "RFC3611-XR / G.107-Emodel",
+      "mediatype": "application/json",
+      "encoding": "json",
+      "filename": "22-quality-nyc-boston-good-quality.json",
+      "body": "{\n  \"mos\": 4.08,\n  \"r_factor\": 84.6,\n  \"concealed_seconds\": 1.2,\n  \"jitter_buffer_discards\": 22,\n  \"burst_loss_avg_packets\": 1.4,\n  \"codec_impact_ie\": 0,\n  \"codec\": \"G.711\\u00b5/8000\",\n  \"jitter_ms\": 11.8,\n  \"avg_loss_pct\": 0.4,\n  \"latency_ms_round_trip\": 58,\n  \"samples_total\": 9210,\n  \"rating\": \"good\"\n}"
+    }
+  ],
+  "attachments": [
+    {
+      "type": "sip_pcap",
+      "mediatype": "application/vnd.tcpdump.pcap",
+      "filename": "22-quality-nyc-boston-good-trace.pcap",
+      "dialog": [
+        0
+      ],
+      "url": "https://media.vcon.example.net/22-quality-nyc-boston-good-trace.pcap",
+      "content_hash": "sha512-592436ca085a2db3d51aa260fa80d4d5a8b1b3c654dc64b48089f9b16f09ef03230e13be21910742069ba5268f4c29f37b2c66a4c418f78d7dc1046d220338d9",
+      "alg": "SHA-512"
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "c413f494-8ba4-5670-8efb-55cae0dc8b57",
+  "created_at": "2026-05-08T21:22:41+00:00",
+  "subject": "Atlanta GA \u2192 Miami FL \u2014 heavy burst loss",
+  "parties": [
+    {
+      "name": "Tyrese Rutherford",
+      "tel": "+1-404-555-0922",
+      "civicaddress": {
+        "locality": "Atlanta",
+        "region": "GA",
+        "country": "US"
+      },
+      "timezone": "America/New_York"
+    },
+    {
+      "name": "Renata Aguilar",
+      "tel": "+1-305-555-0501",
+      "civicaddress": {
+        "locality": "Miami",
+        "region": "FL",
+        "country": "US"
+      },
+      "timezone": "America/New_York"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "recording",
+      "start": "2026-05-08T21:19:41+00:00",
+      "duration": 158.7,
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "audio/x-wav",
+      "disposition": "answered",
+      "metadata_only": true
+    }
+  ],
+  "analysis": [
+    {
+      "type": "call_quality",
+      "dialog": [
+        0
+      ],
+      "vendor": "Cygnus Voice Quality Probe",
+      "product": "VQProbe v3.4 (RFC 3611 / G.107 E-model)",
+      "schema": "RFC3611-XR / G.107-Emodel",
+      "mediatype": "application/json",
+      "encoding": "json",
+      "filename": "25-quality-atlanta-miami-burst-loss-quality.json",
+      "body": "{\n  \"mos\": 2.41,\n  \"r_factor\": 47.8,\n  \"concealed_seconds\": 19.4,\n  \"jitter_buffer_discards\": 142,\n  \"burst_loss_avg_packets\": 6.7,\n  \"codec_impact_ie\": 5,\n  \"codec\": \"G.722/16000\",\n  \"jitter_ms\": 38.4,\n  \"avg_loss_pct\": 4.1,\n  \"latency_ms_round_trip\": 71,\n  \"samples_total\": 7935,\n  \"rating\": \"bad\"\n}"
+    }
+  ],
+  "attachments": [
+    {
+      "type": "sip_pcap",
+      "mediatype": "application/vnd.tcpdump.pcap",
+      "filename": "25-quality-atlanta-miami-burst-loss-trace.pcap",
+      "dialog": [
+        0
+      ],
+      "url": "https://media.vcon.example.net/25-quality-atlanta-miami-burst-loss-trace.pcap",
+      "content_hash": "sha512-83c77909746b24545fc5ac0898d1b145e83e64f2b3235b3968163da1b0a44b68033d059c8b8ebf86336b5152df5f8599586e45236ffc80ff5adb4a95167bef85",
+      "alg": "SHA-512"
+    }
+  ]
+}

@@ -239,6 +239,18 @@
     .kv .k { font-size: .72rem; color: var(--gray); text-transform: uppercase; letter-spacing: .04em; }
     .kv .v { font-size: .95rem; color: var(--navy); font-weight: 500; margin-top: 2px; word-break: break-word; }
 
+    .cq-panel { display:grid; grid-template-columns: 140px 1fr; gap:18px; align-items:center;
+                background: var(--bg-soft); border-radius: 8px; padding: 14px 18px; margin-bottom: 10px; }
+    .cq-mos { border: 3px solid var(--blue); border-radius: 12px; padding: 10px 4px;
+              text-align:center; }
+    .cq-mos-num { font-size: 2.4rem; font-weight: 300; line-height: 1; }
+    .cq-mos-lbl { font-size: .7rem; letter-spacing:.1em; color: var(--gray); text-transform: uppercase; margin-top:4px; }
+    .cq-mos-grade { font-size: .85rem; font-weight: 700; text-transform: uppercase; margin-top: 6px; }
+    .cq-rf-head { display:flex; justify-content:space-between; font-size:.85rem; color: var(--navy); margin-bottom: 6px; }
+    .cq-rf-bar { width:100%; height: 14px; background:#e8eef3; border-radius: 999px; overflow: hidden; }
+    .cq-rf-fill { height: 100%; transition: width .4s ease; }
+    .cq-rf-scale { display:flex; justify-content:space-between; font-size:.7rem; color: var(--gray); margin-top: 4px; }
+
     pre.json-block {
       background: var(--navy); color: #d4e6f5;
       padding: 14px 16px; border-radius: 8px;
@@ -362,6 +374,7 @@ const STATE = {
     dateTo:    '',
     extension: new Set(['__all__']),  // 'CC','WTF','Consent','SIP','Lifecycle','Standard'
     channel:   new Set(['__all__']),  // 'audio','video','text','email','sms','webchat','voicemail'
+    quality:   new Set(['__all__']),  // '__all__' or 'has' (vCons w/ a call_quality analysis)
   },
   charts: {},
 };
@@ -576,7 +589,22 @@ function vconMatchesFilters(v) {
     if (!ok) return false;
   }
 
+  // Quality filter (only show vCons with a call_quality analysis)
+  if (!f.quality.has('__all__') && f.quality.has('has')) {
+    if (!hasCallQuality(v)) return false;
+  }
+
   return true;
+}
+
+function hasCallQuality(v) {
+  return (v.analysis || []).some(a => a.type === 'call_quality');
+}
+function callQualityFor(v) {
+  // Returns the parsed quality JSON of the first call_quality analysis, or null.
+  const a = (v.analysis || []).find(a => a.type === 'call_quality');
+  if (!a || typeof a.body !== 'string') return null;
+  try { return JSON.parse(a.body); } catch { return null; }
 }
 
 //---------------- List view --------------------------------------------
@@ -605,7 +633,7 @@ function renderList() {
   }
 
   APP.innerHTML = `
-    <h2>Corpus summary</h2>
+    <h2>VCON SUMMARY</h2>
     <div class="kpi-row">
       <div class="kpi"><div class="label">Total vCons</div><div class="value">${totals.total}</div>
         <div class="delta">${totals.standard} standard · ${totals.extended} extended</div></div>
@@ -637,6 +665,13 @@ function renderList() {
         <div class="chart-wrap"><canvas id="c-phones"></canvas></div></div>
       <div class="chart-card"><div class="chart-title">Analysis vendors</div>
         <div class="chart-wrap"><canvas id="c-vendors"></canvas></div></div>
+    </div>
+
+    <div class="chart-row" style="margin-top:16px; grid-template-columns: 1fr;">
+      <div class="chart-card">
+        <div class="chart-title">Call quality (MOS / R-Factor) over time <span class="hint">click a point to open the vCon</span></div>
+        <div class="chart-wrap" style="min-height:260px;"><canvas id="c-mos"></canvas></div>
+      </div>
     </div>
 
     <h2>Filter &amp; search</h2>
@@ -671,6 +706,13 @@ function renderList() {
           ${['audio','video','sms','webchat','email','voicemail'].map(c => pillHtml('channel',c,c)).join('')}
         </div>
       </div>
+      <div class="field" style="min-width:0;">
+        <label>Quality</label>
+        <div class="pill-group" id="pg-quality">
+          ${pillHtml('quality','__all__','Any')}
+          ${pillHtml('quality','has','Has call-quality')}
+        </div>
+      </div>
       <button class="reset-btn" id="reset">Reset filters</button>
     </div>
 
@@ -693,6 +735,7 @@ function renderList() {
   drawHourChart('c-hour',        all);
   drawTopPhonesChart('c-phones', all);
   drawVendorsChart('c-vendors',  all);
+  drawMosChart('c-mos',          all);
 }
 
 function pillHtml(group, val, label) {
@@ -750,7 +793,8 @@ function bindFilterInputs() {
   });
   document.getElementById('reset').addEventListener('click', () => {
     STATE.filters = {text:'', phone:'', dateFrom:'', dateTo:'',
-                     extension:new Set(['__all__']), channel:new Set(['__all__'])};
+                     extension:new Set(['__all__']), channel:new Set(['__all__']),
+                     quality:new Set(['__all__'])};
     renderList();
   });
 }
@@ -950,6 +994,99 @@ function drawTopPhonesChart(id, vcons) {
     },
   });
 }
+function drawMosChart(id, vcons) {
+  const ctx = document.getElementById(id);
+  // collect (start_time, mos, r_factor, vcon_uuid, subject) for every vCon with a call_quality analysis
+  const pts = [];
+  for (const v of vcons) {
+    const q = callQualityFor(v);
+    if (!q) continue;
+    const start = (v.dialog && v.dialog[0] && v.dialog[0].start) || v.created_at;
+    if (!start) continue;
+    pts.push({
+      x: new Date(start).getTime(),
+      mos: q.mos != null ? Number(q.mos) : null,
+      rf:  q.r_factor != null ? Number(q.r_factor) : null,
+      uuid: v.uuid,
+      subject: v.subject,
+    });
+  }
+  pts.sort((a,b) => a.x - b.x);
+
+  if (!pts.length) {
+    ctx.parentElement.innerHTML =
+      '<div class="muted" style="padding:60px 0;text-align:center;">No vCons with call_quality analysis yet.</div>';
+    return;
+  }
+
+  const labels = pts.map(p => new Date(p.x).toLocaleString(undefined,
+                          {month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit'}));
+  const mosData = pts.map(p => p.mos);
+  const rfData  = pts.map(p => p.rf);
+
+  STATE.charts.mos = new Chart(ctx, {
+    type: 'line',
+    data: {labels, datasets: [
+      {label:'MOS', data: mosData, yAxisID:'y',
+        borderColor: PALETTE[0], backgroundColor:'rgba(16,114,186,.15)',
+        pointBackgroundColor: mosData.map(m => mosColor(m)),
+        pointRadius: 6, pointHoverRadius: 8, tension: .25, fill: true},
+      {label:'R-Factor', data: rfData, yAxisID:'y2',
+        borderColor: PALETTE[3], backgroundColor:'rgba(253,183,62,.10)',
+        pointBackgroundColor: PALETTE[3],
+        pointRadius: 4, pointHoverRadius: 6, tension: .25, fill: false, borderDash:[4,4]},
+    ]},
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: {position:'bottom', labels:{font:{family:'Roboto'}, color:'#5a646a'}},
+        tooltip: {
+          callbacks: {
+            title: (items) => pts[items[0].dataIndex].subject,
+            afterBody: (items) => {
+              const p = pts[items[0].dataIndex];
+              return [`MOS:      ${p.mos ?? '—'}`,
+                      `R-Factor: ${p.rf  ?? '—'}`,
+                      `Quality:  ${qualityRating(p.mos)}`];
+            },
+          },
+        },
+      },
+      scales: {
+        y:  {title:{display:true, text:'MOS (1–5)', color:'#1072ba'},
+             min:1, max:5, ticks:{stepSize:0.5, color:'#5a646a'}},
+        y2: {title:{display:true, text:'R-Factor (0–100)', color:'#fdb73e'},
+             min:0, max:100, position:'right', grid:{drawOnChartArea:false},
+             ticks:{stepSize:20, color:'#5a646a'}},
+        x:  {ticks:{color:'#17477e', maxRotation:0, autoSkip:true, maxTicksLimit:12}},
+      },
+      onHover: (e, els) => { e.native.target.style.cursor = els.length ? 'pointer' : 'default'; },
+      onClick: (_e, els) => {
+        if (!els.length) return;
+        const idx = els[0].index;
+        if (pts[idx]) location.hash = '/' + pts[idx].uuid;
+      },
+    },
+  });
+}
+function mosColor(m) {
+  if (m == null) return '#999';
+  if (m >= 4.0)  return '#8bad44';   // green — excellent / good
+  if (m >= 3.6)  return '#65a7db';   // blue — good
+  if (m >= 3.1)  return '#fdb73e';   // gold — fair
+  if (m >= 2.6)  return '#e57373';   // light red — poor
+  return '#b71c1c';                  // deep red — bad
+}
+function qualityRating(m) {
+  if (m == null) return '—';
+  if (m >= 4.3) return 'excellent';
+  if (m >= 4.0) return 'good';
+  if (m >= 3.6) return 'fair';
+  if (m >= 3.1) return 'poor';
+  if (m >= 2.6) return 'bad';
+  return 'unusable';
+}
+
 function drawVendorsChart(id, vcons) {
   const ctx = document.getElementById(id);
   const counts = {};
@@ -1094,7 +1231,11 @@ function renderDialog(d, i, v) {
   const orig = (d.originator != null) ? (v.parties[d.originator]?.name || `party#${d.originator}`) : '—';
   let body = '';
 
-  if (d.type === 'recording') {
+  if (d.type === 'recording' && d.metadata_only) {
+    body = `<div class="media-unavailable" style="background:var(--bg-soft);border-color:var(--blue-pale);color:var(--gray);">
+              📋 Call metadata only — no recording was retained.
+            </div>`;
+  } else if (d.type === 'recording') {
     const isVideo = (d.mediatype || '').startsWith('video/');
     const url = resolveMediaUrl(d);
     const tag = isVideo ?
@@ -1166,7 +1307,9 @@ function renderAnalysis(a, i, v) {
   }
 
   let body;
-  if (parsed && Array.isArray(parsed.segments)) {
+  if (a.type === 'call_quality' && parsed && (parsed.mos != null || parsed.r_factor != null)) {
+    body = renderCallQuality(parsed);
+  } else if (parsed && Array.isArray(parsed.segments)) {
     // WTF-style transcript
     const refDialog = (a.dialog && a.dialog.length) ? a.dialog[0] : null;
     const speakers = parsed.speakers || [];
@@ -1198,6 +1341,40 @@ function renderAnalysis(a, i, v) {
   }
 
   return `<div class="analysis-card">${head}${body}</div>`;
+}
+
+function renderCallQuality(q) {
+  const mos = q.mos != null ? Number(q.mos) : null;
+  const rf  = q.r_factor != null ? Number(q.r_factor) : null;
+  const grade = qualityRating(mos);
+  const color = mosColor(mos);
+  // The other call-quality metrics surface as KV cards.
+  const meta = {};
+  for (const k of ['concealed_seconds','jitter_buffer_discards','burst_loss_avg_packets',
+                   'codec_impact_ie','codec','jitter_ms','avg_loss_pct',
+                   'latency_ms_round_trip','samples_total','rating']) {
+    if (q[k] !== undefined) meta[k] = q[k];
+  }
+  const rfPct = rf != null ? Math.max(0, Math.min(100, rf)) : 0;
+  return `
+    <div class="cq-panel">
+      <div class="cq-mos" style="color:${color}; border-color:${color};">
+        <div class="cq-mos-num">${mos != null ? mos.toFixed(2) : '—'}</div>
+        <div class="cq-mos-lbl">MOS</div>
+        <div class="cq-mos-grade">${escapeHtml(grade)}</div>
+      </div>
+      <div class="cq-rf">
+        <div class="cq-rf-head">
+          <span><strong>R-Factor</strong></span>
+          <span>${rf != null ? rf.toFixed(1) : '—'} / 100</span>
+        </div>
+        <div class="cq-rf-bar"><div class="cq-rf-fill" style="width:${rfPct}%;background:${color};"></div></div>
+        <div class="cq-rf-scale">
+          <span>0</span><span>50</span><span>80 good</span><span>100</span>
+        </div>
+      </div>
+    </div>
+    ${renderJsonKv(meta)}`;
 }
 
 function renderJsonKv(obj) {

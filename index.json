@@ -1,6 +1,6 @@
 {
   "schema": "vcon-corpus-index/0.1",
-  "generated_at": "2026-05-10T03:36:22+00:00",
+  "generated_at": "2026-05-10T03:51:39+00:00",
   "spec_references": [
     "draft-ietf-vcon-vcon-core-02",
     "draft-ietf-vcon-cc-extension-01",
@@ -16,7 +16,7 @@
     "SIP": "SIP signaling (draft-howe-vcon-sip-signaling)",
     "Lifecycle": "SCITT lifecycle (draft-howe-vcon-lifecycle)"
   },
-  "count": 20,
+  "count": 25,
   "vcons": [
     {
       "file": "vcon-01-sales-call.json",
@@ -309,6 +309,71 @@
       "analysis_count": 2,
       "attachment_count": 0,
       "category": "extended"
+    },
+    {
+      "file": "vcon-21-quality-santaclarita-scottsdale-pristine.json",
+      "uuid": "fd41d640-10b8-5623-87ea-c3ca010b1c33",
+      "subject": "Santa Clarita CA \u2192 Scottsdale AZ \u2014 pristine line",
+      "created_at": "2026-05-04T17:15:00+00:00",
+      "extensions": [],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 1,
+      "analysis_count": 1,
+      "attachment_count": 1,
+      "category": "standard"
+    },
+    {
+      "file": "vcon-22-quality-nyc-boston-good.json",
+      "uuid": "fd3c18f5-e7fe-5596-a315-4fe51d6c30f8",
+      "subject": "Manhattan NY \u2192 Boston MA \u2014 good narrowband",
+      "created_at": "2026-05-05T14:36:18+00:00",
+      "extensions": [],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 1,
+      "analysis_count": 1,
+      "attachment_count": 1,
+      "category": "standard"
+    },
+    {
+      "file": "vcon-23-quality-chicago-denver-degraded.json",
+      "uuid": "cd2e0b4f-032b-5740-ba00-b6c6b77ad654",
+      "subject": "Chicago IL \u2192 Denver CO \u2014 degraded (jitter+loss)",
+      "created_at": "2026-05-06T09:50:05+00:00",
+      "extensions": [],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 1,
+      "analysis_count": 1,
+      "attachment_count": 1,
+      "category": "standard"
+    },
+    {
+      "file": "vcon-24-quality-london-tokyo-latency.json",
+      "uuid": "23f3b52a-ca86-5e1a-b7f4-e8507011a387",
+      "subject": "London \u2192 Tokyo \u2014 high-latency international",
+      "created_at": "2026-05-07T11:07:12+00:00",
+      "extensions": [],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 1,
+      "analysis_count": 1,
+      "attachment_count": 1,
+      "category": "standard"
+    },
+    {
+      "file": "vcon-25-quality-atlanta-miami-burst-loss.json",
+      "uuid": "c413f494-8ba4-5670-8efb-55cae0dc8b57",
+      "subject": "Atlanta GA \u2192 Miami FL \u2014 heavy burst loss",
+      "created_at": "2026-05-08T21:22:41+00:00",
+      "extensions": [],
+      "must_support": [],
+      "party_count": 2,
+      "dialog_count": 1,
+      "analysis_count": 1,
+      "attachment_count": 1,
+      "category": "standard"
     }
   ]
 }
