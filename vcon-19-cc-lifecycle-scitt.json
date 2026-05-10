@@ -2,7 +2,7 @@
   "vcon": "0.0.2",
   "uuid": "3647406c-ad07-5a99-9369-84012e082811",
   "created_at": "2026-04-24T18:12:00+00:00",
-  "subject": "Outbound renewal call (Bea Halloran \u2192 Jiang Wei)",
+  "subject": "Renewal call w/ SCITT lifecycle + PCI/PII redaction",
   "parties": [
     {
       "name": "Agent \u2014 Bea Halloran",
@@ -41,6 +41,19 @@
   ],
   "analysis": [
     {
+      "type": "transcript",
+      "dialog": [
+        0
+      ],
+      "vendor": "Deepgram",
+      "product": "Nova-3",
+      "schema": "WTF/1.0",
+      "mediatype": "application/json",
+      "encoding": "json",
+      "filename": "19-cc-lifecycle-redaction-wtf.json",
+      "body": "{\"wtf_version\": \"1.0\", \"provider\": {\"name\": \"Deepgram\", \"model\": \"nova-3\", \"language\": \"en-US\"}, \"channels\": 2, \"speakers\": [{\"speaker\": \"S0\", \"party\": 0, \"role\": \"agent\", \"talk_time_s\": 168.0}, {\"speaker\": \"S1\", \"party\": 1, \"role\": \"customer\", \"talk_time_s\": 188.0}], \"segments\": [{\"start\": 1.4, \"end\": 6.8, \"speaker\": \"S0\", \"text\": \"Hi Jiang, this is Bea calling about your annual renewal.\"}, {\"start\": 6.9, \"end\": 11.2, \"speaker\": \"S1\", \"text\": \"Hey Bea \\u2014 yes, I was expecting your call.\"}, {\"start\": 11.3, \"end\": 22.1, \"speaker\": \"S0\", \"text\": \"Great. I can lock you in for 12 months at the same rate. Want me to charge the card on file or take a new one?\"}, {\"start\": 22.4, \"end\": 26.0, \"speaker\": \"S1\", \"text\": \"New one \\u2014 let me read it out.\"}, {\"start\": 26.1, \"end\": 58.4, \"speaker\": \"S1\", \"text\": \"[REDACTED:PCI]\", \"redaction\": \"pci\"}, {\"start\": 58.6, \"end\": 64.2, \"speaker\": \"S0\", \"text\": \"Got it. Can you confirm the billing zip?\"}, {\"start\": 64.4, \"end\": 68.0, \"speaker\": \"S1\", \"text\": \"[REDACTED:PII-zip]\", \"redaction\": \"pii\"}, {\"start\": 68.2, \"end\": 80.5, \"speaker\": \"S0\", \"text\": \"Thanks. And the email on file is still the same?\"}, {\"start\": 80.7, \"end\": 86.4, \"speaker\": \"S1\", \"text\": \"[REDACTED:PII-email]\", \"redaction\": \"pii\"}, {\"start\": 86.6, \"end\": 96.2, \"speaker\": \"S0\", \"text\": \"Perfect. I've processed the renewal \\u2014 confirmation is on its way.\"}], \"quality\": {\"overall_confidence\": 0.91, \"redaction_applied\": true}}"
+    },
+    {
       "type": "summary",
       "dialog": [
         0
@@ -48,12 +61,36 @@
       "mediatype": "text/plain",
       "vendor": "Anthropic",
       "product": "Claude Sonnet 4.6",
-      "body": "Renewal call; customer agreed to 12-month renewal at flat pricing. Lifecycle events recorded to SCITT transparency service.",
+      "body": "Renewal call; customer agreed to a 12-month flat-rate renewal and provided a new card. PCI (card number) and PII (zip, email) segments redacted from the transcript and audio. Lifecycle including redaction passes recorded to SCITT.",
       "encoding": "none"
+    },
+    {
+      "type": "redaction_log",
+      "dialog": [
+        0
+      ],
+      "mediatype": "application/json",
+      "encoding": "json",
+      "vendor": "Helix",
+      "product": "Redactor v2",
+      "body": "[{\"start\": 26.1, \"end\": 58.4, \"category\": \"PCI\", \"reason\": \"card-number-spoken\"}, {\"start\": 64.4, \"end\": 68.0, \"category\": \"PII-zip\", \"reason\": \"zip-code-spoken\"}, {\"start\": 80.7, \"end\": 86.4, \"category\": \"PII-email\", \"reason\": \"email-spoken\"}]"
     }
   ],
-  "attachments": [],
+  "attachments": [
+    {
+      "type": "lifecycle",
+      "mediatype": "application/vcon-lifecycle+json",
+      "filename": "19-cc-lifecycle-redaction.json",
+      "dialog": [
+        0
+      ],
+      "body": "{\n  \"lifecycle_version\": \"vCon-Lifecycle-SCITT/0.1\",\n  \"transparency_service\": \"https://scitt.example.org/v1\",\n  \"events\": [\n    {\n      \"event\": \"vcon_created\",\n      \"at\": \"2026-04-24T17:59:58+00:00\",\n      \"actor\": \"helix-recorder-edge1\",\n      \"receipt\": \"urn:scitt:receipt:01HZQ1A2\"\n    },\n    {\n      \"event\": \"consent_captured\",\n      \"at\": \"2026-04-24T18:00:12+00:00\",\n      \"actor\": \"helix-consent-svc\",\n      \"receipt\": \"urn:scitt:receipt:01HZQ1B7\"\n    },\n    {\n      \"event\": \"recording_completed\",\n      \"at\": \"2026-04-24T18:06:02+00:00\",\n      \"actor\": \"helix-recorder-edge1\",\n      \"receipt\": \"urn:scitt:receipt:01HZQ1C9\"\n    },\n    {\n      \"event\": \"transcribed\",\n      \"at\": \"2026-04-24T18:10:02+00:00\",\n      \"actor\": \"deepgram-nova3\",\n      \"receipt\": \"urn:scitt:receipt:01HZQ1F2\"\n    },\n    {\n      \"event\": \"redacted_pci\",\n      \"at\": \"2026-04-24T18:12:02+00:00\",\n      \"actor\": \"helix-redactor-v2\",\n      \"receipt\": \"urn:scitt:receipt:01HZQ1G8\",\n      \"details\": {\n        \"category\": \"PCI\",\n        \"ranges\": [\n          [\n            26.1,\n            58.4\n          ]\n        ]\n      }\n    },\n    {\n      \"event\": \"redacted_pii\",\n      \"at\": \"2026-04-24T18:12:22+00:00\",\n      \"actor\": \"helix-redactor-v2\",\n      \"receipt\": \"urn:scitt:receipt:01HZQ1H4\",\n      \"details\": {\n        \"category\": \"PII\",\n        \"ranges\": [\n          [\n            64.4,\n            68.0\n          ],\n          [\n            80.7,\n            86.4\n          ]\n        ]\n      }\n    },\n    {\n      \"event\": \"summarised\",\n      \"at\": \"2026-04-24T18:16:02+00:00\",\n      \"actor\": \"anthropic-claude-sonnet-4.6\",\n      \"receipt\": \"urn:scitt:receipt:01HZQ1J1\"\n    }\n  ]\n}",
+      "encoding": "json"
+    }
+  ],
   "extensions": [
-    "CC"
+    "CC",
+    "Lifecycle",
+    "WTF"
   ]
 }
