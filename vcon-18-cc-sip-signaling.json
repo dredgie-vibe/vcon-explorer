@@ -65,6 +65,17 @@
       ],
       "body": "{\n  \"sip_signaling_version\": \"0.1\",\n  \"call_id\": \"a47f8b2e-9c1d-4a5b-9f3a-1e2f3a4b5c6d@edge1.northwind.example\",\n  \"from\": {\n    \"uri\": \"sip:+14155550998@carrier.example\",\n    \"tag\": \"as5d8f9a\"\n  },\n  \"to\": {\n    \"uri\": \"sip:+17375550911@northwind.example\",\n    \"tag\": \"r19f8c2b\"\n  },\n  \"passport\": {\n    \"verstat\": \"TN-Validation-Passed-A\",\n    \"attestation\": \"A\",\n    \"origid\": \"01HZX0K9ZP\",\n    \"iat\": 1778184660\n  },\n  \"media\": [\n    {\n      \"m\": \"audio\",\n      \"codec\": \"opus/48000/2\",\n      \"srtp\": \"AES_CM_128_HMAC_SHA1_80\"\n    }\n  ]\n}",
       "encoding": "json"
+    },
+    {
+      "type": "sip_pcap",
+      "mediatype": "application/vnd.tcpdump.pcap",
+      "filename": "vcon-18-cc-sip-signaling-attached-trace.pcap",
+      "dialog": [
+        0
+      ],
+      "url": "https://media.vcon.example.net/vcon-18-cc-sip-signaling-attached-trace.pcap",
+      "content_hash": "sha512-e65b8dd7a84ba9ebe6528e920e6008ae5b05b7af965a38baf51b14b0cfc6aef1e68ceda7f0b74c6589c21ad15ded1015b4d7012a3b5087f2cc461af7aee5c50a",
+      "alg": "SHA-512"
     }
   ],
   "extensions": [
