@@ -66,6 +66,19 @@
     }
   ],
   "extensions": [
-    "CC"
+    "CC",
+    "Lifecycle"
+  ],
+  "attachments": [
+    {
+      "type": "lifecycle",
+      "mediatype": "application/vcon-lifecycle+json",
+      "filename": "11-cc-inbound-support-billing-lifecycle.json",
+      "dialog": [
+        0
+      ],
+      "body": "{\n  \"lifecycle_version\": \"vCon-Lifecycle-SCITT/0.1\",\n  \"transparency_service\": \"https://scitt.example.org/v1\",\n  \"events\": [\n    {\n      \"event\": \"vcon_created\",\n      \"at\": \"2026-05-07T14:22:16+00:00\",\n      \"actor\": \"helix-recorder-edge1\",\n      \"receipt\": \"urn:scitt:receipt:01HZP1A2\"\n    },\n    {\n      \"event\": \"consent_captured\",\n      \"at\": \"2026-05-07T14:22:26+00:00\",\n      \"actor\": \"helix-consent-svc\",\n      \"receipt\": \"urn:scitt:receipt:01HZP1B7\"\n    },\n    {\n      \"event\": \"recording_completed\",\n      \"at\": \"2026-05-07T14:27:16+00:00\",\n      \"actor\": \"helix-recorder-edge1\",\n      \"receipt\": \"urn:scitt:receipt:01HZP1C9\"\n    },\n    {\n      \"event\": \"transcribed\",\n      \"at\": \"2026-05-07T14:33:16+00:00\",\n      \"actor\": \"deepgram-nova3\",\n      \"receipt\": \"urn:scitt:receipt:01HZP1F2\"\n    },\n    {\n      \"event\": \"summarised\",\n      \"at\": \"2026-05-07T14:35:56+00:00\",\n      \"actor\": \"anthropic-claude-sonnet-4.6\",\n      \"receipt\": \"urn:scitt:receipt:01HZP1G8\"\n    }\n  ]\n}",
+      "encoding": "json"
+    }
   ]
 }

@@ -2,7 +2,7 @@
   "vcon": "0.0.2",
   "uuid": "3647406c-ad07-5a99-9369-84012e082811",
   "created_at": "2026-04-24T18:12:00+00:00",
-  "subject": "Renewal call w/ SCITT lifecycle audit",
+  "subject": "Outbound renewal call (Bea Halloran \u2192 Jiang Wei)",
   "parties": [
     {
       "name": "Agent \u2014 Bea Halloran",
@@ -52,25 +52,8 @@
       "encoding": "none"
     }
   ],
-  "attachments": [
-    {
-      "type": "lifecycle",
-      "mediatype": "application/vcon-lifecycle+json",
-      "filename": "19-cc-lifecycle-scitt-group-lifecycle.json",
-      "dialog": [
-        0
-      ],
-      "body": "{\n  \"lifecycle_version\": \"vCon-Lifecycle-SCITT/0.1\",\n  \"transparency_service\": \"https://scitt.example.org/v1\",\n  \"events\": [\n    {\n      \"event\": \"vcon_created\",\n      \"at\": \"2026-04-24T17:59:58+00:00\",\n      \"actor\": \"helix-recorder-edge1\",\n      \"receipt\": \"urn:scitt:receipt:01HZW1A2\"\n    },\n    {\n      \"event\": \"consent_captured\",\n      \"at\": \"2026-04-24T18:00:15+00:00\",\n      \"actor\": \"helix-consent-svc\",\n      \"receipt\": \"urn:scitt:receipt:01HZW1B7\"\n    },\n    {\n      \"event\": \"recording_completed\",\n      \"at\": \"2026-04-24T18:06:02+00:00\",\n      \"actor\": \"helix-recorder-edge1\",\n      \"receipt\": \"urn:scitt:receipt:01HZW1C9\"\n    },\n    {\n      \"event\": \"transcribed\",\n      \"at\": \"2026-04-24T18:08:00+00:00\",\n      \"actor\": \"deepgram-nova3\",\n      \"receipt\": \"urn:scitt:receipt:01HZW1F2\"\n    },\n    {\n      \"event\": \"redacted_pii\",\n      \"at\": \"2026-04-24T18:10:00+00:00\",\n      \"actor\": \"helix-redactor-v2\",\n      \"receipt\": \"urn:scitt:receipt:01HZW1G8\"\n    }\n  ]\n}",
-      "encoding": "json"
-    }
-  ],
+  "attachments": [],
   "extensions": [
-    "CC",
-    "Lifecycle"
-  ],
-  "group": [
-    {
-      "uuid": "de8adbcd-5c41-5f14-a683-106173be2dfd"
-    }
+    "CC"
   ]
 }
