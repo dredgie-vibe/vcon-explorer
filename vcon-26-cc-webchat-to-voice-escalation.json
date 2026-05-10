@@ -2,8 +2,8 @@
   "vcon": "0.0.2",
   "uuid": "224ed6c7-fad3-5741-ace0-5cac214a6634",
   "created_at": "2026-05-06T16:12:00+00:00",
-  "updated_at": "2026-05-06T16:43:16+00:00",
-  "subject": "Web chat \u2192 voice escalation: duplicate billing prorate (BL-44219)",
+  "updated_at": "2026-05-06T16:35:30+00:00",
+  "subject": "Web chat \u2192 voice \u2192 email: duplicate billing prorate (BL-44219)",
   "parties": [
     {
       "name": "Agent \u2014 Naomi Sayid",
@@ -152,6 +152,22 @@
       "interaction_id": "INT-OMNI-44219",
       "campaign": "billing-inbound",
       "skill": "billing-tier2"
+    },
+    {
+      "type": "text",
+      "start": "2026-05-06T16:35:00+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "message/rfc822",
+      "body": "Subject: Credit memo CM-44219 \u2014 refund confirmation (BL-44219)\r\nFrom: Naomi Sayid <naomi.sayid@helix.example>\r\nTo: Diane Metzger <diane.metzger@example.com>\r\n\r\nHi Diane,\r\n\r\nThanks for hopping on the call. Confirming the duplicate charge has been credited and the refund of $284.00 is on its way to your new card on file. You should see it land in 3\u20135 business days.\r\n\r\nI've attached the credit memo (CM-44219) for your records.\r\n\r\nAnything else come up, just reply here or open a new chat \u2014 quote BL-44219 and you'll route back to me.\r\n\r\nThanks,\r\nNaomi",
+      "encoding": "none",
+      "interaction_type": "email",
+      "interaction_id": "INT-OMNI-44219",
+      "campaign": "billing-inbound",
+      "skill": "billing-tier2"
     }
   ],
   "analysis": [
@@ -218,8 +234,20 @@
       ],
       "mediatype": "application/vcon-lifecycle+json",
       "filename": "26-cc-webchat-to-voice-escalation-lifecycle.json",
-      "body": "{\n  \"lifecycle_version\": \"vCon-Lifecycle-SCITT/0.1\",\n  \"transparency_service\": \"https://scitt.example.org/v1\",\n  \"events\": [\n    {\n      \"event\": \"vcon_created\",\n      \"at\": \"2026-05-06T16:11:58+00:00\",\n      \"actor\": \"helix-chat-edge\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1A2\"\n    },\n    {\n      \"event\": \"chat_started\",\n      \"at\": \"2026-05-06T16:12:00+00:00\",\n      \"actor\": \"helix-chat-edge\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1A4\"\n    },\n    {\n      \"event\": \"chat_completed\",\n      \"at\": \"2026-05-06T16:16:00+00:00\",\n      \"actor\": \"helix-chat-edge\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1A9\"\n    },\n    {\n      \"event\": \"call_started\",\n      \"at\": \"2026-05-06T16:28:30+00:00\",\n      \"actor\": \"helix-recorder-edge1\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1B0\"\n    },\n    {\n      \"event\": \"consent_captured\",\n      \"at\": \"2026-05-06T16:28:54+00:00\",\n      \"actor\": \"helix-consent-svc\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1B8\"\n    },\n    {\n      \"event\": \"recording_completed\",\n      \"at\": \"2026-05-06T16:33:16+00:00\",\n      \"actor\": \"helix-recorder-edge1\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1C9\"\n    },\n    {\n      \"event\": \"transcribed\",\n      \"at\": \"2026-05-06T16:36:56+00:00\",\n      \"actor\": \"deepgram-nova3\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1F2\"\n    },\n    {\n      \"event\": \"redacted_pci\",\n      \"at\": \"2026-05-06T16:38:56+00:00\",\n      \"actor\": \"helix-redactor-v2\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1G8\",\n      \"details\": {\n        \"category\": \"PCI\",\n        \"ranges\": [\n          [\n            47.7,\n            78.6\n          ]\n        ]\n      }\n    },\n    {\n      \"event\": \"redacted_pii\",\n      \"at\": \"2026-05-06T16:39:01+00:00\",\n      \"actor\": \"helix-redactor-v2\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1H4\",\n      \"details\": {\n        \"category\": \"PII\",\n        \"ranges\": [\n          [\n            85.1,\n            89.4\n          ]\n        ]\n      }\n    },\n    {\n      \"event\": \"summarised\",\n      \"at\": \"2026-05-06T16:42:36+00:00\",\n      \"actor\": \"anthropic-claude-sonnet-4.6\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1J1\"\n    }\n  ]\n}",
+      "body": "{\n  \"lifecycle_version\": \"vCon-Lifecycle-SCITT/0.1\",\n  \"transparency_service\": \"https://scitt.example.org/v1\",\n  \"events\": [\n    {\n      \"event\": \"vcon_created\",\n      \"at\": \"2026-05-06T16:11:58+00:00\",\n      \"actor\": \"helix-chat-edge\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1A2\"\n    },\n    {\n      \"event\": \"chat_started\",\n      \"at\": \"2026-05-06T16:12:00+00:00\",\n      \"actor\": \"helix-chat-edge\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1A4\"\n    },\n    {\n      \"event\": \"chat_completed\",\n      \"at\": \"2026-05-06T16:16:00+00:00\",\n      \"actor\": \"helix-chat-edge\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1A9\"\n    },\n    {\n      \"event\": \"call_started\",\n      \"at\": \"2026-05-06T16:28:30+00:00\",\n      \"actor\": \"helix-recorder-edge1\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1B0\"\n    },\n    {\n      \"event\": \"consent_captured\",\n      \"at\": \"2026-05-06T16:28:54+00:00\",\n      \"actor\": \"helix-consent-svc\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1B8\"\n    },\n    {\n      \"event\": \"recording_completed\",\n      \"at\": \"2026-05-06T16:33:16+00:00\",\n      \"actor\": \"helix-recorder-edge1\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1C9\"\n    },\n    {\n      \"event\": \"transcribed\",\n      \"at\": \"2026-05-06T16:36:56+00:00\",\n      \"actor\": \"deepgram-nova3\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1F2\"\n    },\n    {\n      \"event\": \"redacted_pci\",\n      \"at\": \"2026-05-06T16:38:56+00:00\",\n      \"actor\": \"helix-redactor-v2\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1G8\",\n      \"details\": {\n        \"category\": \"PCI\",\n        \"ranges\": [\n          [\n            47.7,\n            78.6\n          ]\n        ]\n      }\n    },\n    {\n      \"event\": \"redacted_pii\",\n      \"at\": \"2026-05-06T16:39:01+00:00\",\n      \"actor\": \"helix-redactor-v2\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1H4\",\n      \"details\": {\n        \"category\": \"PII\",\n        \"ranges\": [\n          [\n            85.1,\n            89.4\n          ]\n        ]\n      }\n    },\n    {\n      \"event\": \"summarised\",\n      \"at\": \"2026-05-06T16:42:36+00:00\",\n      \"actor\": \"anthropic-claude-sonnet-4.6\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1J1\"\n    },\n    {\n      \"event\": \"email_sent\",\n      \"at\": \"2026-05-06T16:35:00+00:00\",\n      \"actor\": \"helix-mailer-svc\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1K7\",\n      \"details\": {\n        \"to\": \"diane.metzger@example.com\",\n        \"subject\": \"Credit memo CM-44219 \\u2014 refund confirmation (BL-44219)\",\n        \"attachments\": [\n          \"26-credit-memo-CM-44219.pdf\"\n        ]\n      }\n    }\n  ]\n}",
       "encoding": "json"
+    },
+    {
+      "type": "invoice",
+      "party": 1,
+      "dialog": [
+        8
+      ],
+      "mediatype": "application/pdf",
+      "filename": "26-credit-memo-CM-44219.pdf",
+      "url": "https://media.vcon.example.net/26-credit-memo-CM-44219.pdf",
+      "alg": "SHA-512",
+      "content_hash": "sha512-PENDING-COMPUTE-AFTER-PDF-GENERATED"
     }
   ],
   "extensions": [

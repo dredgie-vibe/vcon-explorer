@@ -1,6 +1,6 @@
 {
   "schema": "vcon-corpus-index/0.1",
-  "generated_at": "2026-05-10T15:57:04+00:00",
+  "generated_at": "2026-05-10T16:02:44+00:00",
   "spec_references": [
     "draft-ietf-vcon-vcon-core-02",
     "draft-ietf-vcon-cc-extension-01",
@@ -405,7 +405,7 @@
     {
       "file": "vcon-26-cc-webchat-to-voice-escalation.json",
       "uuid": "224ed6c7-fad3-5741-ace0-5cac214a6634",
-      "subject": "Web chat \u2192 voice escalation: duplicate billing prorate (BL-44219)",
+      "subject": "Web chat \u2192 voice \u2192 email: duplicate billing prorate (BL-44219)",
       "created_at": "2026-05-06T16:12:00+00:00",
       "extensions": [
         "CC",
@@ -417,9 +417,9 @@
         "WTF"
       ],
       "party_count": 2,
-      "dialog_count": 8,
+      "dialog_count": 9,
       "analysis_count": 3,
-      "attachment_count": 2,
+      "attachment_count": 3,
       "category": "extended",
       "form": "unsigned"
     },
