@@ -1238,8 +1238,14 @@ function renderAttachment(a, i, v) {
     if (ok) body = renderJsonKv(obj);
     else    body = `<div class="body-text">${escapeHtml(a.body)}</div>`;
   } else if (a.url) {
-    body = `<div class="url-line">📎 <a href="${escapeHtml(a.url)}" target="_blank" rel="noopener">${escapeHtml(a.filename || a.url)}</a></div>
-            ${a.content_hash ? `<div class="url-line">🔐 ${escapeHtml(a.content_hash)} (${escapeHtml(a.alg||'')})</div>` : ''}`;
+    const localUrl = resolveMediaUrl(a);
+    const isPdf  = (a.mediatype || '').includes('pdf') || (a.filename || '').toLowerCase().endsWith('.pdf');
+    const preview = isPdf
+      ? `<iframe src="${escapeHtml(localUrl)}" style="width:100%;height:520px;border:1px solid var(--blue-pale);border-radius:6px;background:var(--bg-soft);" title="${escapeHtml(a.filename || 'PDF preview')}"></iframe>`
+      : '';
+    body = `${preview}
+      <div class="url-line">📎 <a href="${escapeHtml(localUrl)}" target="_blank" rel="noopener">${escapeHtml(a.filename || localUrl)}</a></div>
+      ${a.content_hash ? `<div class="url-line">🔐 ${escapeHtml(a.content_hash)} (${escapeHtml(a.alg||'')})</div>` : ''}`;
   } else {
     body = '<div class="muted">(empty)</div>';
   }
