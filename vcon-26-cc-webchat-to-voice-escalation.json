@@ -1,0 +1,234 @@
+{
+  "vcon": "0.0.2",
+  "uuid": "224ed6c7-fad3-5741-ace0-5cac214a6634",
+  "created_at": "2026-05-06T16:12:00+00:00",
+  "updated_at": "2026-05-06T16:43:16+00:00",
+  "subject": "Web chat \u2192 voice escalation: duplicate billing prorate (BL-44219)",
+  "parties": [
+    {
+      "name": "Agent \u2014 Naomi Sayid",
+      "tel": "+1-737-555-0101",
+      "mailto": "naomi.sayid@helix.example",
+      "timezone": "America/Chicago",
+      "role": "agent"
+    },
+    {
+      "name": "Customer \u2014 Diane Metzger",
+      "tel": "+1-415-555-0388",
+      "mailto": "diane.metzger@example.com",
+      "timezone": "America/Los_Angeles",
+      "role": "customer"
+    }
+  ],
+  "dialog": [
+    {
+      "type": "text",
+      "start": "2026-05-06T16:12:00+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "text/plain",
+      "body": "Hi \u2014 I see two identical charges on my April invoice for $284. Can someone help?",
+      "encoding": "none",
+      "interaction_type": "webchat",
+      "interaction_id": "INT-OMNI-44219",
+      "campaign": "billing-inbound",
+      "skill": "billing-tier2"
+    },
+    {
+      "type": "text",
+      "start": "2026-05-06T16:12:32+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "text/plain",
+      "body": "Hi Diane, I'm Naomi \u2014 sorry about that. Can I have your account email so I can pull up the invoice?",
+      "encoding": "none",
+      "interaction_type": "webchat",
+      "interaction_id": "INT-OMNI-44219",
+      "campaign": "billing-inbound",
+      "skill": "billing-tier2"
+    },
+    {
+      "type": "text",
+      "start": "2026-05-06T16:13:11+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "text/plain",
+      "body": "diane.metzger@example.com",
+      "encoding": "none",
+      "interaction_type": "webchat",
+      "interaction_id": "INT-OMNI-44219",
+      "campaign": "billing-inbound",
+      "skill": "billing-tier2"
+    },
+    {
+      "type": "text",
+      "start": "2026-05-06T16:13:42+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "text/plain",
+      "body": "Thanks. I can see a duplicate prorate from the seat-count change on the 12th. There's a credit memo workflow I'd rather walk through on a quick call so we don't bounce links back and forth \u2014 okay if I send you our number?",
+      "encoding": "none",
+      "interaction_type": "webchat",
+      "interaction_id": "INT-OMNI-44219",
+      "campaign": "billing-inbound",
+      "skill": "billing-tier2"
+    },
+    {
+      "type": "text",
+      "start": "2026-05-06T16:14:45+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "text/plain",
+      "body": "Sure.",
+      "encoding": "none",
+      "interaction_type": "webchat",
+      "interaction_id": "INT-OMNI-44219",
+      "campaign": "billing-inbound",
+      "skill": "billing-tier2"
+    },
+    {
+      "type": "text",
+      "start": "2026-05-06T16:15:00+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 0,
+      "mediatype": "text/plain",
+      "body": "Great \u2014 call +1-737-555-0101 and quote ticket BL-44219, you'll route straight back to me.",
+      "encoding": "none",
+      "interaction_type": "webchat",
+      "interaction_id": "INT-OMNI-44219",
+      "campaign": "billing-inbound",
+      "skill": "billing-tier2"
+    },
+    {
+      "type": "text",
+      "start": "2026-05-06T16:15:40+00:00",
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "text/plain",
+      "body": "On my way.",
+      "encoding": "none",
+      "interaction_type": "webchat",
+      "interaction_id": "INT-OMNI-44219",
+      "campaign": "billing-inbound",
+      "skill": "billing-tier2"
+    },
+    {
+      "type": "recording",
+      "start": "2026-05-06T16:28:30+00:00",
+      "duration": 286.4,
+      "parties": [
+        0,
+        1
+      ],
+      "originator": 1,
+      "mediatype": "audio/mp4",
+      "filename": "26-cc-webchat-to-voice-escalation.m4a",
+      "url": "https://media.vcon.example.net/26-cc-webchat-to-voice-escalation.m4a",
+      "content_hash": "sha512-705f1b23ce203afd9e546cb264b1eed4f0460c28ffb272c91ad4b715d0b62370ec08236a47c1d5304d328357f06f681629a1d0d3627f0fe1699112806c4f9e31",
+      "alg": "SHA-512",
+      "disposition": "answered",
+      "interaction_type": "voice",
+      "interaction_id": "INT-OMNI-44219",
+      "campaign": "billing-inbound",
+      "skill": "billing-tier2"
+    }
+  ],
+  "analysis": [
+    {
+      "type": "transcript",
+      "dialog": [
+        7
+      ],
+      "vendor": "Deepgram",
+      "product": "Nova-3",
+      "schema": "WTF/1.0",
+      "mediatype": "application/json",
+      "encoding": "json",
+      "filename": "26-cc-webchat-to-voice-escalation-wtf.json",
+      "body": "{\"wtf_version\": \"1.0\", \"provider\": {\"name\": \"Deepgram\", \"model\": \"nova-3\", \"language\": \"en-US\"}, \"channels\": 2, \"speakers\": [{\"speaker\": \"S0\", \"party\": 0, \"role\": \"agent\", \"talk_time_s\": 132.0}, {\"speaker\": \"S1\", \"party\": 1, \"role\": \"customer\", \"talk_time_s\": 148.0}], \"segments\": [{\"start\": 1.6, \"end\": 6.4, \"speaker\": \"S0\", \"text\": \"Helix billing, this is Naomi \\u2014 I see we were just chatting.\"}, {\"start\": 6.7, \"end\": 11.5, \"speaker\": \"S1\", \"text\": \"Yes, you said to mention BL-44219.\"}, {\"start\": 11.7, \"end\": 22.0, \"speaker\": \"S0\", \"text\": \"Got it. Quick recording disclosure: this call is recorded for QA, transcripts may be reviewed. Okay to proceed?\"}, {\"start\": 22.2, \"end\": 24.4, \"speaker\": \"S1\", \"text\": \"Yes, that's fine.\"}, {\"start\": 24.6, \"end\": 41.8, \"speaker\": \"S0\", \"text\": \"Great. I've issued credit memo CM-44219 for $284. Want to apply it to next month or refund to the card on file? If you'd rather refund to a different card, give me the new one.\"}, {\"start\": 42.0, \"end\": 47.5, \"speaker\": \"S1\", \"text\": \"Refund to a new card \\u2014 let me read it out.\"}, {\"start\": 47.7, \"end\": 78.6, \"speaker\": \"S1\", \"text\": \"[REDACTED:PCI]\", \"redaction\": \"pci\"}, {\"start\": 78.8, \"end\": 84.9, \"speaker\": \"S0\", \"text\": \"Got it \\u2014 confirming the email for the refund receipt.\"}, {\"start\": 85.1, \"end\": 89.4, \"speaker\": \"S1\", \"text\": \"[REDACTED:PII-email]\", \"redaction\": \"pii\"}, {\"start\": 89.6, \"end\": 102.2, \"speaker\": \"S0\", \"text\": \"Perfect \\u2014 refund will hit in 3\\u20135 business days, you'll get a confirmation email shortly. Anything else?\"}, {\"start\": 102.4, \"end\": 104.8, \"speaker\": \"S1\", \"text\": \"That's all, thanks Naomi.\"}], \"quality\": {\"overall_confidence\": 0.92, \"redaction_applied\": true}}"
+    },
+    {
+      "type": "summary",
+      "dialog": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "vendor": "Anthropic",
+      "product": "Claude Sonnet 4.6",
+      "mediatype": "text/plain",
+      "encoding": "none",
+      "body": "Customer reported a duplicate $284 prorate on the April invoice via web chat (BL-44219). Agent Naomi authenticated her by email, escalated to a voice call for the refund workflow, captured explicit recording consent, processed credit memo CM-44219 with refund to a new card. PCI (card number) and PII (email) segments redacted from the transcript and recording."
+    },
+    {
+      "type": "redaction_log",
+      "dialog": [
+        7
+      ],
+      "vendor": "Helix",
+      "product": "Redactor v2",
+      "mediatype": "application/json",
+      "encoding": "json",
+      "body": "[{\"start\": 47.7, \"end\": 78.6, \"category\": \"PCI\", \"reason\": \"card-number-spoken\"}, {\"start\": 85.1, \"end\": 89.4, \"category\": \"PII-email\", \"reason\": \"email-spoken\"}]"
+    }
+  ],
+  "attachments": [
+    {
+      "type": "consent",
+      "party": 1,
+      "dialog": [
+        7
+      ],
+      "mediatype": "application/vcon-consent+json",
+      "filename": "26-cc-webchat-to-voice-escalation-consent.json",
+      "start": "2026-05-06T16:28:54+00:00",
+      "body": "{\n  \"consent_version\": \"vCon-Consent/0.1\",\n  \"expires_at\": \"2027-05-06T16:28:30+00:00\",\n  \"parties\": [\n    1\n  ],\n  \"dialog\": [\n    7\n  ],\n  \"consents\": [\n    {\n      \"purpose\": \"recording\",\n      \"granted\": true,\n      \"granted_at\": \"2026-05-06T16:28:54+00:00\"\n    },\n    {\n      \"purpose\": \"transcription\",\n      \"granted\": true,\n      \"granted_at\": \"2026-05-06T16:28:54+00:00\"\n    },\n    {\n      \"purpose\": \"qa_review\",\n      \"granted\": true,\n      \"granted_at\": \"2026-05-06T16:28:54+00:00\"\n    },\n    {\n      \"purpose\": \"ai_training\",\n      \"granted\": false\n    },\n    {\n      \"purpose\": \"third_party_share\",\n      \"granted\": false\n    }\n  ],\n  \"ai_preferences\": {\n    \"allow_inference\": true,\n    \"allow_training\": false\n  },\n  \"scitt_receipt\": {\n    \"transparency_service\": \"https://scitt.example.org/v1\",\n    \"receipt_id\": \"urn:scitt:receipt:01HZR1B8\"\n  }\n}",
+      "encoding": "json"
+    },
+    {
+      "type": "lifecycle",
+      "dialog": [
+        7
+      ],
+      "mediatype": "application/vcon-lifecycle+json",
+      "filename": "26-cc-webchat-to-voice-escalation-lifecycle.json",
+      "body": "{\n  \"lifecycle_version\": \"vCon-Lifecycle-SCITT/0.1\",\n  \"transparency_service\": \"https://scitt.example.org/v1\",\n  \"events\": [\n    {\n      \"event\": \"vcon_created\",\n      \"at\": \"2026-05-06T16:11:58+00:00\",\n      \"actor\": \"helix-chat-edge\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1A2\"\n    },\n    {\n      \"event\": \"chat_started\",\n      \"at\": \"2026-05-06T16:12:00+00:00\",\n      \"actor\": \"helix-chat-edge\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1A4\"\n    },\n    {\n      \"event\": \"chat_completed\",\n      \"at\": \"2026-05-06T16:16:00+00:00\",\n      \"actor\": \"helix-chat-edge\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1A9\"\n    },\n    {\n      \"event\": \"call_started\",\n      \"at\": \"2026-05-06T16:28:30+00:00\",\n      \"actor\": \"helix-recorder-edge1\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1B0\"\n    },\n    {\n      \"event\": \"consent_captured\",\n      \"at\": \"2026-05-06T16:28:54+00:00\",\n      \"actor\": \"helix-consent-svc\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1B8\"\n    },\n    {\n      \"event\": \"recording_completed\",\n      \"at\": \"2026-05-06T16:33:16+00:00\",\n      \"actor\": \"helix-recorder-edge1\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1C9\"\n    },\n    {\n      \"event\": \"transcribed\",\n      \"at\": \"2026-05-06T16:36:56+00:00\",\n      \"actor\": \"deepgram-nova3\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1F2\"\n    },\n    {\n      \"event\": \"redacted_pci\",\n      \"at\": \"2026-05-06T16:38:56+00:00\",\n      \"actor\": \"helix-redactor-v2\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1G8\",\n      \"details\": {\n        \"category\": \"PCI\",\n        \"ranges\": [\n          [\n            47.7,\n            78.6\n          ]\n        ]\n      }\n    },\n    {\n      \"event\": \"redacted_pii\",\n      \"at\": \"2026-05-06T16:39:01+00:00\",\n      \"actor\": \"helix-redactor-v2\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1H4\",\n      \"details\": {\n        \"category\": \"PII\",\n        \"ranges\": [\n          [\n            85.1,\n            89.4\n          ]\n        ]\n      }\n    },\n    {\n      \"event\": \"summarised\",\n      \"at\": \"2026-05-06T16:42:36+00:00\",\n      \"actor\": \"anthropic-claude-sonnet-4.6\",\n      \"receipt\": \"urn:scitt:receipt:01HZR1J1\"\n    }\n  ]\n}",
+      "encoding": "json"
+    }
+  ],
+  "extensions": [
+    "CC",
+    "WTF",
+    "Consent",
+    "Lifecycle"
+  ],
+  "must_support": [
+    "WTF"
+  ]
+}
