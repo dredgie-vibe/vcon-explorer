@@ -456,6 +456,30 @@ function normalizePhone(s) {
   if (!p.startsWith('+')) p = '+' + p;
   return p;
 }
+// Rewrite recording URLs to point at ./media/<filename> when the JSON uses
+// the placeholder media.vcon.example.net host. Real external URLs are kept
+// as-is. Falls back to ./media/<filename> if no URL is present at all.
+//
+// Audio extension swap: the JSON uses .wav (since the spec/generator chose
+// audio/x-wav), but the actual files in media/ are .m4a. We swap on rewrite.
+const MEDIA_PLACEHOLDER_HOSTS = ['media.vcon.example.net'];
+const AUDIO_EXT_LOCAL = '.m4a';   // change to '.wav' if you swap formats later
+function resolveMediaUrl(d) {
+  const url = d.url || '';
+  let fname = d.filename || (url ? url.split('/').pop() : '');
+  const isVideo = (d.mediatype || '').startsWith('video/');
+  // Swap extension on audio recordings to match the local media folder
+  if (!isVideo && fname.toLowerCase().endsWith('.wav')) {
+    fname = fname.slice(0, -4) + AUDIO_EXT_LOCAL;
+  }
+  // If URL points at the synthetic placeholder host, rewrite to local media/
+  for (const host of MEDIA_PLACEHOLDER_HOSTS) {
+    if (url.includes(host)) return './media/' + (fname || encodeURIComponent(url.split('/').pop()));
+  }
+  // No URL at all? Try local media folder by filename.
+  if (!url && fname) return './media/' + fname;
+  return url;
+}
 function classifyChannel(d) {
   // Returns the high-level channel for filtering: audio, video, sms, email, webchat, voicemail, text, other
   if (!d) return 'other';
@@ -1072,7 +1096,7 @@ function renderDialog(d, i, v) {
 
   if (d.type === 'recording') {
     const isVideo = (d.mediatype || '').startsWith('video/');
-    const url = d.url || '';
+    const url = resolveMediaUrl(d);
     const tag = isVideo ?
       `<video id="media-${i}" data-isvideo="1" controls preload="metadata" src="${escapeHtml(url)}"></video>` :
       `<audio id="media-${i}" data-isvideo="0" controls preload="metadata" src="${escapeHtml(url)}"></audio>`;
