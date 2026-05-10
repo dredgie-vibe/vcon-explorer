@@ -1,6 +1,6 @@
 {
   "schema": "vcon-corpus-index/0.1",
-  "generated_at": "2026-05-10T15:40:14+00:00",
+  "generated_at": "2026-05-10T15:57:04+00:00",
   "spec_references": [
     "draft-ietf-vcon-vcon-core-02",
     "draft-ietf-vcon-cc-extension-01",
@@ -16,7 +16,7 @@
     "SIP": "SIP signaling (draft-howe-vcon-sip-signaling)",
     "Lifecycle": "SCITT lifecycle (draft-howe-vcon-lifecycle)"
   },
-  "count": 26,
+  "count": 27,
   "vcons": [
     {
       "file": "vcon-01-sales-call.json",
@@ -29,7 +29,8 @@
       "dialog_count": 1,
       "analysis_count": 3,
       "attachment_count": 0,
-      "category": "standard"
+      "category": "standard",
+      "form": "unsigned"
     },
     {
       "file": "vcon-02-support-lockout.json",
@@ -42,7 +43,8 @@
       "dialog_count": 1,
       "analysis_count": 3,
       "attachment_count": 0,
-      "category": "standard"
+      "category": "standard",
+      "form": "unsigned"
     },
     {
       "file": "vcon-03-team-standup.json",
@@ -55,7 +57,8 @@
       "dialog_count": 1,
       "analysis_count": 2,
       "attachment_count": 1,
-      "category": "standard"
+      "category": "standard",
+      "form": "unsigned"
     },
     {
       "file": "vcon-04-sms-thread.json",
@@ -68,7 +71,8 @@
       "dialog_count": 4,
       "analysis_count": 0,
       "attachment_count": 0,
-      "category": "standard"
+      "category": "standard",
+      "form": "unsigned"
     },
     {
       "file": "vcon-05-email-thread.json",
@@ -81,7 +85,8 @@
       "dialog_count": 2,
       "analysis_count": 0,
       "attachment_count": 1,
-      "category": "standard"
+      "category": "standard",
+      "form": "unsigned"
     },
     {
       "file": "vcon-06-webchat.json",
@@ -94,7 +99,8 @@
       "dialog_count": 6,
       "analysis_count": 1,
       "attachment_count": 0,
-      "category": "standard"
+      "category": "standard",
+      "form": "unsigned"
     },
     {
       "file": "vcon-07-voicemail.json",
@@ -107,7 +113,8 @@
       "dialog_count": 1,
       "analysis_count": 2,
       "attachment_count": 0,
-      "category": "standard"
+      "category": "standard",
+      "form": "unsigned"
     },
     {
       "file": "vcon-08-conference-call.json",
@@ -120,7 +127,8 @@
       "dialog_count": 1,
       "analysis_count": 2,
       "attachment_count": 0,
-      "category": "standard"
+      "category": "standard",
+      "form": "unsigned"
     },
     {
       "file": "vcon-09-telehealth.json",
@@ -133,7 +141,8 @@
       "dialog_count": 1,
       "analysis_count": 2,
       "attachment_count": 1,
-      "category": "standard"
+      "category": "standard",
+      "form": "unsigned"
     },
     {
       "file": "vcon-10-job-interview.json",
@@ -146,7 +155,8 @@
       "dialog_count": 1,
       "analysis_count": 2,
       "attachment_count": 0,
-      "category": "standard"
+      "category": "standard",
+      "form": "unsigned"
     },
     {
       "file": "vcon-11-cc-inbound-billing.json",
@@ -162,7 +172,8 @@
       "dialog_count": 1,
       "analysis_count": 2,
       "attachment_count": 1,
-      "category": "extended"
+      "category": "extended",
+      "form": "unsigned"
     },
     {
       "file": "vcon-12-cc-outbound-renewal-wtf.json",
@@ -180,7 +191,8 @@
       "dialog_count": 1,
       "analysis_count": 3,
       "attachment_count": 0,
-      "category": "extended"
+      "category": "extended",
+      "form": "unsigned"
     },
     {
       "file": "vcon-13-cc-omnichannel.json",
@@ -195,7 +207,8 @@
       "dialog_count": 3,
       "analysis_count": 2,
       "attachment_count": 0,
-      "category": "extended"
+      "category": "extended",
+      "form": "unsigned"
     },
     {
       "file": "vcon-14-cc-escalation-wtf.json",
@@ -213,7 +226,8 @@
       "dialog_count": 1,
       "analysis_count": 2,
       "attachment_count": 0,
-      "category": "extended"
+      "category": "extended",
+      "form": "unsigned"
     },
     {
       "file": "vcon-15-cc-with-consent.json",
@@ -229,7 +243,8 @@
       "dialog_count": 1,
       "analysis_count": 1,
       "attachment_count": 1,
-      "category": "extended"
+      "category": "extended",
+      "form": "unsigned"
     },
     {
       "file": "vcon-16-cc-multisegment-transfer.json",
@@ -244,7 +259,8 @@
       "dialog_count": 3,
       "analysis_count": 1,
       "attachment_count": 0,
-      "category": "extended"
+      "category": "extended",
+      "form": "unsigned"
     },
     {
       "file": "vcon-17-cc-supervisor-monitor.json",
@@ -259,7 +275,8 @@
       "dialog_count": 1,
       "analysis_count": 2,
       "attachment_count": 0,
-      "category": "extended"
+      "category": "extended",
+      "form": "unsigned"
     },
     {
       "file": "vcon-18-cc-sip-signaling.json",
@@ -275,7 +292,8 @@
       "dialog_count": 1,
       "analysis_count": 1,
       "attachment_count": 2,
-      "category": "extended"
+      "category": "extended",
+      "form": "unsigned"
     },
     {
       "file": "vcon-19-cc-lifecycle-scitt.json",
@@ -292,7 +310,8 @@
       "dialog_count": 1,
       "analysis_count": 3,
       "attachment_count": 1,
-      "category": "extended"
+      "category": "extended",
+      "form": "unsigned"
     },
     {
       "file": "vcon-20-cc-redacted-pci-pii.json",
@@ -310,7 +329,8 @@
       "dialog_count": 1,
       "analysis_count": 2,
       "attachment_count": 0,
-      "category": "extended"
+      "category": "extended",
+      "form": "unsigned"
     },
     {
       "file": "vcon-21-quality-santaclarita-scottsdale-pristine.json",
@@ -323,7 +343,8 @@
       "dialog_count": 1,
       "analysis_count": 1,
       "attachment_count": 1,
-      "category": "standard"
+      "category": "standard",
+      "form": "unsigned"
     },
     {
       "file": "vcon-22-quality-nyc-boston-good.json",
@@ -336,7 +357,8 @@
       "dialog_count": 1,
       "analysis_count": 1,
       "attachment_count": 1,
-      "category": "standard"
+      "category": "standard",
+      "form": "unsigned"
     },
     {
       "file": "vcon-23-quality-chicago-denver-degraded.json",
@@ -349,7 +371,8 @@
       "dialog_count": 1,
       "analysis_count": 1,
       "attachment_count": 1,
-      "category": "standard"
+      "category": "standard",
+      "form": "unsigned"
     },
     {
       "file": "vcon-24-quality-london-tokyo-latency.json",
@@ -362,7 +385,8 @@
       "dialog_count": 1,
       "analysis_count": 1,
       "attachment_count": 1,
-      "category": "standard"
+      "category": "standard",
+      "form": "unsigned"
     },
     {
       "file": "vcon-25-quality-atlanta-miami-burst-loss.json",
@@ -375,7 +399,8 @@
       "dialog_count": 1,
       "analysis_count": 1,
       "attachment_count": 1,
-      "category": "standard"
+      "category": "standard",
+      "form": "unsigned"
     },
     {
       "file": "vcon-26-cc-webchat-to-voice-escalation.json",
@@ -395,7 +420,22 @@
       "dialog_count": 8,
       "analysis_count": 3,
       "attachment_count": 2,
-      "category": "extended"
+      "category": "extended",
+      "form": "unsigned"
+    },
+    {
+      "file": "vcon-27-encrypted-internal-meeting.json",
+      "uuid": "aa86dd6a-d2d6-5e6c-9f7a-f89edde8c255",
+      "subject": null,
+      "created_at": "2026-05-09T10:00:00+00:00",
+      "extensions": [],
+      "must_support": [],
+      "party_count": 0,
+      "dialog_count": 0,
+      "analysis_count": 0,
+      "attachment_count": 0,
+      "category": "encrypted",
+      "form": "encrypted"
     }
   ]
 }

@@ -144,6 +144,9 @@
     .badge.sip  { background: #e6e2f6; color: #2d2261; border: 1px solid #c8c0e4; }
     .badge.life { background: #fde2ec; color: #722241; border: 1px solid #f4bbcd; }
     .badge.channel { background: #fff; color: var(--blue); border: 1px solid var(--blue-pale); }
+    .badge.enc  { background: #354c59; color: #fff; }
+    .vcon-card.encrypted { border-color: var(--navy-deep); border-style: dashed; background: #f8f9fb; }
+    .vcon-card.encrypted:hover { border-style: solid; }
 
     /* ---------- Detail page ---------- */
     .back-link { display: inline-flex; align-items: center; gap: 6px;
@@ -374,6 +377,7 @@ const STATE = {
     extension: new Set(['__all__']),  // 'CC','WTF','Consent','SIP','Lifecycle','Standard'
     channel:   new Set(['__all__']),  // 'audio','video','text','email','sms','webchat','voicemail'
     quality:   new Set(['__all__']),  // '__all__' or 'has' (vCons w/ a call_quality analysis)
+    form:      new Set(['__all__']),  // '__all__' / 'unsigned' / 'signed' / 'encrypted'
   },
   charts: {},
 };
@@ -397,9 +401,34 @@ async function boot() {
     // Fetch every vCon listed in the index
     const fetched = await Promise.all(idx.vcons.map(async (row) => {
       try {
-        const v = await fetch('./' + row.file, {cache:'no-cache'}).then(r => r.json());
-        v.__file = row.file; v.__indexRow = row;
-        return v;
+        const raw = await fetch('./' + row.file, {cache:'no-cache'}).then(r => r.json());
+        // JWE-form detection: ciphertext + iv + tag at the top level
+        if (raw && raw.ciphertext && raw.iv && raw.tag) {
+          const up = raw.unprotected || {};
+          let protectedHdr = {};
+          try { protectedHdr = JSON.parse(b64uDecode(raw.protected || '')); } catch {}
+          const stub = {
+            vcon: '0.0.2',
+            uuid: up['vcon-uuid'] || row.uuid || ('encrypted-' + Math.random().toString(36).slice(2,10)),
+            created_at: up['vcon-created'] || row.created_at || null,
+            subject: null,
+            parties: [], dialog: [], analysis: [], attachments: [],
+            extensions: [],
+            __file: row.file, __indexRow: row,
+            __encrypted: true,
+            __jwe: {
+              protected:    protectedHdr,
+              unprotected:  up,
+              iv:           raw.iv,
+              tag:          raw.tag,
+              ciphertext_len: raw.ciphertext.length,
+              encrypted_key:  raw.encrypted_key || '',
+            },
+          };
+          return stub;
+        }
+        raw.__file = row.file; raw.__indexRow = row;
+        return raw;
       } catch(e) {
         console.warn('Failed to load', row.file, e);
         return null;
@@ -436,6 +465,12 @@ function route() {
 }
 
 //---------------- Helpers ---------------------------------------------
+function b64uDecode(s) {
+  // base64url -> string
+  s = String(s).replace(/-/g,'+').replace(/_/g,'/');
+  while (s.length % 4) s += '=';
+  return atob(s);
+}
 function escapeHtml(s) {
   if (s == null) return '';
   return String(s).replace(/[&<>"']/g, c => ({
@@ -537,6 +572,29 @@ function badgeForChannel(c) {
 function vconMatchesFilters(v) {
   const f = STATE.filters;
 
+  // Form filter (unsigned / signed / encrypted)
+  if (!f.form.has('__all__')) {
+    const form = v.__encrypted ? 'encrypted' : 'unsigned';   // signed not yet in corpus
+    if (!f.form.has(form)) return false;
+  }
+
+  // Encrypted vCons match ONLY the form filter — text/phone/extension/channel/etc.
+  // can't be applied because the dashboard can't see inside.
+  if (v.__encrypted) {
+    // Date range still applies (created_at is in the unprotected header).
+    if (f.dateFrom && (!v.created_at || new Date(v.created_at) < new Date(f.dateFrom))) return false;
+    if (f.dateTo) {
+      const end = new Date(f.dateTo); end.setHours(23,59,59,999);
+      if (!v.created_at || new Date(v.created_at) > end) return false;
+    }
+    // Any other active content-side filter excludes encrypted vCons by definition.
+    if (f.text || f.phone) return false;
+    if (!f.extension.has('__all__')) return false;
+    if (!f.channel.has('__all__'))   return false;
+    if (!f.quality.has('__all__'))   return false;
+    return true;
+  }
+
   // Text search
   if (f.text) {
     const q = f.text.toLowerCase();
@@ -618,9 +676,10 @@ function renderList() {
 
   // KPIs based on full corpus
   const totals = {
-    total:    all.length,
-    standard: all.filter(v => !v.extensions || v.extensions.length === 0).length,
-    extended: all.filter(v => v.extensions && v.extensions.length > 0).length,
+    total:     all.length,
+    encrypted: all.filter(v => v.__encrypted).length,
+    standard:  all.filter(v => !v.__encrypted && (!v.extensions || v.extensions.length === 0)).length,
+    extended:  all.filter(v => !v.__encrypted &&  v.extensions && v.extensions.length > 0).length,
   };
   const allParties = new Set();
   const allTels = new Set();
@@ -639,7 +698,7 @@ function renderList() {
     <h2>VCON SUMMARY</h2>
     <div class="kpi-row">
       <div class="kpi"><div class="label">Total vCons</div><div class="value">${totals.total}</div>
-        <div class="delta">${totals.standard} standard · ${totals.extended} extended</div></div>
+        <div class="delta">${totals.standard} standard · ${totals.extended} extended${totals.encrypted ? ' · ' + totals.encrypted + ' encrypted' : ''}</div></div>
       <div class="kpi"><div class="label">Unique parties</div><div class="value">${allParties.size}</div>
         <div class="delta">${allTels.size} unique phone numbers</div></div>
       <div class="kpi"><div class="label">Dialogs</div><div class="value">${totalDialogs}</div>
@@ -716,6 +775,14 @@ function renderList() {
           ${pillHtml('quality','has','Has call-quality')}
         </div>
       </div>
+      <div class="field" style="min-width:0;">
+        <label>Form</label>
+        <div class="pill-group" id="pg-form">
+          ${pillHtml('form','__all__','Any')}
+          ${pillHtml('form','unsigned','Unsigned')}
+          ${pillHtml('form','encrypted','🔒 Encrypted')}
+        </div>
+      </div>
       <button class="reset-btn" id="reset">Reset filters</button>
     </div>
 
@@ -748,6 +815,19 @@ function pillHtml(group, val, label) {
 }
 
 function renderCard(v) {
+  // Encrypted vCons get a distinct card with no content preview
+  if (v.__encrypted) {
+    return `
+      <div class="vcon-card encrypted" onclick="location.hash='/${v.uuid}'">
+        <div class="badges"><span class="badge enc">🔒 encrypted</span></div>
+        <div class="subject" style="color:var(--gray);font-style:italic;">Encrypted vCon — contents not viewable</div>
+        <div class="muted" style="font-size:.78rem;font-family:'Roboto Mono',monospace;word-break:break-all;">UUID: ${escapeHtml(v.uuid)}</div>
+        <div class="meta">
+          <span>📅 ${fmtDateOnly(v.created_at)}</span>
+          <span>🛡️ JWE / RFC 7516</span>
+        </div>
+      </div>`;
+  }
   const r = v.__indexRow || {};
   const created = fmtDateOnly(v.created_at);
   const partyChips = (v.parties || []).slice(0,3).map(p => escapeHtml(p.name || p.tel || p.mailto || 'party')).join(' · ');
@@ -797,7 +877,7 @@ function bindFilterInputs() {
   document.getElementById('reset').addEventListener('click', () => {
     STATE.filters = {text:'', phone:'', dateFrom:'', dateTo:'',
                      extension:new Set(['__all__']), channel:new Set(['__all__']),
-                     quality:new Set(['__all__'])};
+                     quality:new Set(['__all__']),  form:new Set(['__all__'])};
     renderList();
   });
 }
@@ -869,16 +949,30 @@ function clickedPhone(phone) {
 // ---- chart drawers ----
 function drawCategoryChart(id, vcons) {
   const ctx = document.getElementById(id);
-  const std  = vcons.filter(v => !(v.extensions||[]).length).length;
-  const ext  = vcons.length - std;
+  const enc = vcons.filter(v =>  v.__encrypted).length;
+  const std = vcons.filter(v => !v.__encrypted && !(v.extensions||[]).length).length;
+  const ext = vcons.length - std - enc;
+  const labels = ['Standard','Extended','Encrypted'];
+  const data   = [std, ext, enc];
+  const colors = [PALETTE[1], PALETTE[0], '#354c59'];
   STATE.charts.cat = new Chart(ctx, {
     type: 'doughnut',
-    data: {labels:['Standard','Extended'], datasets:[{data:[std,ext], backgroundColor:[PALETTE[1], PALETTE[0]], borderColor:'#fff', borderWidth:2}]},
+    data: {labels, datasets:[{data, backgroundColor: colors, borderColor:'#fff', borderWidth:2}]},
     options: {
       responsive:true, maintainAspectRatio:false,
       plugins:{legend:{position:'bottom', labels:{font:{family:'Roboto'}, color:'#5a646a'}}},
       onHover: (e, els) => { e.native.target.style.cursor = els.length ? 'pointer' : 'default'; },
-      onClick: (_e, els) => { if (els.length) clickedCategory(['Standard','Extended'][els[0].index]); },
+      onClick: (_e, els) => {
+        if (!els.length) return;
+        const lbl = labels[els[0].index];
+        if (lbl === 'Encrypted') { /* drive the Form filter */
+          const set = STATE.filters.form;
+          if (set.has('encrypted') && set.size === 1) set.clear();
+          else { set.clear(); set.add('encrypted'); }
+          if (set.size === 0) set.add('__all__');
+          reflectFilterChanges();
+        } else clickedCategory(lbl);
+      },
     },
   });
 }
@@ -939,6 +1033,7 @@ function drawDurationChart(id, vcons) {
   const buckets = ['<1m','1–5m','5–15m','15–60m','>60m','none'];
   const counts = [0,0,0,0,0,0];
   for (const v of vcons) {
+    if (v.__encrypted) continue;   // can't measure what we can't see
     let total = 0, found = false;
     for (const d of (v.dialog||[])) {
       if (d.duration != null) { total += Number(d.duration); found = true; }
@@ -1111,6 +1206,12 @@ function drawVendorsChart(id, vcons) {
 //---------------- Detail view -----------------------------------------
 function renderDetail(v) {
   destroyCharts();
+
+  // Encrypted vCons render a stub detail page — no content visible.
+  if (v.__encrypted) {
+    return renderEncryptedDetail(v);
+  }
+
   const dialogsHtml = (v.dialog || []).map((d,i) => renderDialog(d,i,v)).join('');
   const analysisHtml = (v.analysis || []).map((a,i) => renderAnalysis(a,i,v)).join('') ||
                        '<div class="muted">No analysis records.</div>';
@@ -1205,6 +1306,63 @@ function renderDetail(v) {
       }
     });
   });
+}
+
+function renderEncryptedDetail(v) {
+  const j = v.__jwe || {};
+  const ph = j.protected || {};
+  const up = j.unprotected || {};
+  APP.innerHTML = `
+    <a class="back-link" onclick="history.back()">&larr; Back to all vCons</a>
+
+    <div class="detail-header" style="background:#354c59; color:#fff; border-color:#354c59;">
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;">
+        <span class="badge enc">🔒 encrypted</span>
+      </div>
+      <h1 style="color:#fff;">Encrypted vCon</h1>
+      <p style="font-size:.95rem; color:rgba(255,255,255,.85); max-width: 70ch;">
+        This vCon's contents are sealed in a JWE (JSON Web Encryption, RFC 7516).
+        The audio, transcript, parties, and analysis are not readable from the file alone —
+        they're protected by AES-256-GCM with a key the operator did not include in this repo.
+        Only the holder of the symmetric key (or the recipient of an encrypted_key claim) can decrypt.
+      </p>
+      <div class="meta-grid" style="margin-top:14px;">
+        <div><span class="key" style="color:rgba(255,255,255,.7);">UUID</span>
+             <span class="val" style="color:#fff;font-family:'Roboto Mono',monospace;font-size:.78rem;">${escapeHtml(v.uuid || '—')}</span></div>
+        <div><span class="key" style="color:rgba(255,255,255,.7);">Created</span>
+             <span class="val" style="color:#fff;">${fmtDate(v.created_at)}</span></div>
+        <div><span class="key" style="color:rgba(255,255,255,.7);">File</span>
+             <span class="val" style="color:#fff;">${escapeHtml(v.__file || '—')}</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>JWE structure</h2>
+      <p class="muted" style="font-size:.85rem;margin-bottom:12px;">
+        These are the only fields visible without the key. The actual conversation data
+        (parties, dialogs, transcripts, attachments) is inside <code>ciphertext</code> and unreadable.
+      </p>
+      <div class="kv-grid">
+        <div class="kv"><div class="k">algorithm (alg)</div>     <div class="v">${escapeHtml(ph.alg || '—')}</div></div>
+        <div class="kv"><div class="k">encryption (enc)</div>     <div class="v">${escapeHtml(ph.enc || '—')}</div></div>
+        <div class="kv"><div class="k">key id (kid)</div>          <div class="v" style="font-family:'Roboto Mono',monospace;font-size:.85rem;">${escapeHtml(ph.kid || '—')}</div></div>
+        <div class="kv"><div class="k">content type (cty)</div>    <div class="v">${escapeHtml(ph.cty || up.cty || '—')}</div></div>
+        <div class="kv"><div class="k">IV (nonce)</div>            <div class="v" style="font-family:'Roboto Mono',monospace;font-size:.78rem;word-break:break-all;">${escapeHtml(j.iv || '—')}</div></div>
+        <div class="kv"><div class="k">auth tag</div>              <div class="v" style="font-family:'Roboto Mono',monospace;font-size:.78rem;word-break:break-all;">${escapeHtml(j.tag || '—')}</div></div>
+        <div class="kv"><div class="k">ciphertext length</div>     <div class="v">${j.ciphertext_len || 0} chars (base64url)</div></div>
+        <div class="kv"><div class="k">encrypted_key</div>         <div class="v">${j.encrypted_key ? '(present, key wrapping)' : '(empty — alg=dir, direct AES key)'}</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Visible (unprotected) header</h2>
+      <p class="muted" style="font-size:.85rem;margin-bottom:8px;">
+        Visible to anyone, used for routing and indexing — but <em>not</em> integrity-protected.
+        Only put non-sensitive metadata here.
+      </p>
+      <pre class="json-block">${escapeHtml(JSON.stringify(up, null, 2))}</pre>
+    </div>
+  `;
 }
 
 function renderParty(p, i) {

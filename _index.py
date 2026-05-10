@@ -34,19 +34,37 @@ def main():
         except Exception as e:
             print(f"  ! skipping {os.path.basename(fp)}: {e}")
             continue
-        rows.append({
-            "file":             os.path.basename(fp),
-            "uuid":             v.get("uuid"),
-            "subject":          v.get("subject"),
-            "created_at":       v.get("created_at"),
-            "extensions":       v.get("extensions", []),
-            "must_support":     v.get("must_support", []),
-            "party_count":      len(v.get("parties",     [])),
-            "dialog_count":     len(v.get("dialog",      [])),
-            "analysis_count":   len(v.get("analysis",    [])),
-            "attachment_count": len(v.get("attachments", [])),
-            "category":         "extended" if v.get("extensions") else "standard",
-        })
+        # JWE form detection: ciphertext + iv + tag at top level, no plaintext keys
+        is_encrypted = "ciphertext" in v and "iv" in v and "tag" in v
+        if is_encrypted:
+            up = v.get("unprotected") or {}
+            rows.append({
+                "file":             os.path.basename(fp),
+                "uuid":             up.get("vcon-uuid"),
+                "subject":          None,
+                "created_at":       up.get("vcon-created"),
+                "extensions":       [],
+                "must_support":     [],
+                "party_count":      0, "dialog_count": 0,
+                "analysis_count":   0, "attachment_count": 0,
+                "category":         "encrypted",
+                "form":             "encrypted",
+            })
+        else:
+            rows.append({
+                "file":             os.path.basename(fp),
+                "uuid":             v.get("uuid"),
+                "subject":          v.get("subject"),
+                "created_at":       v.get("created_at"),
+                "extensions":       v.get("extensions", []),
+                "must_support":     v.get("must_support", []),
+                "party_count":      len(v.get("parties",     [])),
+                "dialog_count":     len(v.get("dialog",      [])),
+                "analysis_count":   len(v.get("analysis",    [])),
+                "attachment_count": len(v.get("attachments", [])),
+                "category":         "extended" if v.get("extensions") else "standard",
+                "form":             "unsigned",
+            })
 
     out = {
         "schema":          "vcon-corpus-index/0.1",

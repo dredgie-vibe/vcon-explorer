@@ -1,0 +1,13 @@
+{
+  "protected": "eyJhbGciOiJkaXIiLCJlbmMiOiJBMjU2R0NNIiwia2lkIjoidmNvbi1leHBsb3Jlci1kZW1vLWtleS0xIiwiY3R5IjoidmNvbitqc29uIn0",
+  "encrypted_key": "",
+  "iv": "o5Sq_GiDUI4Z7Kzm",
+  "ciphertext": "3ck7otnbPfQqlfXQr14SwqYy4UzicpE9R1vejuShJ2s48UQ7XQfN04W2mogFCsecV1QaPyqaLwldOP50Y6M88gZTwf4EJDt9QByj27FxRGrIyHpTgqcny8zJTPT2ajqKcfgqquDxjbHmBwtcvPP0cmHs6oeh5_8ZTa2JJor0A1d2NxhbhdhFBbFW8uIsO89PfsbwqwDmU2Yy3py96RxAvGRMb7AGSliUOlI2t84EJBUlhbDU_PrrZFTcS16rZtyj1TdDoDOvFqzz9xuVW2huJUJv3Azz23EvOCP-ynL3fm65kkADZB2_IUSuwCQZ1UEQYWXBexd46ibk_IYc1xCF4kJvsAWA9lDNkeQUqAupD61PyepqkSpcNzbV9m6LxgLobgvQL6pbobk0PKbWiOHZQ-OMMDCsNxurvQudV0qUu_UPdOMD7TjAxX55ZZpcxnUlKd6r6NkkddW9AVMyRBEAwvm2NKnsGh2tbRZr2S792SH0P8JPrBMG19a2fJXAfwtlPw3CHesvXUiZH7X7dKQZacw1sHWIdIUOFDs24G3myau0LDKIz2NmJb0XQ1NRrYLVrJxfTKsojmYmfuTLcH3YWlDV1wTnwkhjQnX30E1qn9m00QXwJrpQ7ogdvXJfT5j_2nV7v_xKQUvb_4SYGFhn1q2ryqKnh8ycwsZl0lgcLnoATJlIyI7X85ko_AaUc4bmdpshq8LdsJ_fYCXUzW4H9-03rvyHgEYnm1eRLjgN9erTQ3s8b4TDHIEhHAkTWhFt_-S40Er-rFuOdz-6AO2AtrTjeS8l_qkOCfSibDgHvZLJRIIs_ywKAWiwJSniQ_1OrsoyM0x1RoIygJghxqOBSr7aCXzu6dq2s-_mObaNcU3pNslBySVVu9wGSTm8JgEFqKG7NqmDq7toPpeXRc1o-tmufTvYcQjPHWgKZZv214AK5ibU76NFxnEU3i4izn88YR7GKU8QaIk0LwvxyqOBOJv2PF5cgqJXvfbEhdc21x1KqvD-oUeVz7Zav5_8A37vxbcBQQB0cNKfW2v14dNEn77XZDTgEpAStbED7VNiT5WoduAYEq5ZJ6MfttoACUQSVgrOjnm4UwhP9UqF16Cd74sslGHMM6N3VwvzjNk3lGbISeKpj09RO03EiZq-fqfcI1HYJEy9_4phz8cYHk8fK6FF0I6KEltZHWN1jJMIYEq7zzlcI39J6DMze-2FEO5u2g",
+  "tag": "GdzfQAAz_7H7kzIZOJILuQ",
+  "unprotected": {
+    "vcon-uuid": "aa86dd6a-d2d6-5e6c-9f7a-f89edde8c255",
+    "vcon-created": "2026-05-09T10:00:00+00:00",
+    "cty": "vcon+json",
+    "note": "Encrypted form (per draft-ietf-vcon-vcon-core \u00a7encrypted-form, JWE/RFC 7516)."
+  }
+}
