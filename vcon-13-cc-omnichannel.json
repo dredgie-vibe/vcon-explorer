@@ -29,9 +29,9 @@
         1
       ],
       "originator": 1,
-      "mediatype": "audio/x-wav",
-      "filename": "13-cc-omnichannel-voice.wav",
-      "url": "https://media.vcon.example.net/13-cc-omnichannel-voice.wav",
+      "mediatype": "audio/mp4",
+      "filename": "13-cc-omnichannel-voice-sms-voice.m4a",
+      "url": "https://media.vcon.example.net/13-cc-omnichannel-voice-sms-voice.m4a",
       "content_hash": "sha512-9b15ce3ab62b7c19acc9214050927a3023e4a7e92467ba8c3d7f75ff2258109285fc27a8bbd6f2f6d16fd72e1c240fb90e5ece59fc479b553d401f458526d4bb",
       "alg": "SHA-512",
       "disposition": "answered",
