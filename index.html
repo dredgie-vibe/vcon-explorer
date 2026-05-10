@@ -506,14 +506,18 @@ function classifyChannel(d) {
   }
   if (mt === 'message/rfc822')         return 'email';
   if (mt === 'text/plain' || t === 'text') {
-    // SMS heuristic: tel-only parties + short body
+    // CC extension can specify the sub-channel directly on the dialog
+    const it = (d.interaction_type || '').toLowerCase();
+    if (it === 'sms')     return 'sms';
+    if (it === 'webchat' || it === 'chat') return 'webchat';
+    if (it === 'email')   return 'email';
     return 'text';
   }
   return t || 'other';
 }
 function vconChannels(v) {
   const set = new Set((v.dialog || []).map(classifyChannel));
-  // refine: webchat vs sms vs email vs text
+  // Refine generic 'text' dialogs by looking at the vCon-level subject/filename
   if (set.has('text')) {
     const subj = (v.subject || '').toLowerCase();
     const file = (v.__file  || '').toLowerCase();
