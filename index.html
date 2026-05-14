@@ -334,6 +334,39 @@
                                  padding: 4px 0; user-select: none; }
     details.raw-json > summary:hover { color: var(--blue); }
 
+    /* Lifecycle timeline */
+    .lifecycle-panel { background: var(--bg-soft); border: 1px solid var(--blue-pale);
+                       border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+    .lc-meta { display:flex; flex-wrap:wrap; gap: 6px 18px; align-items:center;
+               font-size:.78rem; color: var(--gray); margin-bottom: 14px; }
+    .lc-meta strong { color: var(--navy); font-weight: 600; }
+    .lc-timeline { position: relative; padding-left: 22px; }
+    .lc-timeline::before { content:""; position:absolute; left: 7px; top: 4px; bottom: 4px;
+                           width: 2px; background: var(--blue-pale); }
+    .lc-event { position: relative; padding: 0 0 14px 14px; }
+    .lc-event:last-child { padding-bottom: 0; }
+    .lc-dot { position:absolute; left: -22px; top: 4px; width: 16px; height: 16px;
+              border-radius: 50%; background: var(--blue);
+              border: 3px solid #fff; box-shadow: 0 0 0 1px var(--blue-pale); }
+    .lc-dot.start    { background: var(--blue); }
+    .lc-dot.complete { background: var(--green); }
+    .lc-dot.redact   { background: #c64646; }
+    .lc-dot.send     { background: var(--gold); }
+    .lc-event-head { display:flex; flex-wrap:wrap; align-items:baseline; gap: 8px 12px; }
+    .lc-event-name { font-size:.9rem; font-weight: 600; color: var(--navy);
+                     text-transform: capitalize; }
+    .lc-event-time { font-size:.72rem; color: var(--gray); font-variant-numeric: tabular-nums; }
+    .lc-event-actor { font-size:.72rem; color: var(--gray); }
+    .lc-event-actor code { background:#fff; border:1px solid var(--blue-pale);
+                           padding:1px 6px; border-radius: 3px; color: var(--navy);
+                           font-size:.7rem; }
+    .lc-event-details { margin-top: 4px; font-size:.75rem; color: var(--gray); }
+    .lc-event-details strong { color: var(--navy); font-weight: 600; }
+    .lc-event-receipt { font-size:.7rem; color: var(--gray); margin-top: 2px; }
+    .lc-event-receipt code { background:#fff; border:1px solid var(--blue-pale);
+                             padding:1px 6px; border-radius: 3px; color: var(--navy);
+                             font-size:.68rem; }
+
     /* small screens */
     @media (max-width: 640px) {
       header.app-header { padding: 12px 16px; }
@@ -1632,6 +1665,87 @@ function renderConsent(c, v, a) {
   </div>`;
 }
 
+function renderLifecycle(lc, v, a) {
+  // lc: parsed lifecycle body (vCon-Lifecycle-SCITT/0.x)
+  const fmtName = s => String(s || '')
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, m => m.toUpperCase());
+  const fmtTime = s => {
+    if (!s) return '';
+    try { return new Date(s).toLocaleString(); } catch { return String(s); }
+  };
+  // Classify event for dot colour
+  const klass = name => {
+    const n = String(name || '').toLowerCase();
+    if (n.includes('redact'))                                      return 'redact';
+    if (n.endsWith('_sent') || n === 'email_sent')                 return 'send';
+    if (n.endsWith('_completed') || n.endsWith('_captured')
+        || n === 'transcribed' || n === 'summarised'
+        || n === 'summarized')                                     return 'complete';
+    return 'start';
+  };
+
+  // Sort events chronologically (some files list them in workflow order, not time order)
+  const events = (lc.events || []).slice().sort((x, y) => {
+    const tx = new Date(x.at || 0).getTime();
+    const ty = new Date(y.at || 0).getTime();
+    return tx - ty;
+  });
+  const t0 = events.length ? new Date(events[0].at).getTime() : 0;
+
+  // Header
+  const headerBits = [];
+  if (lc.lifecycle_version)      headerBits.push(`<span>spec: <strong>${escapeHtml(lc.lifecycle_version)}</strong></span>`);
+  if (lc.transparency_service)   headerBits.push(`<span>SCITT: <a href="${escapeHtml(lc.transparency_service)}" target="_blank" rel="noopener">${escapeHtml(lc.transparency_service)}</a></span>`);
+  headerBits.push(`<span><strong>${events.length}</strong> events</span>`);
+
+  // Timeline rows
+  const rows = events.map(ev => {
+    const cls = klass(ev.event);
+    const tEv = new Date(ev.at).getTime();
+    const dt  = isFinite(tEv - t0) ? `+${humanDelta(tEv - t0)}` : '';
+    let detailsHtml = '';
+    if (ev.details && typeof ev.details === 'object') {
+      const flat = Object.entries(ev.details).map(([k, val]) => {
+        let v;
+        if (Array.isArray(val)) v = val.map(x => Array.isArray(x) ? `[${x.join(' – ')}]` : String(x)).join(', ');
+        else if (val && typeof val === 'object') v = JSON.stringify(val);
+        else v = String(val);
+        return `<strong>${escapeHtml(k)}:</strong> ${escapeHtml(v)}`;
+      }).join(' · ');
+      if (flat) detailsHtml = `<div class="lc-event-details">${flat}</div>`;
+    }
+    const receiptHtml = ev.receipt
+      ? `<div class="lc-event-receipt">receipt: <code>${escapeHtml(ev.receipt)}</code></div>`
+      : '';
+    return `<div class="lc-event">
+      <div class="lc-dot ${cls}"></div>
+      <div class="lc-event-head">
+        <span class="lc-event-name">${escapeHtml(fmtName(ev.event))}</span>
+        <span class="lc-event-time">${escapeHtml(fmtTime(ev.at))}${dt ? ' · ' + escapeHtml(dt) : ''}</span>
+        ${ev.actor ? `<span class="lc-event-actor">by <code>${escapeHtml(ev.actor)}</code></span>` : ''}
+      </div>
+      ${detailsHtml}
+      ${receiptHtml}
+    </div>`;
+  }).join('');
+
+  return `<div class="lifecycle-panel">
+    <div class="lc-meta">${headerBits.join('<span style="color:var(--blue-pale);">|</span>')}</div>
+    <div class="lc-timeline">${rows || '<div class="muted">No events.</div>'}</div>
+  </div>`;
+}
+
+function humanDelta(ms) {
+  if (ms < 0) ms = 0;
+  const s = Math.round(ms / 1000);
+  if (s < 60)        return `${s}s`;
+  if (s < 3600)      return `${Math.floor(s/60)}m ${s%60}s`;
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  return `${h}h ${m}m`;
+}
+
 function rawJsonBlock(obj, label) {
   return `<details class="raw-json"><summary>${escapeHtml(label || 'Show raw JSON')}</summary>
     <pre class="json-block">${escapeHtml(JSON.stringify(obj, null, 2))}</pre>
@@ -1674,11 +1788,14 @@ function renderAttachment(a, i, v) {
   if (typeof a.body === 'string') {
     const [ok, obj] = tryParseJson(a.body);
     if (ok) {
-      // Consent gets a dedicated visual panel + the raw JSON underneath.
+      // Consent and lifecycle get dedicated visual panels + raw JSON underneath.
       const looksLikeConsent = a.type === 'consent'
         || (obj && Array.isArray(obj.consents) && typeof obj.consent_version === 'string');
-      if (looksLikeConsent) body = renderConsent(obj, v, a) + rawJsonBlock(obj);
-      else                  body = renderJsonKv(obj);
+      const looksLikeLifecycle = a.type === 'lifecycle'
+        || (obj && Array.isArray(obj.events) && typeof obj.lifecycle_version === 'string');
+      if      (looksLikeConsent)   body = renderConsent(obj, v, a)   + rawJsonBlock(obj);
+      else if (looksLikeLifecycle) body = renderLifecycle(obj, v, a) + rawJsonBlock(obj);
+      else                         body = renderJsonKv(obj);
     }
     else    body = `<div class="body-text">${escapeHtml(a.body)}</div>`;
   } else if (a.url) {
