@@ -52,7 +52,7 @@
       "mediatype": "application/json",
       "encoding": "json",
       "filename": "23-quality-chicago-denver-degraded-quality.json",
-      "body": "{\n  \"mos\": 3.52,\n  \"r_factor\": 70.1,\n  \"concealed_seconds\": 8.3,\n  \"jitter_buffer_discards\": 87,\n  \"burst_loss_avg_packets\": 2.8,\n  \"codec_impact_ie\": 4,\n  \"codec\": \"Opus/16000\",\n  \"jitter_ms\": 41.2,\n  \"avg_loss_pct\": 2.1,\n  \"latency_ms_round_trip\": 92,\n  \"samples_total\": 30620,\n  \"rating\": \"fair\"\n}"
+      "body": "{\n  \"mos\": 3.52,\n  \"r_factor\": 70.1,\n  \"concealed_seconds\": 8.3,\n  \"jitter_buffer_discards\": 87,\n  \"burst_loss_avg_packets\": 2.8,\n  \"codec_impact_ie\": 4,\n  \"codec\": \"Opus/16000\",\n  \"jitter_ms\": 41.2,\n  \"avg_loss_pct\": 2.1,\n  \"latency_ms_round_trip\": 92,\n  \"pdd_ms\": 2840,\n  \"pdd_threshold_ms\": 2000,\n  \"samples_total\": 30620,\n  \"rating\": \"fair\"\n}"
     }
   ],
   "attachments": [
@@ -64,7 +64,7 @@
         0
       ],
       "url": "https://media.vcon.example.net/23-quality-chicago-denver-degraded-trace.pcap",
-      "content_hash": "sha512-43d6cc06d657128cc01267ee320951b3c7135bcec73784088579b6580f56e86096144b5e3a0c690be14f585abf1e857d85fb3167c5d50eb0e8818b627e654e87",
+      "content_hash": "sha512-2842faf0ee5a8a2732039e75803be81683da4083d4cad6a0a96d7cd39fda603f8ca48db191c14d46989a21a0215bea319f02f52caa2d960331464becc57a007a",
       "alg": "SHA-512"
     }
   ]

@@ -167,18 +167,27 @@ def generate_pcap(profile, out_path):
         pkts.append((t, build_pkt(callee_mac, caller_mac, callee_ip, caller_ip,
                                    rtp_port_callee, rtp_port_caller, payload, ident)))
 
+    # Post-Dial Delay (INVITE → first 180 Ringing). If a profile carries
+    # a `pdd_ms` in its quality body, the pcap timeline is shifted so the
+    # 180 Ringing actually lands at that offset — making the metric
+    # observable in Wireshark, not just asserted in the analysis block.
+    # Timings are kept in integer milliseconds so the resulting packet
+    # timestamps are bit-stable across regenerations (no float dust).
+    pdd_ms_int    = p["quality"].get("pdd_ms", 450)
+    answer_ms_int = pdd_ms_int + 3420         # preserve original ring→answer gap
+
     base = 0x4000 + p["idx"]*0x100
-    c2s(t0 + 0.000, invite,    base+0x01)
-    s2c(t0 + 0.012, trying,    base+0x81)
-    s2c(t0 + 0.450, ringing,   base+0x82)
-    s2c(t0 + 3.870, ok_invite, base+0x83)
-    c2s(t0 + 3.880, ack,       base+0x02)
+    c2s(t0 + 0.000,                          invite,    base+0x01)
+    s2c(t0 + 0.012,                          trying,    base+0x81)
+    s2c(t0 + pdd_ms_int    / 1000.0,         ringing,   base+0x82)
+    s2c(t0 + answer_ms_int / 1000.0,         ok_invite, base+0x83)
+    c2s(t0 + (answer_ms_int + 10) / 1000.0,  ack,       base+0x02)
 
     # ~12 RTP packets covering ~240 ms of media to keep the file small,
     # with deliberate seq gaps reflecting the loss pattern advertised in
     # the call_quality analysis.  This is illustrative — a quality probe
     # in the wild would compute these numbers from a longer capture.
-    rtp_start = t0 + 3.900
+    rtp_start = t0 + (answer_ms_int + 30) / 1000.0
     rtp_period = codec["ptime_ms"] / 1000.0
     rtp_count = 24
     loss_pattern = p["loss_pattern"]   # set of seq numbers to skip
@@ -292,6 +301,8 @@ PROFILES = [
             "jitter_ms": 41.2,
             "avg_loss_pct": 2.1,
             "latency_ms_round_trip": 92,
+            "pdd_ms": 2840,
+            "pdd_threshold_ms": 2000,
             "samples_total": 30620,
             "rating": "fair",
         },
