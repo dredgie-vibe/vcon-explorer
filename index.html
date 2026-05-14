@@ -301,6 +301,39 @@
                     font-size: .75rem; color: var(--gray); }
     .confidential a { color: var(--gray); }
 
+    /* Consent panel */
+    .consent-panel { background: var(--bg-soft); border: 1px solid var(--blue-pale);
+                     border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+    .consent-meta { display:flex; flex-wrap:wrap; gap: 6px 18px; align-items:center;
+                    font-size:.78rem; color: var(--gray); margin-bottom: 12px; }
+    .consent-meta strong { color: var(--navy); font-weight: 600; }
+    .consent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+                    gap: 8px; }
+    .consent-item { display:flex; align-items:center; gap:10px;
+                    background:#fff; border:1px solid var(--blue-pale);
+                    border-left: 4px solid var(--blue-pale);
+                    border-radius: 6px; padding: 8px 12px; }
+    .consent-item.granted { border-left-color: var(--green); }
+    .consent-item.denied  { border-left-color: #c64646; }
+    .consent-mark { width: 22px; height: 22px; border-radius: 50%;
+                    display:flex; align-items:center; justify-content:center;
+                    font-size:.85rem; font-weight:700; color:#fff; flex-shrink:0; }
+    .consent-mark.granted { background: var(--green); }
+    .consent-mark.denied  { background: #c64646; }
+    .consent-text { display:flex; flex-direction:column; min-width:0; }
+    .consent-purpose { font-size:.85rem; color: var(--navy); font-weight:600;
+                       text-transform: capitalize; }
+    .consent-when    { font-size:.7rem; color: var(--gray); }
+    .consent-extras  { margin-top: 12px; display:flex; flex-direction:column; gap: 4px;
+                       font-size:.78rem; color: var(--gray); }
+    .consent-extras code { background:#fff; border:1px solid var(--blue-pale);
+                           padding:1px 6px; border-radius: 3px; color: var(--navy);
+                           font-size:.72rem; }
+    details.raw-json { margin-top: 8px; }
+    details.raw-json > summary { cursor:pointer; font-size:.75rem; color: var(--gray);
+                                 padding: 4px 0; user-select: none; }
+    details.raw-json > summary:hover { color: var(--blue); }
+
     /* small screens */
     @media (max-width: 640px) {
       header.app-header { padding: 12px 16px; }
@@ -1539,6 +1572,72 @@ function renderCallQuality(q) {
     ${renderJsonKv(meta)}`;
 }
 
+function renderConsent(c, v, a) {
+  // c: parsed consent body (vCon-Consent/0.x)
+  const fmtPurpose = s => String(s || '')
+    .replace(/_/g, ' ')
+    .replace(/\b\w/g, m => m.toUpperCase());
+  const fmtTime = s => {
+    if (!s) return '';
+    try { return new Date(s).toLocaleString(); } catch { return String(s); }
+  };
+
+  // Header: who granted, when it expires
+  const partyIdx = Array.isArray(c.parties) ? c.parties[0] : (a && a.party);
+  const grantor  = partyIdx != null && v.parties[partyIdx] ? v.parties[partyIdx].name : null;
+  const grantorRole = partyIdx != null && v.parties[partyIdx] ? v.parties[partyIdx].role : null;
+  const dialogRef = Array.isArray(c.dialog) && c.dialog.length
+    ? `dialog ${c.dialog.join(', ')}` : null;
+
+  const headerBits = [];
+  if (grantor)      headerBits.push(`<span>Granted by <strong>${escapeHtml(grantor)}</strong>${grantorRole ? ` (${escapeHtml(grantorRole)})` : ''}</span>`);
+  if (dialogRef)    headerBits.push(`<span>scope: ${escapeHtml(dialogRef)}</span>`);
+  if (c.expires_at) headerBits.push(`<span>expires <strong>${escapeHtml(fmtTime(c.expires_at))}</strong></span>`);
+  if (c.consent_version) headerBits.push(`<span>spec: <strong>${escapeHtml(c.consent_version)}</strong></span>`);
+
+  // Per-purpose chips
+  const items = (c.consents || []).map(it => {
+    const cls   = it.granted ? 'granted' : 'denied';
+    const glyph = it.granted ? '✓' : '✕';
+    const when  = it.granted_at ? `granted ${fmtTime(it.granted_at)}`
+                : it.denied_at  ? `denied ${fmtTime(it.denied_at)}`
+                : '';
+    return `<div class="consent-item ${cls}">
+      <div class="consent-mark ${cls}" aria-hidden="true">${glyph}</div>
+      <div class="consent-text">
+        <span class="consent-purpose">${escapeHtml(fmtPurpose(it.purpose))}</span>
+        ${when ? `<span class="consent-when">${escapeHtml(when)}</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+
+  // Extras: AI preferences, SCITT receipt
+  const extras = [];
+  if (c.ai_preferences) {
+    const ai = c.ai_preferences;
+    const bits = [];
+    if (ai.allow_inference != null) bits.push(`inference: <strong>${ai.allow_inference ? 'allowed' : 'denied'}</strong>`);
+    if (ai.allow_training  != null) bits.push(`training: <strong>${ai.allow_training  ? 'allowed' : 'denied'}</strong>`);
+    if (bits.length) extras.push(`<div><span>AI preferences — </span>${bits.join(' · ')}</div>`);
+  }
+  if (c.scitt_receipt && (c.scitt_receipt.receipt_id || c.scitt_receipt.transparency_service)) {
+    const r = c.scitt_receipt;
+    extras.push(`<div>SCITT receipt: <code>${escapeHtml(r.receipt_id || '—')}</code>${r.transparency_service ? ` · <a href="${escapeHtml(r.transparency_service)}" target="_blank" rel="noopener">${escapeHtml(r.transparency_service)}</a>` : ''}</div>`);
+  }
+
+  return `<div class="consent-panel">
+    <div class="consent-meta">${headerBits.join('<span style="color:var(--blue-pale);">|</span>')}</div>
+    <div class="consent-grid">${items || '<div class="muted">No consent items.</div>'}</div>
+    ${extras.length ? `<div class="consent-extras">${extras.join('')}</div>` : ''}
+  </div>`;
+}
+
+function rawJsonBlock(obj, label) {
+  return `<details class="raw-json"><summary>${escapeHtml(label || 'Show raw JSON')}</summary>
+    <pre class="json-block">${escapeHtml(JSON.stringify(obj, null, 2))}</pre>
+  </details>`;
+}
+
 function renderJsonKv(obj) {
   // If it's a flat object with primitives, render as KV grid; otherwise fall back to JSON block.
   const isFlatPrim = obj && typeof obj === 'object' && !Array.isArray(obj) &&
@@ -1574,7 +1673,13 @@ function renderAttachment(a, i, v) {
   let body = '';
   if (typeof a.body === 'string') {
     const [ok, obj] = tryParseJson(a.body);
-    if (ok) body = renderJsonKv(obj);
+    if (ok) {
+      // Consent gets a dedicated visual panel + the raw JSON underneath.
+      const looksLikeConsent = a.type === 'consent'
+        || (obj && Array.isArray(obj.consents) && typeof obj.consent_version === 'string');
+      if (looksLikeConsent) body = renderConsent(obj, v, a) + rawJsonBlock(obj);
+      else                  body = renderJsonKv(obj);
+    }
     else    body = `<div class="body-text">${escapeHtml(a.body)}</div>`;
   } else if (a.url) {
     const localUrl = resolveMediaUrl(a);
