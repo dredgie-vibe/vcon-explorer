@@ -1513,7 +1513,8 @@ function renderCallQuality(q) {
   const meta = {};
   for (const k of ['concealed_seconds','jitter_buffer_discards','burst_loss_avg_packets',
                    'codec_impact_ie','codec','jitter_ms','avg_loss_pct',
-                   'latency_ms_round_trip','samples_total','rating']) {
+                   'latency_ms_round_trip','pdd_ms','pdd_threshold_ms',
+                   'samples_total','rating']) {
     if (q[k] !== undefined) meta[k] = q[k];
   }
   const rfPct = rf != null ? Math.max(0, Math.min(100, rf)) : 0;
