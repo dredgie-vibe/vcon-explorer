@@ -1700,9 +1700,21 @@ function renderConsent(c, v, a) {
 
 function renderLifecycle(lc, v, a) {
   // lc: parsed lifecycle body (vCon-Lifecycle-SCITT/0.x)
+  // Title-case each word, then fix canonical capitalisation for tokens
+  // that aren't plain English words: vCon (lowercase-v / capital-C) and
+  // standard acronyms like PCI / PII / SIP / SMS / API.
+  const FMT_OVERRIDES = {
+    'Vcon': 'vCon',
+    'Pci':  'PCI',
+    'Pii':  'PII',
+    'Sip':  'SIP',
+    'Sms':  'SMS',
+    'Api':  'API',
+  };
   const fmtName = s => String(s || '')
     .replace(/_/g, ' ')
-    .replace(/\b\w/g, m => m.toUpperCase());
+    .replace(/\b\w/g, m => m.toUpperCase())
+    .replace(/\b(Vcon|Pci|Pii|Sip|Sms|Api)\b/g, w => FMT_OVERRIDES[w]);
   const fmtTime = s => {
     if (!s) return '';
     try { return new Date(s).toLocaleString(); } catch { return String(s); }
@@ -1785,7 +1797,7 @@ function renderLifecycle(lc, v, a) {
     scittFooter = `<div class="lc-scitt">
       <div class="lc-scitt-title">
         <strong>SCITT</strong>: Supply Chain Integrity, Transparency, and Trust
-        <span class="draft">(IETF Draft Standard)</span>
+        <span class="draft">(IETF Internet-Draft)</span>
       </div>
       <div class="lc-scitt-row">${tsBits.join('<span style="color:var(--blue-pale);">|</span>')}</div>
       <div class="muted" style="font-size:.72rem;">Every lifecycle event above is a signed statement appended to the transparency log; the head receipt is the most recent one for this vCon.</div>
