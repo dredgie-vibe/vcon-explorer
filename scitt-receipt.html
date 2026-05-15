@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SCITT Receipt | vCon Explorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue: #1072ba; --blue-light: #65a7db; --gray: #5a646a;
+      --gold: #fdb73e; --navy: #17477e; --navy-deep: #354c59;
+      --blue-pale: #b9e0f7; --green: #8bad44; --red: #c64646;
+      --bg-soft: #f5f7f8;
+      --card-radius: 0 16px 0 16px;
+      --shadow-sm: 0 1px 2px rgba(23,71,126,.06), 0 2px 8px rgba(23,71,126,.04);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: #fff; color: var(--gray);
+      display: flex; flex-direction: column;
+      min-height: 100vh;
+    }
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    code, pre { font-family: 'Roboto Mono', monospace; }
+
+    header.app-header {
+      background: #fff; padding: 14px 32px;
+      border-bottom: 1px solid var(--blue-pale);
+      display: flex; align-items: center; gap: 24px; justify-content: space-between;
+      position: sticky; top: 0; z-index: 50;
+    }
+    header.app-header img.logo { height: 32px; }
+    header.app-header .title-block { display: flex; align-items: baseline; gap: 12px; flex: 1; min-width: 0; }
+    header.app-header .title-block h1 {
+      font-size: 1.05rem; font-weight: 700; color: var(--navy); letter-spacing: .02em;
+      text-transform: uppercase;
+    }
+    header.app-header .title-block .sub {
+      color: var(--gray); font-size: .85rem; font-weight: 400;
+    }
+    header.app-header .header-right { display: flex; align-items: center; gap: 16px; }
+    .back-link {
+      padding: 6px 14px; border-radius: 100px;
+      border: 1px solid var(--blue-pale); color: var(--blue);
+      font-size: .85rem; font-weight: 500;
+    }
+    .back-link:hover { background: var(--blue-pale); text-decoration: none; }
+
+    main {
+      flex: 1; max-width: 1100px; width: 100%; margin: 0 auto;
+      padding: 28px 32px 48px;
+    }
+    h2 { font-weight: 700; color: var(--blue); font-size: 1.0rem; margin: 28px 0 12px;
+         text-transform: uppercase; letter-spacing: .04em; }
+    h2:first-child { margin-top: 0; }
+    h3 { font-weight: 700; color: var(--navy); font-size: .95rem; margin-bottom: 6px; }
+    .muted { color: var(--gray); font-size: .85rem; }
+
+    .summary {
+      background: var(--bg-soft); border: 1px solid var(--blue-pale);
+      border-radius: var(--card-radius); padding: 18px 22px;
+      box-shadow: var(--shadow-sm);
+      display: flex; flex-direction: column; gap: 12px;
+    }
+    .summary .urn {
+      font-family: 'Roboto Mono', monospace; font-size: 1.05rem;
+      color: var(--navy); font-weight: 500; word-break: break-all;
+    }
+    .summary .meta {
+      display: flex; flex-wrap: wrap; gap: 6px 18px; align-items: center;
+      font-size: .85rem;
+    }
+    .summary .meta strong { color: var(--navy); font-weight: 600; }
+    .summary .meta .sep { color: var(--blue-pale); }
+    .summary .verdict-row { display: flex; flex-wrap: wrap; gap: 10px; }
+    .verdict {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 6px 12px; border-radius: 999px;
+      font-size: .82rem; font-weight: 500;
+      border: 1px solid;
+    }
+    .verdict .dot {
+      width: 8px; height: 8px; border-radius: 50%;
+    }
+    .verdict.pass  { border-color: var(--green); color: #4a6f1f; background: #f3f7e8; }
+    .verdict.pass .dot  { background: var(--green); }
+    .verdict.fail  { border-color: var(--red);   color: #7a2a2a; background: #fbecec; }
+    .verdict.fail .dot  { background: var(--red); }
+    .verdict.pend  { border-color: var(--gray);  color: var(--gray);  background: #fff; }
+    .verdict.pend .dot  { background: var(--gray); animation: pulse 1.2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:.3;} }
+
+    .card {
+      background: #fff; border: 1px solid var(--blue-pale);
+      border-radius: var(--card-radius); padding: 16px 20px;
+      box-shadow: var(--shadow-sm);
+    }
+    .kv {
+      display: grid; grid-template-columns: minmax(170px, max-content) 1fr;
+      gap: 6px 16px; font-size: .88rem;
+    }
+    .kv .k { color: var(--gray); font-size: .78rem; text-transform: uppercase;
+             letter-spacing: .04em; font-weight: 500; padding-top: 3px; }
+    .kv .v { color: var(--navy); word-break: break-all; }
+    .kv .v code { background: var(--bg-soft); padding: 1px 5px; border-radius: 4px;
+                  border: 1px solid var(--blue-pale); font-size: .85rem; }
+
+    .proof {
+      display: flex; flex-direction: column; gap: 10px;
+      font-size: .85rem;
+    }
+    .proof-step {
+      display: grid; grid-template-columns: 28px 1fr;
+      gap: 12px; align-items: start;
+    }
+    .proof-step .step-num {
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--blue-pale); color: var(--navy);
+      display: flex; align-items: center; justify-content: center;
+      font-size: .75rem; font-weight: 700;
+    }
+    .proof-step.ok .step-num   { background: var(--green); color: #fff; }
+    .proof-step.fail .step-num { background: var(--red); color: #fff; }
+    .proof-step .step-body { padding-top: 2px; }
+    .proof-step .step-title { color: var(--navy); font-weight: 600; font-size: .9rem; }
+    .proof-step .step-detail { color: var(--gray); margin-top: 2px; font-size: .8rem; }
+    .proof-step .step-detail code {
+      background: var(--bg-soft); padding: 1px 5px; border-radius: 4px;
+      border: 1px solid var(--blue-pale);
+    }
+
+    pre.hex {
+      background: var(--bg-soft); border: 1px solid var(--blue-pale);
+      border-radius: 6px; padding: 12px 14px; font-size: .78rem;
+      overflow-x: auto; line-height: 1.5; color: var(--navy-deep);
+      max-height: 320px;
+    }
+    details summary {
+      cursor: pointer; color: var(--blue); font-size: .85rem;
+      padding: 4px 0;
+    }
+    details summary:hover { text-decoration: underline; }
+
+    footer {
+      border-top: 1px solid var(--blue-pale);
+      padding: 14px 32px; color: var(--gray); font-size: .75rem;
+      text-align: center;
+    }
+
+    .err {
+      background: #fbecec; border: 1px solid var(--red); color: #7a2a2a;
+      padding: 14px 18px; border-radius: 8px; font-size: .9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="app-header">
+    <img class="logo" alt="ALIANZA"
+         src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDQwMC4yIDExNS45Ij48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6IzE3NDc3ZTt9PC9zdHlsZT48L2RlZnM+PGc+PGcgaWQ9IkxheWVyXzEiPjxnPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTcwLjgsNjIuNGwtNy45LTE1LjUtOC4yLDE1LjVoMTYuMlpNNTksMzkuNWg4LjNsMjEuMiwzOC4xaC05LjdsLTQuNC04LjNoLTIzLjRsLTQuMyw4LjNoLTguNmwyMC45LTM4LjEiLz48cG9seWdvbiBjbGFzcz0iY2xzLTEiIHBvaW50cz0iOTYuMSAzOS41IDEwNC43IDM5LjUgMTA0LjcgNzAuNCAxMzIuNCA3MC40IDEzMi40IDc3LjYgOTYuMSA3Ny42IDk2LjEgMzkuNSIvPjxyZWN0IGNsYXNzPSJjbHMtMSIgeD0iMTQyLjIiIHk9IjM5LjUiIHdpZHRoPSI4LjYiIGhlaWdodD0iMzguMSIvPjxwYXRoIGNsYXNzPSJjbHMtMSIgZD0iTTE5Mi40LDYyLjRsLTcuOS0xNS41LTguMywxNS41aDE2LjJaTTE4MC42LDM5LjVoOC4zbDIxLjIsMzguMWgtOS43bC00LjQtOC4zaC0yMy40bC00LjMsOC4zaC04LjZsMjAuOS0zOC4xIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMjE2LjIsMzkuNWg1LjlsMjYsMjIuNGMxLjUsMS4yLDIuOSwyLjYsNC4yLDQuMS0uMi0zLjItLjQtNS40LS40LTYuNnYtMjBoNy43djM4LjFoLTUuOWwtMjcuMi0yMy42Yy0xLjEtMS0yLjEtMS45LTMuMS0zLjEuMywyLjkuNCw0LjkuNCw2djIwLjZoLTcuN3YtMzguMVoiLz48cG9seWdvbiBjbGFzcz0iY2xzLTEiIHBvaW50cz0iMjY3LjcgNzMuNCAyOTMuNiA0Ni4zIDI3MC4zIDQ2LjMgMjcwLjMgMzkuNSAzMDcuNCAzOS41IDMwNy40IDQzLjIgMjgxLjIgNzAuNCAzMDcuNCA3MC40IDMwNy40IDc3LjYgMjY3LjcgNzcuNiAyNjcuNyA3My40Ii8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMzQ0LjQsNjIuNGwtNy45LTE1LjUtOC4yLDE1LjVoMTYuMlpNMzMyLjYsMzkuNWg4LjNsMjEuMiwzOC4xaC05LjdsLTQuNC04LjNoLTIzLjRsLTQuMyw4LjNoLTguNmwyMC45LTM4LjEiLz48L2c+PC9nPjwvZz48L3N2Zz4=" />
+    <div class="title-block">
+      <h1>SCITT Receipt</h1>
+      <span class="sub">
+        SCITT: Supply Chain Integrity, Transparency, and Trust
+        <span style="color: var(--gray);">(IETF Draft Standard)</span>
+        <span style="color: var(--blue-pale);">|</span>
+        COSE_Sign1 · RFC 9052 · RFC 9162 Merkle proof
+      </span>
+    </div>
+    <div class="header-right">
+      <a class="back-link" href="index.html">← Explorer</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <div id="loading" class="muted">Loading receipt…</div>
+  </main>
+
+  <footer>
+    Demo receipt — Transparency Service key is minted per build. The signature and Merkle proof are
+    cryptographically valid; the issuer identity is not.
+  </footer>
+
+  <script>
+  // ---------------------------------------------------------------------------
+  // Minimal CBOR decoder. Handles the subset of RFC 8949 used by COSE_Sign1:
+  // unsigned ints, negative ints, byte strings, text strings, arrays, maps,
+  // tags, and the special values true/false/null. No floats, no
+  // indefinite-length items — receipts use canonical encoding.
+  // ---------------------------------------------------------------------------
+  function CBORDecoder(buf) {
+    this.view = new DataView(buf);
+    this.bytes = new Uint8Array(buf);
+    this.pos = 0;
+  }
+  CBORDecoder.prototype._readArg = function (info) {
+    // 0..23 = literal; 24/25/26/27 = 1/2/4/8-byte big-endian
+    if (info < 24) return info;
+    if (info === 24) { const v = this.view.getUint8(this.pos); this.pos += 1; return v; }
+    if (info === 25) { const v = this.view.getUint16(this.pos); this.pos += 2; return v; }
+    if (info === 26) { const v = this.view.getUint32(this.pos); this.pos += 4; return v; }
+    if (info === 27) {
+      // BigInt for 64-bit — coerce small values back to Number
+      const hi = this.view.getUint32(this.pos);
+      const lo = this.view.getUint32(this.pos + 4);
+      this.pos += 8;
+      const big = (BigInt(hi) << 32n) | BigInt(lo);
+      return big <= BigInt(Number.MAX_SAFE_INTEGER) ? Number(big) : big;
+    }
+    throw new Error('unsupported additional info ' + info);
+  };
+  CBORDecoder.prototype.decode = function () {
+    const first = this.view.getUint8(this.pos++);
+    const major = first >> 5;
+    const info = first & 0x1f;
+    if (major === 0) return this._readArg(info);                       // unsigned
+    if (major === 1) {                                                  // negative
+      const a = this._readArg(info);
+      return typeof a === 'bigint' ? -1n - a : -1 - a;
+    }
+    if (major === 2 || major === 3) {                                   // byte / text string
+      const len = this._readArg(info);
+      const slice = this.bytes.subarray(this.pos, this.pos + len);
+      this.pos += len;
+      return major === 2 ? new Uint8Array(slice) : new TextDecoder().decode(slice);
+    }
+    if (major === 4) {                                                  // array
+      const n = this._readArg(info);
+      const arr = new Array(n);
+      for (let i = 0; i < n; i++) arr[i] = this.decode();
+      return arr;
+    }
+    if (major === 5) {                                                  // map
+      const n = this._readArg(info);
+      const map = new Map();
+      for (let i = 0; i < n; i++) {
+        const k = this.decode();
+        const v = this.decode();
+        map.set(k, v);
+      }
+      return map;
+    }
+    if (major === 6) {                                                  // tag
+      const tag = this._readArg(info);
+      const value = this.decode();
+      return { __tag: tag, value: value };
+    }
+    if (major === 7) {                                                  // special
+      if (info === 20) return false;
+      if (info === 21) return true;
+      if (info === 22) return null;
+      if (info === 23) return undefined;
+      throw new Error('unsupported simple value ' + info);
+    }
+    throw new Error('unsupported major type ' + major);
+  };
+
+  function decodeCBOR(buf) {
+    return new CBORDecoder(buf).decode();
+  }
+
+  // ---------------------------------------------------------------------------
+  // Canonical CBOR *encoder* — only what we need to reconstruct the
+  // Sig_structure for signature verification. Same canonical rules:
+  //   - shortest-form integer arg encoding
+  //   - definite-length only
+  // ---------------------------------------------------------------------------
+  function encArg(major, n) {
+    const m = major << 5;
+    if (n < 24)             return new Uint8Array([m | n]);
+    if (n < 0x100)          return new Uint8Array([m | 24, n]);
+    if (n < 0x10000)        return new Uint8Array([m | 25, n >> 8, n & 0xff]);
+    if (n < 0x100000000)    return new Uint8Array([m | 26,
+      (n >>> 24) & 0xff, (n >>> 16) & 0xff, (n >>> 8) & 0xff, n & 0xff]);
+    throw new Error('integer too large for demo encoder');
+  }
+  function concatBytes(parts) {
+    let total = 0;
+    for (const p of parts) total += p.length;
+    const out = new Uint8Array(total);
+    let off = 0;
+    for (const p of parts) { out.set(p, off); off += p.length; }
+    return out;
+  }
+  function encodeTextString(s) {
+    const b = new TextEncoder().encode(s);
+    return concatBytes([encArg(3, b.length), b]);
+  }
+  function encodeByteString(b) {
+    return concatBytes([encArg(2, b.length), b]);
+  }
+  function encodeArray(items) {
+    return concatBytes([encArg(4, items.length), ...items]);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Utilities
+  // ---------------------------------------------------------------------------
+  function b64uDecode(s) {
+    s = s.replace(/-/g, '+').replace(/_/g, '/');
+    while (s.length % 4) s += '=';
+    const bin = atob(s);
+    const out = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+    return out;
+  }
+  function bytesToHex(b) {
+    let s = '';
+    for (let i = 0; i < b.length; i++) s += b[i].toString(16).padStart(2, '0');
+    return s;
+  }
+  function hexBlock(b, group = 4, wrap = 16) {
+    const hex = bytesToHex(b);
+    const out = [];
+    for (let i = 0; i < hex.length; i += 2) {
+      out.push(hex.substr(i, 2));
+    }
+    const lines = [];
+    for (let i = 0; i < out.length; i += wrap) {
+      const line = out.slice(i, i + wrap);
+      const grouped = [];
+      for (let j = 0; j < line.length; j += group) {
+        grouped.push(line.slice(j, j + group).join(''));
+      }
+      lines.push(grouped.join(' '));
+    }
+    return lines.join('\n');
+  }
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+  async function sha256(bytes) {
+    const buf = await crypto.subtle.digest('SHA-256', bytes);
+    return new Uint8Array(buf);
+  }
+  async function leafHash(statementBytes) {
+    const inp = new Uint8Array(1 + statementBytes.length);
+    inp[0] = 0x00;
+    inp.set(statementBytes, 1);
+    return sha256(inp);
+  }
+  async function innerHash(left, right) {
+    const inp = new Uint8Array(1 + left.length + right.length);
+    inp[0] = 0x01;
+    inp.set(left, 1);
+    inp.set(right, 1 + left.length);
+    return sha256(inp);
+  }
+
+  const COSE_LABELS = {
+    1: 'alg', 2: 'crit', 3: 'content type', 4: 'kid', 5: 'IV', 6: 'Partial IV',
+    7: 'counter signature',
+    395: 'vds (verifiable data structure)',
+    396: 'inclusion proof',
+    [-111]: 'issuer (demo label)',
+    [-112]: 'subject vCon uuid (demo label)',
+  };
+  const ALG_NAMES = { [-7]: 'ES256 (ECDSA P-256 / SHA-256)', [-8]: 'EdDSA', [-35]: 'ES384', [-36]: 'ES512' };
+  const VDS_NAMES = { 1: 'RFC9162_SHA256 (CT-style Merkle tree, SHA-256)' };
+
+  // ---------------------------------------------------------------------------
+  // Main flow
+  // ---------------------------------------------------------------------------
+  async function run() {
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id');
+    const main = document.getElementById('main');
+
+    if (!id) {
+      main.innerHTML = '<div class="err">No receipt ID supplied. Append <code>?id=01HZQ1J1</code> (or another receipt ID) to the URL.</div>';
+      return;
+    }
+    if (!/^[A-Za-z0-9_-]{4,40}$/.test(id)) {
+      main.innerHTML = '<div class="err">Invalid receipt ID.</div>';
+      return;
+    }
+
+    const cborUrl = `media/scitt-receipts/${id}.cbor`;
+    const jsonUrl = `media/scitt-receipts/${id}.json`;
+
+    let receiptBytes, sidecar;
+    try {
+      const [r1, r2] = await Promise.all([fetch(cborUrl), fetch(jsonUrl)]);
+      if (!r1.ok) throw new Error(`receipt ${id}.cbor not found (HTTP ${r1.status})`);
+      if (!r2.ok) throw new Error(`sidecar ${id}.json not found (HTTP ${r2.status})`);
+      receiptBytes = new Uint8Array(await r1.arrayBuffer());
+      sidecar = await r2.json();
+    } catch (e) {
+      main.innerHTML = `<div class="err">Could not load receipt: ${escapeHtml(e.message)}</div>`;
+      return;
+    }
+
+    // Decode the COSE_Sign1
+    let decoded, protBytes, prot, unprot, payload, signature;
+    try {
+      decoded = decodeCBOR(receiptBytes.buffer.slice(receiptBytes.byteOffset, receiptBytes.byteOffset + receiptBytes.byteLength));
+      if (!decoded || decoded.__tag !== 18) throw new Error('outer CBOR tag is not 18 (COSE_Sign1)');
+      const arr = decoded.value;
+      if (!Array.isArray(arr) || arr.length !== 4) throw new Error('COSE_Sign1 must be a 4-element array');
+      protBytes = arr[0];
+      unprot = arr[1];
+      payload = arr[2];
+      signature = arr[3];
+      prot = decodeCBOR(protBytes.buffer.slice(protBytes.byteOffset, protBytes.byteOffset + protBytes.byteLength));
+    } catch (e) {
+      main.innerHTML = `<div class="err">CBOR decode failed: ${escapeHtml(e.message)}</div>`;
+      return;
+    }
+
+    // Render the summary skeleton
+    const urn = sidecar.receipt_urn || `urn:scitt:receipt:${id}`;
+    const algLabel = ALG_NAMES[prot.get(1)] || String(prot.get(1));
+    const vdsLabel = VDS_NAMES[prot.get(395)] || String(prot.get(395));
+
+    main.innerHTML = `
+      <div class="summary">
+        <div class="urn">${escapeHtml(urn)}</div>
+        <div class="meta">
+          <span>Transparency Service: <a href="${escapeHtml(sidecar.transparency_service)}" target="_blank" rel="noopener"><strong>${escapeHtml(sidecar.transparency_service)}</strong></a></span>
+          <span class="sep">|</span>
+          <span>issued <strong>${escapeHtml(new Date(sidecar.issued_at).toLocaleString())}</strong></span>
+          <span class="sep">|</span>
+          <span>subject vCon: <code>${escapeHtml(sidecar.subject_vcon_uuid)}</code></span>
+        </div>
+        <div class="verdict-row" id="verdicts">
+          <span class="verdict pend" id="v-cbor"><span class="dot"></span>CBOR decode</span>
+          <span class="verdict pend" id="v-proof"><span class="dot"></span>Inclusion proof</span>
+          <span class="verdict pend" id="v-sig"><span class="dot"></span>TS signature</span>
+        </div>
+      </div>
+
+      <h2>Protected header</h2>
+      <div class="card">
+        <div class="kv">
+          <div class="k">alg (1)</div>     <div class="v">${escapeHtml(String(prot.get(1)))} — ${escapeHtml(algLabel)}</div>
+          <div class="k">kid (4)</div>     <div class="v"><code>${bytesToHex(prot.get(4))}</code></div>
+          <div class="k">vds (395)</div>   <div class="v">${escapeHtml(String(prot.get(395)))} — ${escapeHtml(vdsLabel)}</div>
+          <div class="k">issuer (-111)</div>  <div class="v">${escapeHtml(String(prot.get(-111)))}</div>
+          <div class="k">subject (-112)</div> <div class="v"><code>${escapeHtml(String(prot.get(-112)))}</code></div>
+        </div>
+        <details style="margin-top: 14px;">
+          <summary>Raw protected header (CBOR, ${protBytes.length} bytes)</summary>
+          <pre class="hex">${escapeHtml(hexBlock(protBytes))}</pre>
+        </details>
+      </div>
+
+      <h2>Unprotected header — inclusion proof</h2>
+      <div class="card">
+        <div class="kv">
+          <div class="k">tree size</div>  <div class="v">${unprot.get(396)[0]}</div>
+          <div class="k">leaf index</div> <div class="v">${unprot.get(396)[1]}</div>
+          <div class="k">audit path</div> <div class="v">${unprot.get(396)[2].length} sibling hashes (SHA-256, 32 bytes each)</div>
+        </div>
+        <div id="proof-trace" class="proof" style="margin-top: 16px;"></div>
+      </div>
+
+      <h2>Payload</h2>
+      <div class="card">
+        <div class="muted" style="margin-bottom: 8px;">
+          On the wire the payload slot is <code>null</code> — the receipt is <strong>detached</strong>.
+          The bytes actually signed are the Merkle tree root that the inclusion proof above resolves to,
+          placed into the Sig_structure during signature computation (RFC 9052 §4.4).
+        </div>
+        <div class="kv">
+          <div class="k">payload slot</div>   <div class="v"><code>null (detached)</code></div>
+          <div class="k">derived root</div>   <div class="v"><code id="root-hex">computing…</code></div>
+        </div>
+      </div>
+
+      <h2>Signature</h2>
+      <div class="card">
+        <div class="kv">
+          <div class="k">algorithm</div>   <div class="v">${escapeHtml(algLabel)}</div>
+          <div class="k">length</div>      <div class="v">${signature.length} bytes (raw r ∥ s)</div>
+        </div>
+        <details style="margin-top: 12px;">
+          <summary>Signature bytes</summary>
+          <pre class="hex">${escapeHtml(hexBlock(signature))}</pre>
+        </details>
+        <details style="margin-top: 8px;">
+          <summary>Transparency Service public JWK</summary>
+          <pre class="hex" style="white-space: pre-wrap;">${escapeHtml(JSON.stringify(sidecar.jwk, null, 2))}</pre>
+        </details>
+        <div id="sig-trace" class="proof" style="margin-top: 16px;"></div>
+      </div>
+
+      <h2>Raw receipt</h2>
+      <div class="card">
+        <div class="muted" style="margin-bottom: 8px;">Full COSE_Sign1 bytes, ${receiptBytes.length} bytes total.</div>
+        <pre class="hex">${escapeHtml(hexBlock(receiptBytes))}</pre>
+      </div>
+    `;
+    setVerdict('v-cbor', 'pass', 'CBOR decode');
+
+    // Verify the inclusion proof
+    const proofTrace = document.getElementById('proof-trace');
+    const statementBytes = b64uDecode(sidecar.statement.bytes_b64u);
+    const auditPath = sidecar.merkle.audit_path_b64u.map(b64uDecode);
+    let idx = unprot.get(396)[1];
+    let node = await leafHash(statementBytes);
+
+    let line = (cls, title, detail) => {
+      const div = document.createElement('div');
+      div.className = `proof-step ${cls}`;
+      div.innerHTML = `<div class="step-num">${proofTrace.children.length + 1}</div>
+        <div class="step-body">
+          <div class="step-title">${escapeHtml(title)}</div>
+          ${detail ? `<div class="step-detail">${detail}</div>` : ''}
+        </div>`;
+      proofTrace.appendChild(div);
+    };
+
+    line('ok', `Leaf hash = SHA-256(0x00 ∥ statement-bytes)`,
+         `<code>${bytesToHex(node)}</code>`);
+
+    for (let i = 0; i < auditPath.length; i++) {
+      const sib = auditPath[i];
+      const side = (idx & 1) ? 'right' : 'left';
+      const newNode = (idx & 1)
+        ? await innerHash(sib, node)
+        : await innerHash(node, sib);
+      line('ok', `Step ${i + 1}/${auditPath.length}: hash with sibling on the ${side === 'right' ? 'left' : 'right'}`,
+           `we are on the ${side}, sibling hash: <code>${bytesToHex(sib)}</code><br/>→ <code>${bytesToHex(newNode)}</code>`);
+      node = newNode;
+      idx >>= 1;
+    }
+
+    const expectedRoot = b64uDecode(sidecar.merkle.expected_root_b64u);
+    const rootMatches = bytesToHex(node) === bytesToHex(expectedRoot);
+    document.getElementById('root-hex').textContent = bytesToHex(node);
+
+    if (rootMatches) {
+      line('ok', 'Derived root matches the sidecar\'s recorded tree root',
+           `<code>${bytesToHex(node)}</code>`);
+      setVerdict('v-proof', 'pass', 'Inclusion proof valid');
+    } else {
+      line('fail', 'Derived root does NOT match the recorded tree root',
+           `expected <code>${bytesToHex(expectedRoot)}</code>`);
+      setVerdict('v-proof', 'fail', 'Inclusion proof FAILED');
+    }
+
+    // Verify the signature
+    const sigTrace = document.getElementById('sig-trace');
+    const sigStep = (cls, title, detail) => {
+      const div = document.createElement('div');
+      div.className = `proof-step ${cls}`;
+      div.innerHTML = `<div class="step-num">${sigTrace.children.length + 1}</div>
+        <div class="step-body">
+          <div class="step-title">${escapeHtml(title)}</div>
+          ${detail ? `<div class="step-detail">${detail}</div>` : ''}
+        </div>`;
+      sigTrace.appendChild(div);
+    };
+
+    // Rebuild Sig_structure = [ "Signature1", body_protected, external_aad, payload ]
+    // external_aad = empty bstr; payload = the derived tree root.
+    const sigStructure = encodeArray([
+      encodeTextString('Signature1'),
+      encodeByteString(protBytes),
+      encodeByteString(new Uint8Array(0)),
+      encodeByteString(node),
+    ]);
+    sigStep('ok', 'Reconstructed Sig_structure for verification (RFC 9052 §4.4)',
+            `["Signature1", protected, h'', root] — <strong>${sigStructure.length} bytes</strong> of canonical CBOR`);
+
+    try {
+      const key = await crypto.subtle.importKey(
+        'jwk',
+        { kty: sidecar.jwk.kty, crv: sidecar.jwk.crv, x: sidecar.jwk.x, y: sidecar.jwk.y, ext: true },
+        { name: 'ECDSA', namedCurve: 'P-256' },
+        false,
+        ['verify']
+      );
+      sigStep('ok', 'Imported Transparency Service public key (JWK → WebCrypto)',
+              `<code>${escapeHtml(sidecar.jwk.crv)}</code>, kid <code>${escapeHtml(sidecar.kid_b64u)}</code>`);
+
+      const ok = await crypto.subtle.verify(
+        { name: 'ECDSA', hash: 'SHA-256' },
+        key,
+        signature.buffer.slice(signature.byteOffset, signature.byteOffset + signature.byteLength),
+        sigStructure.buffer.slice(sigStructure.byteOffset, sigStructure.byteOffset + sigStructure.byteLength)
+      );
+      if (ok) {
+        sigStep('ok', 'ECDSA verification: PASS',
+                `The Transparency Service signed exactly this receipt, binding the inclusion proof above to the log root.`);
+        setVerdict('v-sig', 'pass', 'TS signature valid');
+      } else {
+        sigStep('fail', 'ECDSA verification: FAIL', '');
+        setVerdict('v-sig', 'fail', 'TS signature FAILED');
+      }
+    } catch (e) {
+      sigStep('fail', 'Signature verification threw an error', escapeHtml(e.message));
+      setVerdict('v-sig', 'fail', 'TS signature error');
+    }
+  }
+
+  function setVerdict(id, cls, label) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.className = `verdict ${cls}`;
+    el.innerHTML = `<span class="dot"></span>${escapeHtml(label)}`;
+  }
+
+  run().catch(err => {
+    document.getElementById('main').innerHTML =
+      `<div class="err">Unexpected error: ${escapeHtml(err.message)}</div>`;
+    console.error(err);
+  });
+  </script>
+</body>
+</html>

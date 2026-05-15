@@ -366,6 +366,29 @@
     .lc-event-receipt code { background:#fff; border:1px solid var(--blue-pale);
                              padding:1px 6px; border-radius: 3px; color: var(--navy);
                              font-size:.68rem; }
+    .lc-event-receipt a code { color: var(--blue); }
+    .lc-event-receipt a:hover code { background: var(--blue-pale); }
+
+    /* SCITT transparency-service footer for the lifecycle panel.
+       The lifecycle is what's logged to SCITT, so the transparency anchor
+       belongs at the bottom of this panel — not under consent. */
+    .lc-scitt {
+      margin-top: 14px; padding-top: 12px;
+      border-top: 1px dashed var(--blue-pale);
+      display: flex; flex-direction: column; gap: 4px;
+      font-size: .78rem; color: var(--gray);
+    }
+    .lc-scitt-row { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+    .lc-scitt-title { font-size: .8rem; color: var(--navy); margin-bottom: 4px; }
+    .lc-scitt-title strong { color: var(--navy); font-weight: 700; letter-spacing: .02em; }
+    .lc-scitt-title .draft { color: var(--gray); font-weight: 400; }
+    .lc-scitt-label { font-size: .68rem; text-transform: uppercase;
+                      letter-spacing: .04em; font-weight: 600; color: var(--navy); }
+    .lc-scitt code { background: #fff; border: 1px solid var(--blue-pale);
+                     padding: 1px 6px; border-radius: 3px; color: var(--navy);
+                     font-size: .72rem; }
+    .lc-scitt a code { color: var(--blue); }
+    .lc-scitt a:hover code { background: var(--blue-pale); }
 
     /* small screens */
     @media (max-width: 640px) {
@@ -435,6 +458,7 @@ const STATE = {
   index:   null,        // contents of index.json
   vcons:   [],          // array of full vCon objects, in same order as index.vcons
   byUuid:  new Map(),
+  scittReceiptIds: new Set(), // populated from media/scitt-receipts/_manifest.json on boot
   filters: {
     text:      '',
     phone:     '',
@@ -463,6 +487,16 @@ async function boot() {
       return r.json();
     });
     STATE.index = idx;
+
+    // Try to load the SCITT receipt manifest. If it's missing (e.g. nobody
+    // has run _make_scitt_receipts.py yet) we just fall through with an
+    // empty Set — receipt URNs will render as plain code instead of links.
+    try {
+      const m = await fetch('./media/scitt-receipts/_manifest.json', {cache:'no-cache'}).then(r => r.ok ? r.json() : null);
+      if (m && Array.isArray(m.receipts)) {
+        STATE.scittReceiptIds = new Set(m.receipts.map(r => r.id));
+      }
+    } catch (e) { /* leave the Set empty */ }
 
     // Fetch every vCon listed in the index
     const fetched = await Promise.all(idx.vcons.map(async (row) => {
@@ -1644,7 +1678,10 @@ function renderConsent(c, v, a) {
     </div>`;
   }).join('');
 
-  // Extras: AI preferences, SCITT receipt
+  // Extras: AI preferences. (SCITT receipt lives in the Lifecycle panel —
+  // transparency-log evidence is a property of the whole lifecycle, not of
+  // consent specifically. Consent events are themselves one of the things
+  // logged there.)
   const extras = [];
   if (c.ai_preferences) {
     const ai = c.ai_preferences;
@@ -1652,10 +1689,6 @@ function renderConsent(c, v, a) {
     if (ai.allow_inference != null) bits.push(`inference: <strong>${ai.allow_inference ? 'allowed' : 'denied'}</strong>`);
     if (ai.allow_training  != null) bits.push(`training: <strong>${ai.allow_training  ? 'allowed' : 'denied'}</strong>`);
     if (bits.length) extras.push(`<div><span>AI preferences — </span>${bits.join(' · ')}</div>`);
-  }
-  if (c.scitt_receipt && (c.scitt_receipt.receipt_id || c.scitt_receipt.transparency_service)) {
-    const r = c.scitt_receipt;
-    extras.push(`<div>SCITT receipt: <code>${escapeHtml(r.receipt_id || '—')}</code>${r.transparency_service ? ` · <a href="${escapeHtml(r.transparency_service)}" target="_blank" rel="noopener">${escapeHtml(r.transparency_service)}</a>` : ''}</div>`);
   }
 
   return `<div class="consent-panel">
@@ -1693,10 +1726,10 @@ function renderLifecycle(lc, v, a) {
   });
   const t0 = events.length ? new Date(events[0].at).getTime() : 0;
 
-  // Header
+  // Header — `transparency_service` is rendered in the SCITT footer block
+  // below, not here, so this row stays focused on the lifecycle itself.
   const headerBits = [];
   if (lc.lifecycle_version)      headerBits.push(`<span>spec: <strong>${escapeHtml(lc.lifecycle_version)}</strong></span>`);
-  if (lc.transparency_service)   headerBits.push(`<span>SCITT: <a href="${escapeHtml(lc.transparency_service)}" target="_blank" rel="noopener">${escapeHtml(lc.transparency_service)}</a></span>`);
   headerBits.push(`<span><strong>${events.length}</strong> events</span>`);
 
   // Timeline rows
@@ -1716,7 +1749,7 @@ function renderLifecycle(lc, v, a) {
       if (flat) detailsHtml = `<div class="lc-event-details">${flat}</div>`;
     }
     const receiptHtml = ev.receipt
-      ? `<div class="lc-event-receipt">receipt: <code>${escapeHtml(ev.receipt)}</code></div>`
+      ? `<div class="lc-event-receipt">receipt: ${scittReceiptLink(ev.receipt)}</div>`
       : '';
     return `<div class="lc-event">
       <div class="lc-dot ${cls}"></div>
@@ -1730,10 +1763,55 @@ function renderLifecycle(lc, v, a) {
     </div>`;
   }).join('');
 
+  // SCITT footer: the lifecycle log is the artifact whose transparency we're
+  // attesting. Show the transparency service URL and the most recent event's
+  // receipt as the current head of the log for this vCon.
+  const latest = events[events.length - 1];
+  const headReceiptUrn = (lc.scitt_receipt && lc.scitt_receipt.receipt_id)
+                        || (latest && latest.receipt)
+                        || null;
+  const tsUrl = (lc.scitt_receipt && lc.scitt_receipt.transparency_service)
+                || lc.transparency_service
+                || null;
+  let scittFooter = '';
+  if (tsUrl || headReceiptUrn) {
+    const tsBits = [];
+    if (headReceiptUrn) {
+      tsBits.push(`<span><span class="lc-scitt-label">head receipt</span> ${scittReceiptLink(headReceiptUrn)}</span>`);
+    }
+    if (tsUrl) {
+      tsBits.push(`<span><span class="lc-scitt-label">transparency service</span> <a href="${escapeHtml(tsUrl)}" target="_blank" rel="noopener">${escapeHtml(tsUrl)}</a></span>`);
+    }
+    scittFooter = `<div class="lc-scitt">
+      <div class="lc-scitt-title">
+        <strong>SCITT</strong>: Supply Chain Integrity, Transparency, and Trust
+        <span class="draft">(IETF Draft Standard)</span>
+      </div>
+      <div class="lc-scitt-row">${tsBits.join('<span style="color:var(--blue-pale);">|</span>')}</div>
+      <div class="muted" style="font-size:.72rem;">Every lifecycle event above is a signed statement appended to the transparency log; the head receipt is the most recent one for this vCon.</div>
+    </div>`;
+  }
+
   return `<div class="lifecycle-panel">
     <div class="lc-meta">${headerBits.join('<span style="color:var(--blue-pale);">|</span>')}</div>
     <div class="lc-timeline">${rows || '<div class="muted">No events.</div>'}</div>
+    ${scittFooter}
   </div>`;
+}
+
+// Turn a "urn:scitt:receipt:<id>" string into a link to the receipt viewer.
+// Only URNs that have a real COSE_Sign1 receipt on disk (as advertised by
+// media/scitt-receipts/_manifest.json, loaded into STATE.scittReceiptIds
+// during boot) are rendered as clickable links. Anything else falls back
+// to plain <code> so the URN is still visible.
+function scittReceiptLink(urn) {
+  const s = String(urn || '');
+  const m = s.match(/^urn:scitt:receipt:([A-Za-z0-9_-]+)$/);
+  if (m && STATE.scittReceiptIds.has(m[1])) {
+    const href = `scitt-receipt.html?id=${encodeURIComponent(m[1])}`;
+    return `<a href="${href}" target="_blank" rel="noopener" title="Open the verifiable COSE_Sign1 receipt"><code>${escapeHtml(s)}</code></a>`;
+  }
+  return `<code>${escapeHtml(s)}</code>`;
 }
 
 function humanDelta(ms) {

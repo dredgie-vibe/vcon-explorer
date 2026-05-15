@@ -1,0 +1,195 @@
+{
+  "generated_at": null,
+  "transparency_service": "https://scitt.example.org/v1",
+  "vcons": [
+    "vcon-11-cc-inbound-billing.json",
+    "vcon-19-cc-lifecycle-scitt.json",
+    "vcon-26-cc-webchat-to-voice-escalation.json"
+  ],
+  "receipts": [
+    {
+      "urn": "urn:scitt:receipt:01HZP1A2",
+      "id": "01HZP1A2",
+      "event": "vcon_created",
+      "vcon_uuid": "de8adbcd-5c41-5f14-a683-106173be2dfd",
+      "vcon_file": "vcon-11-cc-inbound-billing.json",
+      "size_bytes": 292
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZP1B7",
+      "id": "01HZP1B7",
+      "event": "consent_captured",
+      "vcon_uuid": "de8adbcd-5c41-5f14-a683-106173be2dfd",
+      "vcon_file": "vcon-11-cc-inbound-billing.json",
+      "size_bytes": 292
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZP1C9",
+      "id": "01HZP1C9",
+      "event": "recording_completed",
+      "vcon_uuid": "de8adbcd-5c41-5f14-a683-106173be2dfd",
+      "vcon_file": "vcon-11-cc-inbound-billing.json",
+      "size_bytes": 292
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZP1F2",
+      "id": "01HZP1F2",
+      "event": "transcribed",
+      "vcon_uuid": "de8adbcd-5c41-5f14-a683-106173be2dfd",
+      "vcon_file": "vcon-11-cc-inbound-billing.json",
+      "size_bytes": 292
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZP1G8",
+      "id": "01HZP1G8",
+      "event": "summarised",
+      "vcon_uuid": "de8adbcd-5c41-5f14-a683-106173be2dfd",
+      "vcon_file": "vcon-11-cc-inbound-billing.json",
+      "size_bytes": 292
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZQ1A2",
+      "id": "01HZQ1A2",
+      "event": "vcon_created",
+      "vcon_uuid": "3647406c-ad07-5a99-9369-84012e082811",
+      "vcon_file": "vcon-19-cc-lifecycle-scitt.json",
+      "size_bytes": 292
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZQ1B7",
+      "id": "01HZQ1B7",
+      "event": "consent_captured",
+      "vcon_uuid": "3647406c-ad07-5a99-9369-84012e082811",
+      "vcon_file": "vcon-19-cc-lifecycle-scitt.json",
+      "size_bytes": 292
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZQ1C9",
+      "id": "01HZQ1C9",
+      "event": "recording_completed",
+      "vcon_uuid": "3647406c-ad07-5a99-9369-84012e082811",
+      "vcon_file": "vcon-19-cc-lifecycle-scitt.json",
+      "size_bytes": 292
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZQ1F2",
+      "id": "01HZQ1F2",
+      "event": "transcribed",
+      "vcon_uuid": "3647406c-ad07-5a99-9369-84012e082811",
+      "vcon_file": "vcon-19-cc-lifecycle-scitt.json",
+      "size_bytes": 292
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZQ1G8",
+      "id": "01HZQ1G8",
+      "event": "redacted_pci",
+      "vcon_uuid": "3647406c-ad07-5a99-9369-84012e082811",
+      "vcon_file": "vcon-19-cc-lifecycle-scitt.json",
+      "size_bytes": 292
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZQ1H4",
+      "id": "01HZQ1H4",
+      "event": "redacted_pii",
+      "vcon_uuid": "3647406c-ad07-5a99-9369-84012e082811",
+      "vcon_file": "vcon-19-cc-lifecycle-scitt.json",
+      "size_bytes": 292
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZQ1J1",
+      "id": "01HZQ1J1",
+      "event": "summarised",
+      "vcon_uuid": "3647406c-ad07-5a99-9369-84012e082811",
+      "vcon_file": "vcon-19-cc-lifecycle-scitt.json",
+      "size_bytes": 292
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZR1A2",
+      "id": "01HZR1A2",
+      "event": "vcon_created",
+      "vcon_uuid": "224ed6c7-fad3-5741-ace0-5cac214a6634",
+      "vcon_file": "vcon-26-cc-webchat-to-voice-escalation.json",
+      "size_bytes": 326
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZR1A4",
+      "id": "01HZR1A4",
+      "event": "chat_started",
+      "vcon_uuid": "224ed6c7-fad3-5741-ace0-5cac214a6634",
+      "vcon_file": "vcon-26-cc-webchat-to-voice-escalation.json",
+      "size_bytes": 326
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZR1A9",
+      "id": "01HZR1A9",
+      "event": "chat_completed",
+      "vcon_uuid": "224ed6c7-fad3-5741-ace0-5cac214a6634",
+      "vcon_file": "vcon-26-cc-webchat-to-voice-escalation.json",
+      "size_bytes": 326
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZR1B0",
+      "id": "01HZR1B0",
+      "event": "call_started",
+      "vcon_uuid": "224ed6c7-fad3-5741-ace0-5cac214a6634",
+      "vcon_file": "vcon-26-cc-webchat-to-voice-escalation.json",
+      "size_bytes": 326
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZR1B8",
+      "id": "01HZR1B8",
+      "event": "consent_captured",
+      "vcon_uuid": "224ed6c7-fad3-5741-ace0-5cac214a6634",
+      "vcon_file": "vcon-26-cc-webchat-to-voice-escalation.json",
+      "size_bytes": 326
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZR1C9",
+      "id": "01HZR1C9",
+      "event": "recording_completed",
+      "vcon_uuid": "224ed6c7-fad3-5741-ace0-5cac214a6634",
+      "vcon_file": "vcon-26-cc-webchat-to-voice-escalation.json",
+      "size_bytes": 326
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZR1F2",
+      "id": "01HZR1F2",
+      "event": "transcribed",
+      "vcon_uuid": "224ed6c7-fad3-5741-ace0-5cac214a6634",
+      "vcon_file": "vcon-26-cc-webchat-to-voice-escalation.json",
+      "size_bytes": 326
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZR1G8",
+      "id": "01HZR1G8",
+      "event": "redacted_pci",
+      "vcon_uuid": "224ed6c7-fad3-5741-ace0-5cac214a6634",
+      "vcon_file": "vcon-26-cc-webchat-to-voice-escalation.json",
+      "size_bytes": 326
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZR1H4",
+      "id": "01HZR1H4",
+      "event": "redacted_pii",
+      "vcon_uuid": "224ed6c7-fad3-5741-ace0-5cac214a6634",
+      "vcon_file": "vcon-26-cc-webchat-to-voice-escalation.json",
+      "size_bytes": 326
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZR1J1",
+      "id": "01HZR1J1",
+      "event": "summarised",
+      "vcon_uuid": "224ed6c7-fad3-5741-ace0-5cac214a6634",
+      "vcon_file": "vcon-26-cc-webchat-to-voice-escalation.json",
+      "size_bytes": 326
+    },
+    {
+      "urn": "urn:scitt:receipt:01HZR1K7",
+      "id": "01HZR1K7",
+      "event": "email_sent",
+      "vcon_uuid": "224ed6c7-fad3-5741-ace0-5cac214a6634",
+      "vcon_file": "vcon-26-cc-webchat-to-voice-escalation.json",
+      "size_bytes": 326
+    }
+  ]
+}

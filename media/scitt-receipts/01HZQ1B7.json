@@ -1,0 +1,32 @@
+{
+  "receipt_urn": "urn:scitt:receipt:01HZQ1B7",
+  "transparency_service": "https://scitt.example.org/v1",
+  "issued_at": "2026-04-24T18:00:12+00:00",
+  "subject_vcon_uuid": "3647406c-ad07-5a99-9369-84012e082811",
+  "alg": "ES256",
+  "vds": "RFC9162_SHA256",
+  "kid_b64u": "DRNF7iuwIJ0",
+  "jwk": {
+    "kty": "EC",
+    "crv": "P-256",
+    "x": "_O99eIpEeXu2hEv6sKb7VxXkM1fOBx8c2b8CtwmoYgE",
+    "y": "HHghFJeq92_8iPQj94rTKuH591rZwcDbjc5v_09LRl8"
+  },
+  "statement": {
+    "bytes_b64u": "eyJhY3RvciI6ImhlbGl4LWNvbnNlbnQtc3ZjIiwiYXQiOiIyMDI2LTA0LTI0VDE4OjAwOjEyKzAwOjAwIiwiZXZlbnQiOiJjb25zZW50X2NhcHR1cmVkIiwia2luZCI6InZjb24tbGlmZWN5Y2xlLWV2ZW50IiwidmNvbl9zaGEyNTYiOiIyNjU5MTRjM2RhY2U2NGYxZWVlMDg2OGE2OWIxYzdlNjc4OTE1OTRkMDY3ZjJlNjQwODBhNDQwY2Q4MzEwNGVkIiwidmNvbl91dWlkIjoiMzY0NzQwNmMtYWQwNy01YTk5LTkzNjktODQwMTJlMDgyODExIn0",
+    "description": "Canonical JSON of the vCon attachment that this receipt attests to."
+  },
+  "merkle": {
+    "tree_size": 16,
+    "leaf_index": 4,
+    "audit_path_b64u": [
+      "cN1lmmbdx5cy-26IwyKq7WadhNgYMDEiuxIagNd8KHw",
+      "-kgTpBvrlXF7muRJynmJrpG8_3OV_V8kYscKkvlRxjw",
+      "XRyOfbbwGScC8qxfxOA7v-cU2JDYzxVQi_Aq4SGjZ4s",
+      "jZfUPKOS0yCmYocSyOTVxJ6gQHeqc-qrgSrhwNjTVjo"
+    ],
+    "expected_root_b64u": "lP1mMzg0Ieq5CpFWi19po9ys7Oip-c6TzusYH9LuBCg",
+    "hash_alg": "SHA-256",
+    "convention": "RFC 9162 (CT): leaf = SHA256(0x00||x), inner = SHA256(0x01||L||R)"
+  }
+}
