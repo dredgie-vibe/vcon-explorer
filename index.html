@@ -353,8 +353,10 @@
     .lc-dot.redact   { background: #c64646; }
     .lc-dot.send     { background: var(--gold); }
     .lc-event-head { display:flex; flex-wrap:wrap; align-items:baseline; gap: 8px 12px; }
-    .lc-event-name { font-size:.9rem; font-weight: 600; color: var(--navy);
-                     text-transform: capitalize; }
+    /* Casing is set by fmtName() in renderLifecycle so vCon, PCI, PII etc.
+       render with their canonical capitalisation. No text-transform here —
+       text-transform: capitalize would re-uppercase the "v" in "vCon". */
+    .lc-event-name { font-size:.9rem; font-weight: 600; color: var(--navy); }
     .lc-event-time { font-size:.72rem; color: var(--gray); font-variant-numeric: tabular-nums; }
     .lc-event-actor { font-size:.72rem; color: var(--gray); }
     .lc-event-actor code { background:#fff; border:1px solid var(--blue-pale);
